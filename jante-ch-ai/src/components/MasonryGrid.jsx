@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
 import Pin from './Pin';
-import '../styles/MasonryGrid.css';
+import styles from '../styles/masonryGrid.module.css';
 
 const MasonryGrid = ({ pins }) => {
   const [columns, setColumns] = useState(5);
@@ -30,9 +32,9 @@ const MasonryGrid = ({ pins }) => {
   });
   
   return (
-    <div className="masonry-grid" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
+    <div className={styles.masonryGrid} style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
       {columnPins.map((column, columnIndex) => (
-        <div key={columnIndex} className="masonry-column">
+        <div key={columnIndex} className={styles.masonryColumn}>
           {column.map((pin, pinIndex) => (
             <Pin 
               key={pin.id} 

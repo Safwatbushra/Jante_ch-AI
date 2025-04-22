@@ -1,0 +1,168 @@
+/* src/styles/pin.module.css */
+
+.pin {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: #fff;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: transform 0.3s ease, box-shadow 0.2s ease;
+}
+
+.pin.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.pin:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.pinImageContainer {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.pinPlaceholder {
+    width: 100%;
+    padding-bottom: 100%;
+    /* Default aspect ratio */
+    background-color: #f0f0f0;
+    animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: #f0f0f0;
+    }
+    100% {
+        background-color: #e0e0e0;
+    }
+}
+
+.pinImageContainer img {
+    width: 100%;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.pinImageContainer img.loaded {
+    opacity: 1;
+}
+
+.pin:hover .pinImageContainer img {
+    transform: scale(1.03);
+}
+
+.pinOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px;
+    opacity: 0;
+    animation: fadeIn 0.2s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.pinActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.saveButton {
+    background-color: #e60023;
+    color: white;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.saveButton:hover {
+    background-color: #ad081b;
+}
+
+.iconButtons {
+    display: flex;
+    gap: 8px;
+}
+
+.iconButton {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.iconButton svg {
+    fill: #111;
+}
+
+.pinLink {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.pinInfo {
+    padding: 12px 8px;
+}
+
+.pinTitle {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.pinDescription {
+    font-size: 12px;
+    color: #767676;
+    margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.pinCreator {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+}
+
+.creatorImg {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
