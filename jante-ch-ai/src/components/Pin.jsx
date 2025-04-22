@@ -1,11 +1,14 @@
+// src/components/Pin.jsx
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import styles from '../styles/pin.module.css';
 
 const Pin = ({ pin, index }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const pinRef = useRef(null);
   
   // Staggered animation delay based on index
@@ -37,6 +40,24 @@ const Pin = ({ pin, index }) => {
   const handleImageLoad = () => {
     setIsLoaded(true);
   };
+  
+  const handleSave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsSaved(!isSaved);
+  };
+  
+  const handleShare = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Share functionality would go here
+  };
+  
+  const handleMore = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // More options functionality would go here
+  };
 
   return (
     <div 
@@ -46,45 +67,59 @@ const Pin = ({ pin, index }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className={styles.pinImageContainer}>
-        {!isLoaded && <div className={styles.pinPlaceholder}></div>}
-        <img 
-          src={pin.imageUrl} 
-          alt={pin.title} 
-          onLoad={handleImageLoad}
-          className={isLoaded ? styles.loaded : ''}
-        />
-        
-        {isHovered && (
-          <div className={styles.pinOverlay}>
-            <div className={styles.pinActions}>
-              <button className={styles.saveButton}>Save</button>
-              <div className={styles.iconButtons}>
-                <button className={`${styles.iconButton} ${styles.share}`}>
-                  <svg height="16" width="16" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
-                    <path d="M21 14c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2v-6c0-1.1.9-2 2-2s2 .9 2 2v4h14v-4c0-1.1.9-2 2-2zM8.82 8.84c-.78.78-2.05.79-2.83 0-.78-.78-.79-2.04-.01-2.82L11.99 0l6.02 6.01c.78.78.79 2.05.01 2.83-.78.78-2.05.79-2.83 0l-1.2-1.19v6.18a2 2 0 1 1-4 0V7.66L8.82 8.84z"></path>
-                  </svg>
+      <Link href={`/pin/${pin.id}`} className={styles.pinLink}>
+        <div className={styles.pinImageContainer}>
+          {!isLoaded && <div className={styles.pinPlaceholder}></div>}
+          <img 
+            src={pin.imageUrl} 
+            alt={pin.title} 
+            onLoad={handleImageLoad}
+            className={isLoaded ? styles.loaded : ''}
+          />
+          
+          {isHovered && (
+            <div className={styles.pinOverlay}>
+              <div className={styles.pinActions}>
+                <button 
+                  className={`${styles.saveButton} ${isSaved ? styles.saved : ''}`}
+                  onClick={handleSave}
+                >
+                  {isSaved ? 'Saved' : 'Save'}
                 </button>
-                <button className={`${styles.iconButton} ${styles.more}`}>
-                  <svg height="16" width="16" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
-                    <path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"></path>
-                  </svg>
-                </button>
+                <div className={styles.iconButtons}>
+                  <button 
+                    className={`${styles.iconButton} ${styles.share}`}
+                    onClick={handleShare}
+                    aria-label="Share"
+                  >
+                    <i className="fa-solid fa-arrow-up-from-bracket"></i>
+                  </button>
+                  <button 
+                    className={`${styles.iconButton} ${styles.more}`}
+                    onClick={handleMore}
+                    aria-label="More options"
+                  >
+                    <i className="fa-solid fa-ellipsis"></i>
+                  </button>
+                </div>
+              </div>
+              <div className={styles.pinDestination}>
+                <span>{pin.destination || 'pinterest.com'}</span>
+                <i className="fa-solid fa-arrow-up-right-from-square"></i>
               </div>
             </div>
-            <a href="#" className={styles.pinLink}></a>
-          </div>
-        )}
-      </div>
-      
-      <div className={styles.pinInfo}>
-        <h3 className={styles.pinTitle}>{pin.title}</h3>
-        <p className={styles.pinDescription}>{pin.description}</p>
-        <div className={styles.pinCreator}>
-          <img src={pin.creatorImage} alt={pin.creator} className={styles.creatorImg} />
-          <span>{pin.creator}</span>
+          )}
         </div>
-      </div>
+        
+        <div className={styles.pinInfo}>
+          <h3 className={styles.pinTitle}>{pin.title}</h3>
+          <p className={styles.pinDescription}>{pin.description}</p>
+          <div className={styles.pinCreator}>
+            <img src={pin.creatorImage} alt={pin.creator} className={styles.creatorImg} />
+            <span>{pin.creator}</span>
+          </div>
+        </div>
+      </Link>
     </div>
   );
 };

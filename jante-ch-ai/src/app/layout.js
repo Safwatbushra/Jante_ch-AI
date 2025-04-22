@@ -13,7 +13,11 @@ export default function RootLayout({ children }) {
     return ( <
         html lang = "en" >
         <
-        head > { /* You can add additional head elements here if needed */ } <
+        head >
+        <
+        link rel = "stylesheet"
+        href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" / >
+        <
         /head> <
         body className = { inter.className } > { children } <
         /body> <

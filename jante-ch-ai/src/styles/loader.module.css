@@ -16,8 +16,8 @@
     width: 12px;
     height: 12px;
     margin: 0 4px;
-    border-radius: 50%;
-    background-color: #e60023;
+    border-radius: var(--border-radius-full);
+    background-color: var(--pinterest-red);
     animation: bounce 1.4s infinite ease-in-out both;
 }
 
