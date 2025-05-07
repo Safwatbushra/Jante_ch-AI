@@ -3,653 +3,2697 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jante ch-Ai</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <title>Jante ChAi - Government Services Portal</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Professional Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Embedded CSS -->
     <style>
+        /* 
+        * Jante ChAi - Main Stylesheet
+        * A modern, animated website for Bangladesh government services
+        */
+
+        /* ===== Base Styles ===== */
+        :root {
+          --primary-color: #008f69; /* Brighter green */
+          --primary-dark: #006A4E;
+          --primary-light: #00d49a;
+          --secondary-color: #F42A41; /* Bangladesh flag red */
+          --secondary-dark: #d01c31;
+          --secondary-light: #ff5c6f;
+          --dark-color: #2d2d2d;
+          --light-color: #f8f9fa;
+          --gray-color: #6c757d;
+          --success-color: #28a745;
+          --info-color: #17a2b8;
+          --warning-color: #ffc107;
+          --danger-color: #dc3545;
+          --body-font: "Montserrat", sans-serif;
+          --bangla-font: "Hind Siliguri", sans-serif;
+          --heading-font: "Montserrat", sans-serif;
+          --transition: all 0.3s ease;
+          --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+          --border-radius: 8px;
+          --card-bg: white;
+          --input-bg: white;
+          --footer-bg: #2d2d2d;
+          --footer-text: rgba(255, 255, 255, 0.7);
+          --navbar-bg: rgba(255, 255, 255, 0.95);
+          --hero-gradient: linear-gradient(135deg, #00b383 0%, #008f69 100%);
+          --card-border: 1px solid rgba(0, 0, 0, 0.1);
+          --hero-text: white;
+          --chat-primary: #008f69;
+          --chat-bg: white;
+          --chat-text: #2d2d2d;
+          --chat-user-bubble: #e9f9f3;
+          --chat-bot-bubble: #f0f0f0;
+        }
+
+        /* Dark Mode Variables - Improved */
+        .dark-mode {
+          --primary-color: #00d49a;
+          --primary-dark: #00b383;
+          --primary-light: #00ffbd;
+          --secondary-color: #ff5c6f;
+          --secondary-dark: #F42A41;
+          --secondary-light: #ff8a99;
+          --dark-color: #f8f9fa;
+          --light-color: #121212;
+          --gray-color: #adb5bd;
+          --card-bg: #1e1e1e;
+          --input-bg: #2c2c2c;
+          --footer-bg: #0a0a0a;
+          --footer-text: rgba(255, 255, 255, 0.8);
+          --navbar-bg: rgba(18, 18, 18, 0.95);
+          --hero-gradient: linear-gradient(135deg, #00ffbd 0%, #00d49a 100%);
+          --card-border: 1px solid rgba(255, 255, 255, 0.1);
+          --hero-text: #ffffff;
+          --chat-primary: #00d49a;
+          --chat-bg: #1e1e1e;
+          --chat-text: #f8f9fa;
+          --chat-user-bubble: #004d38;
+          --chat-bot-bubble: #2c2c2c;
+        }
+
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        html {
+          scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Open Sans', sans-serif;
-            line-height: 1.6;
-            scroll-behavior: smooth;
-        }
-        body, * {
-        color: white;
-        }
-
-        .slide {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            scroll-snap-align: start;
-            background: linear-gradient(to right, rgba(120, 120, 128, 0.6), rgba(9, 63, 239, 0.861));
+          font-family: var(--body-font);
+          font-size: 16px;
+          line-height: 1.6;
+          color: var(--dark-color);
+          overflow-x: hidden;
+          background-color: var(--light-color);
+          transition: background-color 0.3s ease, color 0.3s ease;
+          font-weight: 400;
         }
 
-        .slide-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 100px 1rem 2rem;
+        .bangla {
+          font-family: var(--bangla-font);
+          display: none; /* Hidden by default in English mode */
         }
 
-        header {
-            position: relative;
-            height: 100vh;
-            background: linear-gradient(to right, rgba(0,0,50,0.6), rgba(0,150,180,0.5)),
-                        url('https://images.unsplash.com/photo-1532619187608-e5375cab36c9?auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            z-index: 0;
+        body.bn .bangla {
+          display: block; /* Show in Bangla mode */
         }
 
-        .overlay-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.5;
-            z-index: 0;
-            pointer-events: none;
+        body.bn .english {
+          display: none; /* Hide in Bangla mode */
         }
 
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 30px 50px;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.103);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        h1, h2, h3, h4, h5, h6 {
+          font-family: var(--heading-font);
+          font-weight: 700;
+          line-height: 1.3;
+          margin-bottom: 15px;
         }
 
-        nav .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+        p {
+          margin-bottom: 20px;
         }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 30px;
+        a {
+          color: var(--primary-color);
+          text-decoration: none;
+          transition: var(--transition);
         }
 
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600; 
+        a:hover {
+          color: var(--primary-dark);
+          text-decoration: none;
         }
 
-        .actions {
-            display: flex;
-            gap: 10px;
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
         }
 
-        .actions a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background 0.3s;
+        img {
+          max-width: 100%;
+          height: auto;
         }
 
-        .actions a:hover {
-            background: rgba(255,255,255,0.2);
+        section {
+          padding: 100px 0;
+          position: relative;
         }
 
-        .hero {
-            position: relative;
-            z-index: 2;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            text-align: left;
-            padding: 0 20px;
-            margin-left: 10%;
+        .btn {
+          font-weight: 500;
+          padding: 12px 30px;
+          border-radius: 50px;
+          transition: var(--transition);
+          text-transform: capitalize;
         }
 
-        .hero h5,
-        .hero h1,
-        .email-form {
+        .btn-primary {
+          background-color: var(--primary-color);
+          border-color: var(--primary-color);
+          color: white;
+        }
+
+        .btn-primary:hover {
+          background-color: var(--primary-dark);
+          border-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+          background-color: var(--secondary-color);
+          border-color: var(--secondary-color);
+          color: white;
+        }
+
+        .btn-secondary:hover {
+          background-color: var(--secondary-dark);
+          border-color: var(--secondary-dark);
+        }
+
+        .btn-outline-light {
+          border-color: white;
+          color: white;
+        }
+
+        .btn-outline-light:hover {
+          background-color: white;
+          color: var(--primary-color);
+        }
+
+        .section-header {
+          margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+          font-size: 36px;
+          margin-bottom: 15px;
+          position: relative;
+        }
+
+        .section-header p {
+          font-size: 18px;
+          color: var(--gray-color);
+        }
+
+        .highlight {
+          color: var(--primary-color);
+        }
+
+        .highlight-secondary {
+          color: var(--secondary-color);
+        }
+
+        /* ===== Preloader ===== */
+        .preloader {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: var(--light-color);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          transition: background-color 0.3s ease;
+        }
+
+        .loader {
+          display: flex;
+        }
+
+        .letter {
+          font-size: 40px;
+          font-weight: 700;
+          color: var(--primary-color);
+          margin: 0 5px;
+          animation: bounce 1s infinite alternate;
+        }
+
+        .letter:nth-child(2) {
+          animation-delay: 0.1s;
+        }
+
+        .letter:nth-child(3) {
+          animation-delay: 0.2s;
+        }
+
+        .letter:nth-child(4) {
+          animation-delay: 0.3s;
+        }
+
+        .letter:nth-child(5) {
+          animation-delay: 0.4s;
+        }
+
+        .letter:nth-child(6) {
+          animation-delay: 0.5s;
+        }
+
+        .letter:nth-child(7) {
+          animation-delay: 0.6s;
+        }
+
+        .letter:nth-child(8) {
+          animation-delay: 0.7s;
+        }
+
+        .letter:nth-child(9) {
+          animation-delay: 0.8s;
+        }
+
+        @keyframes bounce {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-20px);
+          }
+        }
+
+        /* ===== Navbar ===== */
+        .navbar {
+          padding: 20px 0;
+          transition: var(--transition);
+          background-color: transparent;
+        }
+
+        .navbar.scrolled {
+          background-color: var(--navbar-bg);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+          padding: 15px 0;
+        }
+
+        .navbar-brand {
+          font-size: 28px;
+          font-weight: 700;
+          color: var(--primary-color);
+          display: flex;
+          align-items: center;
+        }
+
+        .navbar-brand img {
+          height: 40px;
+          margin-right: 10px;
+        }
+
+        .navbar-brand:hover {
+          color: var(--primary-dark);
+        }
+
+        .nav-link {
+          font-weight: 500;
+          color: var(--dark-color);
+          margin: 0 15px;
+          position: relative;
+          transition: var(--transition);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+          color: var(--primary-color);
+        }
+
+        .nav-link::after {
+          content: "";
+          position: absolute;
+          bottom: -5px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background-color: var(--primary-color);
+          transition: var(--transition);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+          width: 100%;
+        }
+
+        .navbar-toggler {
+          border: none;
+          color: var(--dark-color);
+          font-size: 24px;
+        }
+
+        .navbar-toggler:focus {
+          box-shadow: none;
+        }
+
+        .nav-btn {
+          margin-left: 10px;
+          padding: 8px 20px;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+          position: relative;
+          margin-left: 15px;
+          cursor: pointer;
+        }
+
+        .language-switcher .current-lang {
+          display: flex;
+          align-items: center;
+          padding: 5px 10px;
+          border-radius: 20px;
+          background-color: rgba(0, 143, 105, 0.1);
+          color: var(--primary-color);
+          transition: var(--transition);
+        }
+
+        .language-switcher .current-lang:hover {
+          background-color: rgba(0, 143, 105, 0.2);
+        }
+
+        .language-switcher .current-lang i {
+          margin-left: 5px;
+        }
+
+        .language-options {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          background-color: var(--card-bg);
+          border-radius: var(--border-radius);
+          box-shadow: var(--box-shadow);
+          padding: 10px 0;
+          min-width: 120px;
+          z-index: 100;
+          display: none;
+          margin-top: 10px;
+        }
+
+        .language-options.show {
+          display: block;
+        }
+
+        .language-option {
+          padding: 8px 15px;
+          cursor: pointer;
+          transition: var(--transition);
+        }
+
+        .language-option:hover {
+          background-color: rgba(0, 143, 105, 0.1);
+        }
+
+        .language-option.active {
+          background-color: rgba(0, 143, 105, 0.2);
+          color: var(--primary-color);
+        }
+
+        /* Dark Mode Toggle - Improved */
+        .dark-mode-toggle {
+          width: 60px;
+          height: 30px;
+          background-color: #e0e0e0;
+          border-radius: 30px;
+          position: relative;
+          cursor: pointer;
+          transition: var(--transition);
+          margin-left: 15px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 5px;
+        }
+
+        .dark-mode-toggle.active {
+          background-color: var(--primary-color);
+        }
+
+        .dark-mode-toggle .sun-icon,
+        .dark-mode-toggle .moon-icon {
+          font-size: 14px;
+          color: #888;
+          z-index: 1;
+        }
+
+        .dark-mode-toggle.active .sun-icon {
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .dark-mode-toggle.active .moon-icon {
+          color: white;
+        }
+
+        .dark-mode-toggle .toggle-ball {
+          width: 24px;
+          height: 24px;
+          background-color: white;
+          border-radius: 50%;
+          position: absolute;
+          top: 3px;
+          left: 3px;
+          transition: var(--transition);
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-mode-toggle.active .toggle-ball {
+          transform: translateX(30px);
+        }
+
+        /* ===== Hero Section - Redesigned ===== */
+        .hero-section {
+          background: var(--hero-gradient);
+          color: var(--hero-text);
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          position: relative;
+          overflow: hidden;
+          padding: 150px 0 100px;
+        }
+
+        .hero-content {
+          position: relative;
+          z-index: 2;
+        }
+
+        .hero-title {
+          font-size: 60px;
+          font-weight: 700;
+          margin-bottom: 20px;
+          animation: fadeInUp 1s ease;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+          line-height: 1.2;
+          color: #ffffff; /* Ensuring high contrast */
+        }
+
+        .hero-subtitle {
+          font-size: 20px;
+          margin-bottom: 30px;
+          animation: fadeInUp 1s ease 0.2s;
+          animation-fill-mode: both;
+          max-width: 600px;
+          color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for better readability */
+        }
+
+        .hero-buttons {
+          animation: fadeInUp 1s ease 0.4s;
+          animation-fill-mode: both;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 15px;
+        }
+
+        .hero-image-container {
+          position: relative;
+          animation: fadeIn 1s ease 0.6s;
+          animation-fill-mode: both;
+        }
+
+        .hero-image {
+          max-width: 100%;
+          animation: float 6s ease-in-out infinite;
+          border-radius: 20px;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-badge {
+          position: absolute;
+          background-color: white;
+          color: var(--dark-color);
+          padding: 15px;
+          border-radius: var(--border-radius);
+          box-shadow: var(--box-shadow);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          z-index: 2;
+          animation: float 5s ease-in-out infinite;
+        }
+
+        .service-badge i {
+          font-size: 24px;
+          color: var(--primary-color);
+        }
+
+        .badge-1 {
+          top: 10%;
+          left: -20px;
+          animation-delay: 0s;
+        }
+
+        .badge-2 {
+          top: 40%;
+          right: -20px;
+          animation-delay: 1s;
+        }
+
+        .badge-3 {
+          bottom: 15%;
+          left: 10%;
+          animation-delay: 0.5s;
+        }
+
+        .hero-shape {
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 100%;
+        }
+
+        .hero-particles {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+
+        .particle {
+          position: absolute;
+          display: block;
+          background-color: rgba(255, 255, 255, 0.2);
+          border-radius: 50%;
+          animation: moveParticle 15s linear infinite;
+        }
+
+        @keyframes moveParticle {
+          0% {
+            transform: translateY(0) translateX(0);
             opacity: 0;
-            animation: fadeInLeft 1s ease forwards;
-        }
-
-        .hero h5 {
-            animation-delay: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .hero h1 {
-            animation-delay: 0.6s;
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin-bottom: 30px;
-            max-width: 700px;
-        }
-
-        .email-form {
-            animation-delay: 1s;
-            display: flex;
-            border-radius: 50px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            background-color: white;
-            max-width: 450px;
-            width: 100%;
-        }
-
-        .email-form input {
-            flex: 1;
-            padding: 15px 20px;
-            border: none;
-            outline: none;
-            font-size: 1rem;
-        }
-
-        .email-form button {
-            background-color: #00c9a7;
-            color: white;
-            padding: 0 25px;
-            border: none;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .email-form button:hover {
-            background-color: #00a98a;
-        }
-
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .hero {
-                align-items: center;
-                text-align: center;
-                margin-left: 0;
-            }
-
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-
-            .email-form {
-                flex-direction: column;
-                border-radius: 10px;
-                overflow: hidden;
-            }
-
-            .email-form button {
-                width: 100%;
-                padding: 15px 0;
-            }
-        }
-
-        #slide2 {
-            background-color: #f8fafc;
-            align-items: center;
-        }
-
-        #slide2 .slide-content {
-            flex-direction: row;
-            gap: 2rem;
-            max-width: 1280px;
-        }
-
-        .image-container {
-            flex: 1;
-        }
-
-        .mosaic-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            grid-template-rows: repeat(2, 1fr);
-            gap: 10px;
-            height: 100%;
-        }
-
-        .mosaic-img.large {
-            grid-row: 1 / 3;
-            grid-column: 1;
-        }
-
-        .mosaic-img.small {
-            grid-column: 2;
-        }
-
-        .mosaic-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 12px;
-        }
-
-        .text-container {
-            flex: 1;
-            max-width: 500px; 
-            animation: slideUp 0.7s ease-out 0.2s forwards;
-        }
-
-        .text-container h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-1000px) translateX(100px);
             opacity: 0;
-            animation: slideUp 0.7s ease-out 0.2s forwards;
+          }
         }
 
-        .text-container p {
-            margin-bottom: 1.5rem;
+        @keyframes float {
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+          100% {
+            transform: translateY(0);
+          }
         }
 
-        .text-container button {
+        @keyframes fadeInUp {
+          from {
             opacity: 0;
-            animation: slideUp 0.7s ease-out 0.4s forwards;
-            background-color: #00c9a7;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .text-container button:hover {
-            background-color: #00a98a;
-        }
-
-        #slide3 {
-            background-color: #f1f5f9;
-            text-align: center;
-        }
-
-        #slide3 h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            opacity: 0;
-            animation: fadeIn 0.8s ease-out 0.2s forwards;
-        }
-
-        .carousel {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            padding: 0 1rem;
-        }
-
-        .card {
-            color: black;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            background-color: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            min-width: 200px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s;
-            opacity: 0;
-            transform: translateX(100px);
-            animation: slideIn 0.5s ease-out forwards;
-        }
-
-        .card:nth-child(1) {
-            animation-delay: 0.2s;
-        }
-
-        .card:nth-child(2) {
-            animation-delay: 0.4s;
-        }
-
-        .card:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-        }
-
-        #slide4 {
-            background-color: #f8fafc;
-        }
-
-        #slide4 .content {
-            display: flex;
-            flex-direction: row;
-            gap: 2rem;
-            max-width: 1280px;
-            padding: 100px 1rem 2rem;
-        }
-
-        #slide4 .text,
-        #slide4 .video {
-            flex: 1;
-        }
-
-        #slide4 h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            opacity: 0;
-            animation: slideUp 0.7s ease-out 0.2s forwards;
-        }
-
-        #slide4 p {
-            margin-bottom: 1.5rem;
-        }
-
-        .video video {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        #slide5 {
-            background-color: #f1f5f9;
-            text-align: center;
-        }
-
-        .form {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
-            margin: 0 auto;
-            opacity: 0;
-            animation: slideUp 0.7s ease-out 0.4s forwards;
-        }
-
-        .form h2 {
-            color: black;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            opacity: 0;
-            animation: fadeIn 0.8s ease-out 0.2s forwards;
-        }
-
-        .form input {
-            color: black;
-            width: 100%;
-            padding: 0.75rem 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            background-color: #f8fafc;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .form input:focus {
-            border-color: #00c9a7;
-            box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.15);
-            outline: none;
-        }
-
-        .form button {
-            background-color: #00c9a7;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .form button:hover {
-            background-color: #00a98a;
-        }
-
-        footer {
-            background-color: #0f172a;
-            color: #e2e8f0;
-            padding: 4rem 1rem;
-        }
-
-        footer .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-
-        footer .logo {
-            font-size: 1.875rem;
-            font-weight: bold;
-            color: #e2e8f0;
-        }
-
-        footer ul {
-            list-style: none;
-        }
-
-        footer ul li a {
-            color: #e2e8f0;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        footer ul li a:hover {
-            color: #00c9a7;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        /* ===== Features Section ===== */
+        .features-section {
+          background-color: var(--light-color);
+          padding: 100px 0;
+        }
+
+        .feature-card {
+          background-color: var(--card-bg);
+          padding: 40px 30px;
+          border-radius: var(--border-radius);
+          box-shadow: var(--box-shadow);
+          text-align: center;
+          transition: var(--transition);
+          height: 100%;
+          margin-bottom: 30px;
+          border-bottom: 3px solid transparent;
+          border: var(--card-border);
+        }
+
+        .feature-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+          border-bottom: 3px solid var(--primary-color);
+        }
+
+        .feature-card.active {
+          background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+          color: white;
+        }
+
+        .feature-icon {
+          width: 80px;
+          height: 80px;
+          background-color: rgba(0, 143, 105, 0.1);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 25px;
+        }
+
+        .feature-card.active .feature-icon {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-icon i {
+          font-size: 36px;
+          color: var(--primary-color);
+        }
+
+        .feature-card.active .feature-icon i {
+          color: white;
+        }
+
+        .feature-card h3 {
+          font-size: 22px;
+          margin-bottom: 15px;
+        }
+
+        .feature-card p {
+          margin-bottom: 0;
+          color: var(--gray-color);
+        }
+
+        .feature-card.active p {
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* ===== Services Section ===== */
+        .services-section {
+          background-color: #f0f8f5;
+          padding: 100px 0;
+        }
+
+        .dark-mode .services-section {
+          background-color: #1a2420;
+        }
+
+        .service-card {
+          background-color: var(--card-bg);
+          padding: 40px 30px;
+          border-radius: var(--border-radius);
+          box-shadow: var(--box-shadow);
+          text-align: center;
+          transition: var(--transition);
+          height: 100%;
+          margin-bottom: 30px;
+          position: relative;
+          overflow: hidden;
+          border: var(--card-border);
+        }
+
+        .service-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 5px;
+          background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .service-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-icon {
+          width: 80px;
+          height: 80px;
+          background-color: rgba(0, 143, 105, 0.1);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 25px;
+        }
+
+        .service-icon i {
+          font-size: 36px;
+          color: var(--primary-color);
+        }
+
+        .service-card h3 {
+          font-size: 22px;
+          margin-bottom: 15px;
+        }
+
+        .service-card p {
+          margin-bottom: 20px;
+          color: var(--gray-color);
+        }
+
+        .service-link {
+          font-weight: 500;
+          color: var(--primary-color);
+          transition: var(--transition);
+        }
+
+        .service-link i {
+          margin-left: 5px;
+          transition: var(--transition);
+        }
+
+        .service-link:hover {
+          color: var(--primary-dark);
+        }
+
+        .service-link:hover i {
+          transform: translateX(5px);
+        }
+
+        .service-image {
+          height: 150px;
+          object-fit: cover;
+          border-radius: var(--border-radius);
+          margin-bottom: 20px;
+        }
+
+        /* ===== Demo Section ===== */
+        .demo-section {
+          background-color: var(--light-color);
+          padding: 100px 0;
+        }
+
+        .video-container {
+          position: relative;
+          padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+          height: 0;
+          overflow: hidden;
+          border-radius: var(--border-radius);
+          box-shadow: var(--box-shadow);
+        }
+
+        .video-container iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: 0;
+        }
+
+        .demo-steps {
+          margin-top: 50px;
+        }
+
+        .step-item {
+          display: flex;
+          margin-bottom: 30px;
+        }
+
+        .step-number {
+          width: 50px;
+          height: 50px;
+          background-color: var(--primary-color);
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          font-weight: 700;
+          margin-right: 20px;
+          flex-shrink: 0;
+        }
+
+        .step-content h4 {
+          font-size: 20px;
+          margin-bottom: 10px;
+        }
+
+        .step-content p {
+          color: var(--gray-color);
+          margin-bottom: 0;
+        }
+
+        /* ===== Auth Section - Redesigned ===== */
+        .auth-section {
+          background: linear-gradient(135deg, #f0f8f5 0%, #e0f0eb 100%);
+          padding: 100px 0;
+        }
+
+        .dark-mode .auth-section {
+          background: linear-gradient(135deg, #1a2420 0%, #0d1916 100%);
+        }
+
+        .auth-container {
+          display: flex;
+          border-radius: var(--border-radius);
+          overflow: hidden;
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+          background-color: var(--card-bg);
+          max-width: 1000px;
+          margin: 0 auto;
+        }
+
+        .auth-image {
+          flex: 1;
+          background-image: url('https://placeholder.svg?height=600&width=500&text=Bangladesh+Digital+Services');
+          background-size: cover;
+          background-position: center;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .auth-image::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, rgba(0, 143, 105, 0.9) 0%, rgba(0, 106, 78, 0.9) 100%);
+        }
+
+        .auth-image-content {
+          position: relative;
+          z-index: 1;
+          color: white;
+          text-align: center;
+          padding: 30px;
+        }
+
+        .auth-image-content h2 {
+          font-size: 32px;
+          margin-bottom: 20px;
+          color: #ffffff; /* Ensuring high contrast */
+        }
+
+        .auth-image-content p {
+          font-size: 16px;
+          margin-bottom: 30px;
+          color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for better readability */
+        }
+
+        .auth-form-container {
+          flex: 1;
+          padding: 50px;
+        }
+
+        .auth-tabs {
+          display: flex;
+          margin-bottom: 30px;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .auth-tabs {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-tab {
+          padding: 15px 30px;
+          cursor: pointer;
+          font-weight: 600;
+          position: relative;
+          transition: var(--transition);
+        }
+
+        .auth-tab::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background-color: var(--primary-color);
+          transition: var(--transition);
+        }
+
+        .auth-tab.active {
+          color: var(--primary-color);
+        }
+
+        .auth-tab.active::after {
+          width: 100%;
+        }
+
+        .auth-form h3 {
+          font-size: 24px;
+          margin-bottom: 30px;
+          color: var(--primary-color);
+        }
+
+        .form-group {
+          margin-bottom: 20px;
+        }
+
+        .form-control {
+          height: 50px;
+          border-radius: var(--border-radius);
+          padding: 10px 20px;
+          font-size: 16px;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          transition: var(--transition);
+          background-color: var(--input-bg);
+          color: var(--dark-color);
+        }
+
+        .dark-mode .form-control {
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-control:focus {
+          border-color: var(--primary-color);
+          box-shadow: none;
+        }
+
+        .auth-form .btn {
+          width: 100%;
+          margin-top: 20px;
+        }
+
+        .auth-form .divider {
+          text-align: center;
+          margin: 20px 0;
+          position: relative;
+        }
+
+        .auth-form .divider::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 0;
+          width: 45%;
+          height: 1px;
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .auth-form .divider::before,
+        .dark-mode .auth-form .divider::after {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-form .divider::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          right: 0;
+          width: 45%;
+          height: 1px;
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-form .divider span {
+          background-color: var(--card-bg);
+          padding: 0 10px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .social-login {
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+        }
+
+        .social-login-btn {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #f8f9fa;
+          color: var(--dark-color);
+          transition: var(--transition);
+        }
+
+        .dark-mode .social-login-btn {
+          background-color: #2c2c2c;
+          color: var(--light-color);
+        }
+
+        .social-login-btn:hover {
+          transform: translateY(-5px);
+        }
+
+        .social-login-btn.facebook {
+          background-color: #3b5998;
+          color: white;
+        }
+
+        .social-login-btn.google {
+          background-color: #db4437;
+          color: white;
+        }
+
+        .auth-form .form-check {
+          margin-top: 15px;
+        }
+
+        .auth-form .forgot-password {
+          text-align: right;
+          margin-top: 10px;
+        }
+
+        .auth-form .register-link {
+          text-align: center;
+          margin-top: 20px;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+          background-color: var(--footer-bg);
+          color: white;
+          padding: 80px 0 0;
+        }
+
+        .footer-about {
+          margin-bottom: 30px;
+        }
+
+        .footer-logo {
+          font-size: 28px;
+          font-weight: 700;
+          margin-bottom: 20px;
+          color: white;
+          display: flex;
+          align-items: center;
+        }
+
+        .footer-logo img {
+          height: 40px;
+          margin-right: 10px;
+        }
+
+        .footer-about p {
+          color: var(--footer-text);
+          margin-bottom: 20px;
+        }
+
+        .footer-links {
+          margin-bottom: 30px;
+        }
+
+        .footer-links h3 {
+          font-size: 20px;
+          margin-bottom: 25px;
+          color: white;
+        }
+
+        .footer-links ul li {
+          margin-bottom: 10px;
+        }
+
+        .footer-links ul li a {
+          color: var(--footer-text);
+          transition: var(--transition);
+        }
+
+        .footer-links ul li a:hover {
+          color: var(--primary-color);
+          padding-left: 5px;
+        }
+
+        .footer-contact {
+          margin-bottom: 30px;
+        }
+
+        .footer-contact h3 {
+          font-size: 20px;
+          margin-bottom: 25px;
+          color: white;
+        }
+
+        .footer-contact p {
+          color: var(--footer-text);
+          margin-bottom: 15px;
+        }
+
+        .footer-contact p i {
+          margin-right: 10px;
+          color: var(--primary-color);
+        }
+
+        .social-links {
+          display: flex;
+        }
+
+        .social-link {
+          width: 40px;
+          height: 40px;
+          background-color: rgba(0, 143, 105, 0.1);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 10px;
+          transition: var(--transition);
+        }
+
+        .social-link i {
+          font-size: 16px;
+          color: var(--primary-color);
+          transition: var(--transition);
+        }
+
+        .social-link:hover {
+          background-color: var(--primary-color);
+        }
+
+        .social-link:hover i {
+          color: white;
+        }
+
+        .footer-bottom {
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 20px 0;
+          margin-top: 50px;
+        }
+
+        .copyright {
+          color: var(--footer-text);
+          margin-bottom: 0;
+        }
+
+        .footer-bottom-links {
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .footer-bottom-links li {
+          margin-left: 20px;
+        }
+
+        .footer-bottom-links li a {
+          color: var(--footer-text);
+          transition: var(--transition);
+        }
+
+        .footer-bottom-links li a:hover {
+          color: var(--primary-color);
+        }
+
+        /* ===== Back to Top Button ===== */
+        .back-to-top {
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          width: 50px;
+          height: 50px;
+          background-color: var(--primary-color);
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 99;
+          opacity: 0;
+          visibility: hidden;
+          transition: var(--transition);
+        }
+
+        .back-to-top.active {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .back-to-top:hover {
+          background-color: var(--primary-dark);
+          color: white;
+        }
+
+        /* ===== Chatbot Styles ===== */
+        .chatbot-button {
+          position: fixed;
+          bottom: 30px;
+          right: 100px;
+          width: 60px;
+          height: 60px;
+          background-color: var(--primary-color);
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 99;
+          cursor: pointer;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+          transition: var(--transition);
+        }
+
+        .chatbot-button:hover {
+          background-color: var(--primary-dark);
+          transform: scale(1.05);
+        }
+
+        .chatbot-button i {
+          font-size: 24px;
+        }
+
+        .chatbot-container {
+          position: fixed;
+          bottom: 100px;
+          right: 30px;
+          width: 350px;
+          height: 500px;
+          background-color: var(--chat-bg);
+          border-radius: 15px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          overflow: hidden;
+          display: none;
+          flex-direction: column;
+          transition: all 0.3s ease;
+        }
+
+        .chatbot-container.active {
+          display: flex;
+        }
+
+        .chatbot-header {
+          background-color: var(--primary-color);
+          color: white;
+          padding: 15px 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .chatbot-header h4 {
+          margin: 0;
+          font-size: 18px;
+        }
+
+        .chatbot-close {
+          background: none;
+          border: none;
+          color: white;
+          font-size: 20px;
+          cursor: pointer;
+        }
+
+        .chatbot-body {
+          flex: 1;
+          padding: 20px;
+          overflow-y: auto;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .chat-message {
+          margin-bottom: 15px;
+          max-width: 80%;
+          padding: 12px 15px;
+          border-radius: 15px;
+          position: relative;
+          line-height: 1.5;
+          font-size: 14px;
+        }
+
+        .bot-message {
+          align-self: flex-start;
+          background-color: var(--chat-bot-bubble);
+          color: var(--chat-text);
+          border-bottom-left-radius: 5px;
+        }
+
+        .user-message {
+          align-self: flex-end;
+          background-color: var(--chat-user-bubble);
+          color: var(--chat-text);
+          border-bottom-right-radius: 5px;
+        }
+
+        .chat-timestamp {
+          font-size: 10px;
+          color: var(--gray-color);
+          margin-top: 5px;
+          text-align: right;
+        }
+
+        .chatbot-footer {
+          padding: 15px;
+          border-top: 1px solid rgba(0, 0, 0, 0.1);
+          display: flex;
+          align-items: center;
+        }
+
+        .dark-mode .chatbot-footer {
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-input {
+          flex: 1;
+          height: 40px;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          border-radius: 20px;
+          padding: 0 15px;
+          font-size: 14px;
+          background-color: var(--input-bg);
+          color: var(--chat-text);
+        }
+
+        .dark-mode .chat-input {
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-input:focus {
+          outline: none;
+          border-color: var(--primary-color);
+        }
+
+        .chat-send {
+          width: 40px;
+          height: 40px;
+          background-color: var(--primary-color);
+          color: white;
+          border: none;
+          border-radius: 50%;
+          margin-left: 10px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: var(--transition);
+        }
+
+        .chat-send:hover {
+          background-color: var(--primary-dark);
+        }
+
+        .chat-options {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 10px;
+        }
+
+        .chat-option {
+          background-color: var(--chat-bot-bubble);
+          color: var(--chat-text);
+          padding: 8px 15px;
+          border-radius: 20px;
+          font-size: 12px;
+          cursor: pointer;
+          transition: var(--transition);
+        }
+
+        .chat-option:hover {
+          background-color: var(--primary-color);
+          color: white;
+        }
+
+        .typing-indicator {
+          display: flex;
+          align-items: center;
+          margin-bottom: 15px;
+          align-self: flex-start;
+        }
+
+        .typing-indicator span {
+          height: 8px;
+          width: 8px;
+          background-color: var(--gray-color);
+          border-radius: 50%;
+          display: inline-block;
+          margin-right: 5px;
+          animation: typing 1s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+        }
+
+        /* ===== Responsive Styles ===== */
+        @media (max-width: 991px) {
+          .navbar-collapse {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-top: 15px;
+          }
+
+          .nav-link {
+            margin: 10px 0;
+          }
+
+          .nav-btn {
+            margin: 10px 0 0;
+            display: inline-block;
+          }
+
+          .hero-section {
+            padding: 150px 0 100px;
+          }
+
+          .hero-image-container {
+            margin-top: 50px;
+          }
+
+          .auth-container {
+            flex-direction: column;
+          }
+
+          .auth-image {
+            display: none;
+          }
+
+          .footer-bottom-links {
+            justify-content: flex-start;
+            margin-top: 10px;
+          }
+
+          .footer-bottom-links li {
+            margin-left: 0;
+            margin-right: 20px;
+          }
+
+          .chatbot-container {
+            width: 300px;
+            height: 450px;
+            bottom: 90px;
+          }
+        }
+
+        @media (max-width: 767px) {
+          section {
+            padding: 80px 0;
+          }
+
+          .section-header h2 {
+            font-size: 30px;
+          }
+
+          .hero-title {
+            font-size: 40px;
+          }
+
+          .hero-subtitle {
+            font-size: 18px;
+          }
+
+          .service-badge {
+            padding: 10px;
+          }
+
+          .service-badge i {
+            font-size: 20px;
+          }
+
+          .auth-form-container {
+            padding: 30px 20px;
+          }
+
+          .step-item {
+            flex-direction: column;
+          }
+
+          .step-number {
+            margin-bottom: 15px;
+          }
+
+          .chatbot-container {
+            width: 280px;
+            right: 20px;
+          }
+        }
+
+        @media (max-width: 575px) {
+          .hero-buttons {
+            flex-direction: column;
+            width: 100%;
+          }
+
+          .hero-buttons .btn {
+            width: 100%;
+            margin-right: 0;
+          }
+
+          .auth-tabs {
+            flex-direction: column;
+          }
+
+          .auth-tab {
+            margin-bottom: 10px;
+          }
+
+          .auth-tab:last-child {
+            margin-bottom: 0;
+          }
+
+          .social-login {
+            flex-wrap: wrap;
+          }
+
+          .chatbot-button {
+            right: 30px;
+            bottom: 90px;
+          }
+
+          .chatbot-container {
+            width: 90%;
+            right: 5%;
+            bottom: 160px;
+          }
         }
     </style>
 </head>
 <body>
-    <nav>
-        <div class="logo">Jante ch-Ai</div>
-        <ul>
-            <li><a href="#slide1">Home</a></li>
-            <li><a href="#slide2">Features</a></li>
-            <li><a href="#slide3">Topics</a></li>
-            <li><a href="#slide4">Demo</a></li>
-        </ul>
-        <div class="actions">
-            <a href="#slide5">Sign Up</a>
-            <a href="#slide5">Log In</a>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <span class="letter">J</span>
+            <span class="letter">A</span>
+            <span class="letter">N</span>
+            <span class="letter">T</span>
+            <span class="letter">E</span>
+            <span class="letter">C</span>
+            <span class="letter">h</span>
+            <span class="letter">A</span>
+            <span class="letter">i</span>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="logo.png" alt="Jante ChAi Logo">
+                <span class="brand-text"><b>Jante ChAi</b></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active english" href="#home">Home</a>
+                        <a class="nav-link active bangla" href="#home">হোম</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link english" href="#features">Features</a>
+                        <a class="nav-link bangla" href="#features">বৈশিষ্ট্য</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link english" href="#services">Services</a>
+                        <a class="nav-link bangla" href="#services">সেবাসমূহ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link english" href="#demo">Demo</a>
+                        <a class="nav-link bangla" href="#demo">ডেমো</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary nav-btn english" href="#auth">Login</a>
+                        <a class="btn btn-primary nav-btn bangla" href="#auth">লগইন</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-secondary nav-btn english" href="#auth">Register</a>
+                        <a class="btn btn-secondary nav-btn bangla" href="#auth">রেজিস্টার</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="language-switcher" id="languageSwitcher">
+                            <div class="current-lang">
+                                <span>EN</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="language-options">
+                                <div class="language-option active" data-lang="en">English</div>
+                                <div class="language-option" data-lang="bn">বাংলা</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dark-mode-toggle" id="darkModeToggle">
+                            <i class="fas fa-sun sun-icon"></i>
+                            <i class="fas fa-moon moon-icon"></i>
+                            <div class="toggle-ball"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
-    <header class="slide" id="slide1">
-        <img src="../Images/hello.png" alt="Overlay Image" class="overlay-img" />
-        <div class="hero">
-            <h5>Jante ch-Ai</h5>
-            <h1>Ask anything!</h1>
-            <form class="email-form" onsubmit="event.preventDefault(); alert('Subscribed!')">
-                <input type="text" placeholder="Ask your question" required />
-                <button type="submit">Get started</button>
-            </form>
-        </div>
-    </header>
 
-    <section class="slide" id="slide2">
-        <div class="slide-content">
-            <div class="image-container">
-                <div class="mosaic-grid">
-                    <img src="../Images/pic5.jpg" alt="Mosaic Image 1" class="mosaic-img large">
-                    <img src="../Images/pic7.jpg" alt="Mosaic Image 2" class="mosaic-img small">
-                    <img src="../Images/pic8.jpg" alt="Mosaic Image 3" class="mosaic-img small">
-                </div>
-            </div>
-            <div class="text-container">
-                <h2>Features</h2>
-                <p><ul>
-                    <li>Search for what you want.</li>
-                    <li>Check if your documents are up-to-date.</li>
-                    <li>24/7 Service.</li>
-                    <li>Easy to read.</li>
-                </ul></p>
-                <button>Learn More</button>
-            </div>
-        </div>
-    </section>
-
-    <section class="slide" id="slide3">
-        <img src="../Images/hello2.jpg" alt="Overlay Image" class="overlay-img" />
-        <div class="slide-content">
-            <h2>Explore Our Topics</h2>
-            <div class="carousel">
-                <div class="card">License</div>
-                <div class="card">NID</div>
-                <div class="card">Tax</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="slide" id="slide4">
-        <div class="slide-content">
-            <div class="content">
-                <div class="text animate-fade-in">
-                    <h2>Demonstration</h2>
-                    <p>Watch how to make it work! Our intuitive interface makes accessing information faster and easier than ever before.</p>
-                </div>
-                <div class="video animate-slide-up">
-                    <video controls>
-                        <source src="demo-video.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="slide" id="slide5">
-        <img src="../Images/hello.png" alt="Overlay Image" class="overlay-img" />
-        <div class="slide-content">
-            <div class="form">
-                <h2>Sign Up/Log in Now!</h2>
-                <input type="text" placeholder="Your Name" required>
-                <input type="email" placeholder="Your Email" required>
-                <input type="password" placeholder="Your Password" required>
-                <button>Sign Up</button>
-                <button>Log In</button>
-            </div>
-        </div>
-    </section>
-
-    <footer>
+    <!-- Hero Section - Redesigned -->
+    <section id="home" class="hero-section">
+        <div class="hero-particles" id="heroParticles"></div>
         <div class="container">
-            <div>
-                <div class="logo">Jante ch-Ai</div>
-                <p>Ask anything!</p>
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="hero-content">
+                        <h1 class="hero-title english">Jante ChAi</h1>
+                        <h1 class="hero-title bangla">জানতে চাই</h1>
+                        <p class="hero-subtitle english">Access government services at your fingertips. Get information about National ID, Passport, Birth Certificate, License, and Tax services easily through our platform.</p>
+                        <p class="hero-subtitle bangla">সরকারি তথ্য এবং সেবাসমূহ এখন আপনার হাতের মুঠোয়। আমাদের প্ল্যাটফর্মে আপনি সহজেই জাতীয় পরিচয়পত্র, পাসপোর্ট, জন্ম নিবন্ধন, লাইসেন্স এবং কর সংক্রান্ত তথ্য পেতে পারেন।</p>
+                        <div class="hero-buttons">
+                            <a href="#services" class="btn btn-primary btn-lg english">View Services</a>
+                            <a href="#services" class="btn btn-primary btn-lg bangla">সেবাসমূহ দেখুন</a>
+                            <a href="#auth" class="btn btn-outline-light btn-lg english">Create Account</a>
+                            <a href="#auth" class="btn btn-outline-light btn-lg bangla">একাউন্ট খুলুন</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-flex justify-content-center" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="hero-image-container">
+                        <img src="https://placeholder.svg?height=500&width=500&text=Digital+Bangladesh" alt="Digital Bangladesh" class="hero-image">
+                        <div class="service-badge badge-1">
+                            <i class="fas fa-id-card"></i>
+                            <span class="english">National ID</span>
+                            <span class="bangla">জাতীয় পরিচয়পত্র</span>
+                        </div>
+                        <div class="service-badge badge-2">
+                            <i class="fas fa-passport"></i>
+                            <span class="english">Passport</span>
+                            <span class="bangla">পাসপোর্ট</span>
+                        </div>
+                        <div class="service-badge badge-3">
+                            <i class="fas fa-file-alt"></i>
+                            <span class="english">Birth Certificate</span>
+                            <span class="bangla">জন্ম নিবন্ধন</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#slide1">Home</a></li>
-                    <li><a href="#slide2">Features</a></li>
-                    <li><a href="#slide3">Topics</a></li>
-                    <li><a href="#slide4">Demo</a></li>
-                    <li><a href="#slide5">Sign Up</a></li>
-                </ul>
+        </div>
+        <div class="hero-shape">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#ffffff" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,138.7C1248,117,1344,75,1392,53.3L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header text-center" data-aos="fade-up">
+                <h2 class="english">Why Choose <span class="highlight">Jante ChAi</span>?</h2>
+                <h2 class="bangla">কেন <span class="highlight">জানতে চাই</span> বেছে নিবেন?</h2>
+                <p class="english">Discover our unique features that make us special</p>
+                <p class="bangla">আমাদের অনন্য বৈশিষ্ট্যগুলি আবিষ্কার করুন</p>
             </div>
-            <div>
-                <h3>Contact Info</h3>
-                <ul>
-                    <li>Email: <a href="mailto:info@jantechai.com">jantechai@gmail.com</a></li>
-                    <li>Address: Mirpur DOHS, Dhaka, Bangladesh</li>
-                    <li>Hours: Mon-Fri, 9am-5pm BDT</li>
-                </ul>
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3 class="english">Save Time</h3>
+                        <h3 class="bangla">সময় বাঁচান</h3>
+                        <p class="english">No more waiting in lines. Get government services in just a few minutes through our platform.</p>
+                        <p class="bangla">আর লাইনে দাঁড়াতে হবে না। আমাদের প্ল্যাটফর্মে সরকারি সেবাগুলি পেতে মাত্র কয়েক মিনিট সময় লাগবে।</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card active">
+                        <div class="feature-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="english">Smart Search</h3>
+                        <h3 class="bangla">স্মার্ট সার্চ</h3>
+                        <p class="english">Our advanced search system helps you quickly find the information you need.</p>
+                        <p class="bangla">আমাদের উন্নত সার্চ সিস্টেম আপনাকে দ্রুত প্রয়োজনীয় তথ্য খুঁজে পেতে সাহায্য করবে।</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="english">Secure Access</h3>
+                        <h3 class="bangla">নিরাপদ অ্যাক্সেস</h3>
+                        <p class="english">Your personal information is always protected. We follow the highest security standards.</p>
+                        <p class="bangla">আপনার ব্যক্তিগত তথ্য সর্বদা সুরক্ষিত থাকবে। আমরা সর্বোচ্চ নিরাপত্তা মান অনুসরণ করি।</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="english">Mobile Ready</h3>
+                        <h3 class="bangla">মোবাইল রেডি</h3>
+                        <p class="english">Use our services from any device. Our website is completely mobile-friendly.</p>
+                        <p class="bangla">যেকোনো ডিভাইস থেকে আমাদের সেবা ব্যবহার করুন। আমাদের ওয়েবসাইট সম্পূর্ণ মোবাইল ফ্রেন্ডলি।</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <h3 class="english">User Friendly</h3>
+                        <h3 class="bangla">ব্যবহারকারী বান্ধব</h3>
+                        <p class="english">Easy interface and Bengali language support will help you use the service easily.</p>
+                        <p class="bangla">সহজ ইন্টারফেস এবং বাংলা ভাষার সমর্থন আপনাকে সহজেই সেবা ব্যবহার করতে সাহায্য করবে।</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="600">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h3 class="english">Always Updated</h3>
+                        <h3 class="bangla">সর্বদা আপডেটেড</h3>
+                        <p class="english">Get the latest updates on government rules and procedures on our platform.</p>
+                        <p class="bangla">সরকারি নিয়ম ও প্রক্রিয়ার সর্বশেষ আপডেট আমাদের প্ল্যাটফর্মে পাবেন।</p>
+                    </div>
+                </div>
             </div>
-            <div>
-                <h3>Follow Us</h3>
-                <ul>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">LinkedIn</a></li>
-                </ul>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-header text-center" data-aos="fade-up">
+                <h2 class="english">Our <span class="highlight">Services</span></h2>
+                <h2 class="bangla">আমাদের <span class="highlight">সেবাসমূহ</span></h2>
+                <p class="english">Government services now at your fingertips</p>
+                <p class="bangla">সরকারি সেবাগুলি এখন আপনার হাতের মুঠোয়</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=NID+Card" alt="National ID Card" class="service-image">
+                        <h3 class="english">National ID Card</h3>
+                        <h3 class="bangla">জাতীয় পরিচয়পত্র</h3>
+                        <p class="english">All information related to National ID Card, application process, and status check.</p>
+                        <p class="bangla">জাতীয় পরিচয়পত্র সংক্রান্ত সকল তথ্য, আবেদন প্রক্রিয়া, এবং স্ট্যাটাস চেক করুন।</p>
+                        <a href="#" class="service-link english">Learn More  পরিচয়পত্র সংক্রান্ত সকল তথ্য, আবেদন প্রক্রিয়া, এবং স্ট্যাটাস চেক করুন।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=Birth+Certificate" alt="Birth Certificate" class="service-image">
+                        <h3 class="english">Birth Certificate</h3>
+                        <h3 class="bangla">জন্ম নিবন্ধন</h3>
+                        <p class="english">Apply for birth registration online, make corrections, and collect copies.</p>
+                        <p class="bangla">অনলাইনে জন্ম নিবন্ধন আবেদন করুন, সংশোধন করুন এবং কপি সংগ্রহ করুন।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=Passport" alt="Passport" class="service-image">
+                        <h3 class="english">Passport</h3>
+                        <h3 class="bangla">পাসপোর্ট</h3>
+                        <p class="english">Apply for passport, renew, and track status easily.</p>
+                        <p class="bangla">পাসপোর্ট আবেদন, নবায়ন এবং স্ট্যাটাস ট্র্যাকিং সহজেই করুন।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=Driving+License" alt="Driving License" class="service-image">
+                        <h3 class="english">Driving License</h3>
+                        <h3 class="bangla">ড্রাইভিং লাইসেন্স</h3>
+                        <p class="english">Apply for driving license, renew, and verify information.</p>
+                        <p class="bangla">ড্রাইভিং লাইসেন্স আবেদন, নবায়ন এবং তথ্য যাচাই করুন।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=Tax+Services" alt="Tax Services" class="service-image">
+                        <h3 class="english">Tax Services</h3>
+                        <h3 class="bangla">কর সেবা</h3>
+                        <p class="english">e-TIN registration, return submission, and tax-related information.</p>
+                        <p class="bangla">ই-টিআইএন নিবন্ধন, রিটার্ন দাখিল এবং কর সংক্রান্ত তথ্য পান।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="600">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=Land+Records" alt="Land Records" class="service-image">
+                        <h3 class="english">Land Records</h3>
+                        <h3 class="bangla">ভূমি রেকর্ড</h3>
+                        <p class="english">Land records, parcha, and khatian related information online.</p>
+                        <p class="bangla">ভূমি রেকর্ড, পর্চা এবং খতিয়ান সংক্রান্ত তথ্য অনলাইনে পান।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <div class="section-header text-center" data-aos="fade-up">
+                <h2 class="english">How <span class="highlight">Jante ChAi</span> Works?</h2>
+                <h2 class="bangla">কিভাবে <span class="highlight">জানতে চাই</span> কাজ করে?</h2>
+                <p class="english">See the easy process of using our service</p>
+                <p class="bangla">আমাদের সেবা ব্যবহারের সহজ প্রক্রিয়া দেখুন</p>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto" data-aos="fade-up">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Jante ChAi Demo Video" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="row demo-steps">
+                <div class="col-md-6" data-aos="fade-right">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4 class="english">Register</h4>
+                            <h4 class="bangla">রেজিস্ট্রেশন করুন</h4>
+                            <p class="english">Create an account with your mobile number and email.</p>
+                            <p class="bangla">আপনার মোবাইল নম্বর এবং ইমেইল দিয়ে একটি অ্যাকাউন্ট তৈরি করুন।</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4 class="english">Select Service</h4>
+                            <h4 class="bangla">সেবা নির্বাচন করুন</h4>
+                            <p class="english">Choose the government service you need.</p>
+                            <p class="bangla">আপনার প্রয়োজনীয় সরকারি সেবাটি বেছে নিন।</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-left">
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4 class="english">Provide Information</h4>
+                            <h4 class="bangla">তথ্য প্রদান করুন</h4>
+                            <p class="english">Provide your necessary information and follow the instructions.</p>
+                            <p class="bangla">আপনার প্রয়োজনীয় তথ্য প্রদান করুন এবং নির্দেশনা অনুসরণ করুন।</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4 class="english">Get Results</h4>
+                            <h4 class="bangla">ফলাফল পান</h4>
+                            <p class="english">Easily get the information or service you need.</p>
+                            <p class="bangla">আপনার প্রয়োজনীয় তথ্য বা সেবা সহজেই পেয়ে যান।</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auth Section - Redesigned -->
+    <section id="auth" class="auth-section">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-image">
+                    <div class="auth-image-content">
+                        <h2 class="english">Welcome to Jante ChAi</h2>
+                        <h2 class="bangla">জানতে চাই-এ স্বাগতম</h2>
+                        <p class="english">Access all government services easily through our secure platform. Create an account or login to get started.</p>
+                        <p class="bangla">আমাদের নিরাপদ প্ল্যাটফর্মের মাধ্যমে সহজেই সমস্ত সরকারি সেবা অ্যাক্সেস করুন। শুরু করতে একটি অ্যাকাউন্ট তৈরি করুন বা লগইন করুন।</p>
+                    </div>
+                </div>
+                <div class="auth-form-container">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" data-tab="login">
+                            <span class="english">Login</span>
+                            <span class="bangla">লগইন</span>
+                        </div>
+                        <div class="auth-tab" data-tab="register">
+                            <span class="english">Register</span>
+                            <span class="bangla">রেজিস্টার</span>
+                        </div>
+                    </div>
+                    <div id="loginForm">
+                        <div class="auth-form">
+                            <h3 class="english">Login to Your Account</h3>
+                            <h3 class="bangla">আপনার অ্যাকাউন্টে লগইন করুন</h3>
+                            <form>
+                                <div class="form-group">
+                                    <label for="loginEmail" class="english">Email or Mobile Number</label>
+                                    <label for="loginEmail" class="bangla">ইমেইল বা মোবাইল নম্বর</label>
+                                    <input type="text" class="form-control" id="loginEmail" placeholder="Enter your email or mobile number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginPassword" class="english">Password</label>
+                                    <label for="loginPassword" class="bangla">পাসওয়ার্ড</label>
+                                    <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password">
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                                            <label class="form-check-label english" for="rememberMe">
+                                                Remember me
+                                            </label>
+                                            <label class="form-check-label bangla" for="rememberMe">
+                                                মনে রাখুন
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="forgot-password">
+                                            <a href="#" class="english">Forgot password?</a>
+                                            <a href="#" class="bangla">পাসওয়ার্ড ভুলে গেছেন?</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary english">Login</button>
+                                <button type="submit" class="btn btn-primary bangla">লগইন করুন</button>
+                                <div class="divider">
+                                    <span class="english">Or</span>
+                                    <span class="bangla">অথবা</span>
+                                </div>
+                                <div class="social-login">
+                                    <a href="#" class="social-login-btn facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="social-login-btn google">
+                                        <i class="fab fa-google"></i>
+                                    </a>
+                                </div>
+                                <div class="register-link">
+                                    <p class="english">Don't have an account? <a href="#" class="switch-auth" data-tab="register">Register</a></p>
+                                    <p class="bangla">অ্যাকাউন্ট নেই? <a href="#" class="switch-auth" data-tab="register">রেজিস্টার করুন</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="registerForm" style="display: none;">
+                        <div class="auth-form">
+                            <h3 class="english">Create a New Account</h3>
+                            <h3 class="bangla">নতুন অ্যাকাউন্ট তৈরি করুন</h3>
+                            <form>
+                                <div class="form-group">
+                                    <label for="registerName" class="english">Full Name</label>
+                                    <label for="registerName" class="bangla">পূর্ণ নাম</label>
+                                    <input type="text" class="form-control" id="registerName" placeholder="Enter your full name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerEmail" class="english">Email</label>
+                                    <label for="registerEmail" class="bangla">ইমেইল</label>
+                                    <input type="email" class="form-control" id="registerEmail" placeholder="Enter your email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerMobile" class="english">Mobile Number</label>
+                                    <label for="registerMobile" class="bangla">মোবাইল নম্বর</label>
+                                    <input type="tel" class="form-control" id="registerMobile" placeholder="Enter your mobile number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerPassword" class="english">Password</label>
+                                    <label for="registerPassword" class="bangla">পাসওয়ার্ড</label>
+                                    <input type="password" class="form-control" id="registerPassword" placeholder="Create a password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerConfirmPassword" class="english">Confirm Password</label>
+                                    <label for="registerConfirmPassword" class="bangla">পাসওয়ার্ড নিশ্চিত করুন</label>
+                                    <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Confirm your password">
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms">
+                                    <label class="form-check-label english" for="agreeTerms">
+                                        I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
+                                    </label>
+                                    <label class="form-check-label bangla" for="agreeTerms">
+                                        আমি <a href="#">শর্তাবলী</a> এবং <a href="#">গোপনীয়তা নীতি</a> মেনে নিচ্ছি
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary english">Register</button>
+                                <button type="submit" class="btn btn-primary bangla">রেজিস্টার করুন</button>
+                                <div class="divider">
+                                    <span class="english">Or</span>
+                                    <span class="bangla">অথবা</span>
+                                </div>
+                                <div class="social-login">
+                                    <a href="#" class="social-login-btn facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="social-login-btn google">
+                                        <i class="fab fa-google"></i>
+                                    </a>
+                                </div>
+                                <div class="register-link">
+                                    <p class="english">Already have an account? <a href="#" class="switch-auth" data-tab="login">Login</a></p>
+                                    <p class="bangla">ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="#" class="switch-auth" data-tab="login">লগইন করুন</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-about">
+                        <h3 class="footer-logo">
+                            <img src="https://placeholder.svg?height=40&width=40&text=JC" alt="Jante ChAi Logo">
+                            <span class="english">Jante ChAi</span>
+                            <span class="bangla">জানতে চাই</span>
+                        </h3>
+                        <p class="english">Use our platform to easily access government information and services. We'll help you save time and effort.</p>
+                        <p class="bangla">সরকারি তথ্য এবং সেবাসমূহ সহজেই পাওয়ার জন্য আমাদের প্ল্যাটফর্ম ব্যবহার করুন। আমরা আপনাকে সময় এবং প্রচেষ্টা বাঁচাতে সাহায্য করব।</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-links">
+                        <h3 class="english">Quick Links</h3>
+                        <h3 class="bangla">দ্রুত লিঙ্ক</h3>
+                        <ul>
+                            <li><a href="#home" class="english">Home</a></li>
+                            <li><a href="#home" class="bangla">হোম</a></li>
+                            <li><a href="#features" class="english">Features</a></li>
+                            <li><a href="#features" class="bangla">বৈশিষ্ট্য</a></li>
+                            <li><a href="#services" class="english">Services</a></li>
+                            <li><a href="#services" class="bangla">সেবাসমূহ</a></li>
+                            <li><a href="#demo" class="english">Demo</a></li>
+                            <li><a href="#demo" class="bangla">ডেমো</a></li>
+                            <li><a href="#auth" class="english">Login/Register</a></li>
+                            <li><a href="#auth" class="bangla">লগইন/রেজিস্টার</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-links">
+                        <h3 class="english">Services</h3>
+                        <h3 class="bangla">সেবাসমূহ</h3>
+                        <ul>
+                            <li><a href="#" class="english">National ID</a></li>
+                            <li><a href="#" class="bangla">জাতীয় পরিচয়পত্র</a></li>
+                            <li><a href="#" class="english">Birth Certificate</a></li>
+                            <li><a href="#" class="bangla">জন্ম নিবন্ধন</a></li>
+                            <li><a href="#" class="english">Passport</a></li>
+                            <li><a href="#" class="bangla">পাসপোর্ট</a></li>
+                            <li><a href="#" class="english">Driving License</a></li>
+                            <li><a href="#" class="bangla">ড্রাইভিং লাইসেন্স</a></li>
+                            <li><a href="#" class="english">Tax Services</a></li>
+                            <li><a href="#" class="bangla">কর সেবা</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-contact">
+                        <h3 class="english">Contact Us</h3>
+                        <h3 class="bangla">যোগাযোগ করুন</h3>
+                        <p class="english"><i class="fas fa-map-marker-alt"></i> 123 Digital Bangladesh Road, Dhaka-1200</p>
+                        <p class="bangla"><i class="fas fa-map-marker-alt"></i> ১২৩ ডিজিটাল বাংলাদেশ রোড, ঢাকা-১২০০</p>
+                        <p class="english"><i class="fas fa-phone-alt"></i> +880 1712 345678</p>
+                        <p class="bangla"><i class="fas fa-phone-alt"></i> +৮৮০ ১৭১২ ৩৪৫৬৭৮</p>
+                        <p class="english"><i class="fas fa-envelope"></i> info@jantechai.com.bd</p>
+                        <p class="bangla"><i class="fas fa-envelope"></i> info@jantechai.com.bd</p>
+                        <p class="english"><i class="fas fa-clock"></i> Monday - Friday: 9am - 5pm</p>
+                        <p class="bangla"><i class="fas fa-clock"></i> সোমবার - শুক্রবার: সকাল ৯টা - বিকাল ৫টা</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="copyright english">© 2023 Jante ChAi. All rights reserved.</p>
+                        <p class="copyright bangla">© ২০২৩ জানতে চাই। সর্বস্বত্ব সংরক্ষিত।</p>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="footer-bottom-links">
+                            <li><a href="#" class="english">Privacy Policy</a></li>
+                            <li><a href="#" class="bangla">গোপনীয়তা নীতি</a></li>
+                            <li><a href="#" class="english">Terms of Service</a></li>
+                            <li><a href="#" class="bangla">ব্যবহারের শর্তাবলী</a></li>
+                            <li><a href="#" class="english">Cookie Policy</a></li>
+                            <li><a href="#" class="bangla">কুকি নীতি</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
 
+    <!-- Chatbot Button -->
+    <div class="chatbot-button" id="chatbotButton">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <!-- Chatbot Container -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header">
+            <h4 class="english">Jante ChAi Assistant</h4>
+            <h4 class="bangla">জানতে চাই সহায়ক</h4>
+            <button class="chatbot-close" id="chatbotClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-body" id="chatbotBody">
+            <!-- Chat messages will be added here dynamically -->
+        </div>
+        <div class="chatbot-footer">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Type your message here...">
+            <button class="chat-send" id="chatSend">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Embedded JavaScript -->
     <script>
-        const slides = document.querySelectorAll('.slide');
-        let currentIndex = 0;
+        /*
+         * Jante ChAi - Main JavaScript
+         * Animations, interactions, and functionality
+         */
 
-        function scrollToSlide(index) {
-            if (index >= 0 && index < slides.length) {
-                slides[index].scrollIntoView({ behavior: 'smooth' });
-                currentIndex = index;
-            }
-        }
+        // Wait for the DOM to be fully loaded
+        document.addEventListener("DOMContentLoaded", () => {
+          // Initialize AOS animation library
+          AOS.init({
+            duration: 800,
+            easing: "ease-in-out",
+            once: true,
+          });
 
-        window.addEventListener('wheel', (event) => {
-            event.preventDefault();
-            if (event.deltaY > 0) {
-                scrollToSlide(currentIndex + 1);
+          // Create particles for hero section
+          const heroParticles = document.getElementById('heroParticles');
+          for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('span');
+            particle.classList.add('particle');
+            
+            // Random size
+            const size = Math.random() * 10 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.left = `${Math.random() * 100}%`;
+            
+            // Random animation duration and delay
+            const duration = Math.random() * 20 + 10;
+            const delay = Math.random() * 10;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.animationDelay = `${delay}s`;
+            
+            heroParticles.appendChild(particle);
+          }
+
+          // Preloader
+          const preloader = document.querySelector(".preloader");
+          window.addEventListener("load", () => {
+            setTimeout(() => {
+              preloader.style.opacity = "0";
+              setTimeout(() => {
+                preloader.style.display = "none";
+              }, 500);
+            }, 1500);
+          });
+
+          // Navbar scroll effect
+          const navbar = document.querySelector(".navbar");
+          window.addEventListener("scroll", () => {
+            if (window.scrollY > 50) {
+              navbar.classList.add("scrolled");
             } else {
-                scrollToSlide(currentIndex - 1);
+              navbar.classList.remove("scrolled");
             }
-        }, { passive: false });
+          });
 
-        window.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowDown') {
-                event.preventDefault();
-                scrollToSlide(currentIndex + 1);
-            } else if (event.key === 'ArrowUp') {
-                event.preventDefault();
-                scrollToSlide(currentIndex - 1);
-            }
-        });
-        const navLinks = document.querySelectorAll('nav ul li a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
-                const index = parseInt(targetId.replace('slide', '')) - 1;
-                if (!isNaN(index)) {
-                    scrollToSlide(index);
-                }
+          // Active nav link based on scroll position
+          const sections = document.querySelectorAll("section");
+          const navLinks = document.querySelectorAll(".nav-link");
+
+          window.addEventListener("scroll", () => {
+            let current = "";
+
+            sections.forEach((section) => {
+              const sectionTop = section.offsetTop;
+              const sectionHeight = section.clientHeight;
+
+              if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                current = section.getAttribute("id");
+              }
             });
+
+            navLinks.forEach((link) => {
+              link.classList.remove("active");
+              if (link.getAttribute("href") === `#${current}`) {
+                link.classList.add("active");
+              }
+            });
+          });
+
+          // Back to top button
+          const backToTopButton = document.getElementById("backToTop");
+
+          window.addEventListener("scroll", () => {
+            if (window.scrollY > 300) {
+              backToTopButton.classList.add("active");
+            } else {
+              backToTopButton.classList.remove("active");
+            }
+          });
+
+          backToTopButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          });
+
+          // Smooth scrolling for anchor links
+          document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+            anchor.addEventListener("click", function (e) {
+              e.preventDefault();
+
+              const targetId = this.getAttribute("href");
+              if (targetId === "#") return;
+
+              const targetElement = document.querySelector(targetId);
+              if (targetElement) {
+                const navbarHeight = document.querySelector(".navbar").offsetHeight;
+                const targetPosition = targetElement.offsetTop - navbarHeight;
+
+                window.scrollTo({
+                  top: targetPosition,
+                  behavior: "smooth",
+                });
+
+                // Close mobile menu if open
+                const navbarCollapse = document.querySelector(".navbar-collapse");
+                if (navbarCollapse.classList.contains("show")) {
+                  document.querySelector(".navbar-toggler").click();
+                }
+              }
+            });
+          });
+
+          // Language switcher
+          const languageSwitcher = document.getElementById('languageSwitcher');
+          const currentLang = languageSwitcher.querySelector('.current-lang');
+          const languageOptions = languageSwitcher.querySelector('.language-options');
+          const languageOption = languageSwitcher.querySelectorAll('.language-option');
+          const body = document.body;
+
+          currentLang.addEventListener('click', () => {
+            languageOptions.classList.toggle('show');
+          });
+
+          document.addEventListener('click', (e) => {
+            if (!languageSwitcher.contains(e.target)) {
+              languageOptions.classList.remove('show');
+            }
+          });
+
+          languageOption.forEach(option => {
+            option.addEventListener('click', () => {
+              const lang = option.getAttribute('data-lang');
+              const langText = lang.toUpperCase();
+              
+              // Update current language
+              currentLang.querySelector('span').textContent = langText;
+              
+              // Update active class
+              languageOption.forEach(opt => opt.classList.remove('active'));
+              option.classList.add('active');
+              
+              // Hide options
+              languageOptions.classList.remove('show');
+              
+              // Toggle language class on body
+              if (lang === 'bn') {
+                body.classList.add('bn');
+              } else {
+                body.classList.remove('bn');
+              }
+            });
+          });
+
+          // Auth tabs
+          const authTabs = document.querySelectorAll('.auth-tab');
+          const loginForm = document.getElementById('loginForm');
+          const registerForm = document.getElementById('registerForm');
+          const switchAuthLinks = document.querySelectorAll('.switch-auth');
+
+          authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+              const tabId = tab.getAttribute('data-tab');
+              
+              // Update active tab
+              authTabs.forEach(t => t.classList.remove('active'));
+              tab.classList.add('active');
+              
+              // Show corresponding form
+              if (tabId === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+              } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+              }
+            });
+          });
+
+          switchAuthLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+              e.preventDefault();
+              const tabId = link.getAttribute('data-tab');
+              
+              // Find and click the corresponding tab
+              document.querySelector(`.auth-tab[data-tab="${tabId}"]`).click();
+            });
+          });
+
+          // Dark mode toggle
+          const darkModeToggle = document.getElementById('darkModeToggle');
+
+          // Check for saved theme preference
+          if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            darkModeToggle.classList.add('active');
+          }
+
+          darkModeToggle.addEventListener('click', () => {
+            // Toggle dark mode
+            body.classList.toggle('dark-mode');
+            darkModeToggle.classList.toggle('active');
+            
+            // Save preference
+            if (body.classList.contains('dark-mode')) {
+              localStorage.setItem('darkMode', 'enabled');
+            } else {
+              localStorage.setItem('darkMode', 'disabled');
+            }
+          });
+
+          // Form validation
+          const forms = document.querySelectorAll('form');
+          forms.forEach(form => {
+            form.addEventListener('submit', (e) => {
+              e.preventDefault();
+              
+              // Simple validation
+              let valid = true;
+              const inputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="tel"]');
+              
+              inputs.forEach(input => {
+                if (!input.value.trim()) {
+                  valid = false;
+                  input.classList.add('is-invalid');
+                } else {
+                  input.classList.remove('is-invalid');
+                }
+              });
+              
+              if (form.closest('#registerForm')) {
+                const password = document.getElementById('registerPassword');
+                const confirmPassword = document.getElementById('registerConfirmPassword');
+                
+                if (password.value !== confirmPassword.value) {
+                  valid = false;
+                  confirmPassword.classList.add('is-invalid');
+                  alert(body.classList.contains('bn') ? 'পাসওয়ার্ড মিলছে না!' : 'Passwords do not match!');
+                }
+                
+                const agreeTerms = document.getElementById('agreeTerms');
+                if (!agreeTerms.checked) {
+                  valid = false;
+                  alert(body.classList.contains('bn') ? 'শর্তাবলী মেনে নিতে হবে!' : 'You must agree to the Terms & Conditions!');
+                }
+              }
+              
+              if (valid) {
+                // Here you would normally send the form data to a server
+                // For demo purposes, we'll just show a success message
+                alert(form.closest('#loginForm') ? 
+                  (body.classList.contains('bn') ? 'সফলভাবে লগইন হয়েছে!' : 'Successfully logged in!') : 
+                  (body.classList.contains('bn') ? 'সফলভাবে রেজিস্টার হয়েছে!' : 'Successfully registered!'));
+                form.reset();
+              }
+            });
+          });
+
+          // Chatbot functionality
+          const chatbotButton = document.getElementById('chatbotButton');
+          const chatbotContainer = document.getElementById('chatbotContainer');
+          const chatbotClose = document.getElementById('chatbotClose');
+          const chatbotBody = document.getElementById('chatbotBody');
+          const chatInput = document.getElementById('chatInput');
+          const chatSend = document.getElementById('chatSend');
+
+          // Initial welcome message
+          const welcomeMessages = {
+            en: "Hello! Welcome to Jante ChAi. How can I help you today?",
+            bn: "হ্যালো! জানতে চাই-এ স্বাগতম। আমি আপনাকে কিভাবে সাহায্য করতে পারি?"
+          };
+
+          // Predefined responses
+          const responses = {
+            en: {
+              "hello": "Hello! How can I assist you today?",
+              "hi": "Hi there! How can I help you?",
+              "how are you": "I'm doing well, thank you for asking! How can I help you today?",
+              "services": "We offer various government services including National ID, Passport, Birth Certificate, Driving License, Tax Services, and Land Records. Which one are you interested in?",
+              "national id": "For National ID services, you can apply for a new ID, update your information, or check your application status. Would you like more information about any of these?",
+              "passport": "For Passport services, you can apply for a new passport, renew your existing passport, or track your application status. What would you like to know more about?",
+              "birth certificate": "For Birth Certificate services, you can register a new birth, get a copy of an existing certificate, or make corrections. How can I help you with this?",
+              "driving license": "For Driving License services, you can apply for a new license, renew your existing license, or check your application status. What would you like to do?",
+              "tax": "For Tax services, you can register for e-TIN, file your tax returns, or get information about tax regulations. How can I assist you with taxes?",
+              "land records": "For Land Records services, you can check your land information, get copies of documents, or apply for land-related certificates. What specific information do you need?",
+              "contact": "You can contact us at +880 1712 345678 or email us at info@jantechai.com.bd. Our office is located at 123 Digital Bangladesh Road, Dhaka-1200.",
+              "help": "I can help you with information about our services, application processes, or direct you to the right department. What do you need help with?",
+              "thank you": "You're welcome! Is there anything else I can help you with?",
+              "thanks": "You're welcome! Is there anything else I can help you with?",
+              "bye": "Thank you for chatting with us. Have a great day!",
+              "default": "I'm not sure I understand. Could you please rephrase your question or select from our services: National ID, Passport, Birth Certificate, Driving License, Tax Services, or Land Records?"
+            },
+            bn: {
+              "হ্যালো": "হ্যালো! আমি আপনাকে কিভাবে সাহায্য করতে পারি?",
+              "হাই": "হাই! আমি আপনাকে কিভাবে সাহায্য করতে পারি?",
+              "কেমন আছেন": "আমি ভালো আছি, ধন্যবাদ জিজ্ঞাসা করার জন্য! আমি আপনাকে কিভাবে সাহায্য করতে পারি?",
+              "সেবাসমূহ": "আমরা বিভিন্ন সরকারি সেবা প্রদান করি যেমন জাতীয় পরিচয়পত্র, পাসপোর্ট, জন্ম নিবন্ধন, ড্রাইভিং লাইসেন্স, কর সেবা, এবং ভূমি রেকর্ড। আপনি কোনটিতে আগ্রহী?",
+              "জাতীয় পরিচয়পত্র": "জাতীয় পরিচয়পত্র সেবার জন্য, আপনি নতুন আইডি এর জন্য আবেদন করতে পারেন, আপনার তথ্য আপডেট করতে পারেন, বা আপনার আবেদনের অবস্থা চেক করতে পারেন। আপনি কি এর মধ্যে কোন একটি সম্পর্কে আরও তথ্য জানতে চান?",
+              "পাসপোর্ট": "পাসপোর্ট সেবার জন্য, আপনি নতুন পাসপোর্টের জন্য আবেদন করতে পারেন, আপনার বিদ্যমান পাসপোর্ট নবায়ন করতে পারেন, বা আপনার আবেদনের অবস্থা ট্র্যাক করতে পারেন। আপনি কোন বিষয়ে আরও জানতে চান?",
+              "জন্ম নিবন্ধন": "জন্ম নিবন্ধন সেবার জন্য, আপনি নতুন জন্ম নিবন্ধন করতে পারেন, বিদ্যমান সার্টিফিকেটের কপি পেতে পারেন, বা সংশোধন করতে পারেন। আমি আপনাকে এই বিষয়ে কিভাবে সাহায্য করতে পারি?",
+              "ড্রাইভিং লাইসেন্স": "ড্রাইভিং লাইসেন্স সেবার জন্য, আপনি নতুন লাইসেন্সের জন্য আবেদন করতে পারেন, আপনার বিদ্যমান লাইসেন্স নবায়ন করতে পারেন, বা আপনার আবেদনের অবস্থা চেক করতে পারেন। আপনি কি করতে চান?",
+              "কর": "কর সেবার জন্য, আপনি ই-টিআইএন এর জন্য নিবন্ধন করতে পারেন, আপনার কর রিটার্ন দাখিল করতে পারেন, বা কর সংক্রান্ত নিয়মাবলী সম্পর্কে তথ্য পেতে পারেন। আমি আপনাকে কর সম্পর্কে কিভাবে সাহায্য করতে পারি?",
+              "ভূমি রেকর্ড": "ভূমি রেকর্ড সেবার জন্য, আপনি আপনার ভূমি সম্পর্কিত তথ্য চেক করতে পারেন, দলিলের কপি পেতে পারেন, বা ভূমি সম্পর্কিত সার্টিফিকেটের জন্য আবেদন করতে পারেন। আপনার কি নির্দিষ্ট তথ্য প্রয়োজন?",
+              "যোগাযোগ": "আপনি আমাদের সাথে +৮৮০ ১৭১২ ৩৪৫৬৭৮ নম্বরে যোগাযোগ করতে পারেন বা info@jantechai.com.bd এ ইমেইল করতে পারেন। আমাদের অফিস ১২৩ ডিজিটাল বাংলাদেশ রোড, ঢাকা-১২০০ এ অবস্থিত।",
+              "সাহায্য": "আমি আপনাকে আমাদের সেবা, আবেদন প্রক্রিয়া সম্পর্কে তথ্য দিতে পারি, বা আপনাকে সঠিক বিভাগে নির্দেশিত করতে পারি। আপনার কি সাহায্য প্রয়োজন?",
+              "ধন্যবাদ": "আপনাকে স্বাগতম! আমি কি আপনাকে আর কোন বিষয়ে সাহায্য করতে পারি?",
+              "বিদায়": "আমাদের সাথে চ্যাট করার জন্য ধন্যবাদ। আপনার দিনটি শুভ হোক!",
+              "default": "আমি নিশ্চিত নই আমি বুঝতে পেরেছি। আপনি কি আপনার প্রশ্নটি পুনরায় বলতে পারেন বা আমাদের সেবাগুলি থেকে নির্বাচন করতে পারেন: জাতীয় পরিচয়পত্র, পাসপোর্ট, জন্ম নিবন্ধন, ড্রাইভিং লাইসেন্স, কর সেবা, বা ভূমি রেকর্ড?"
+            }
+          };
+
+          // Function to add a message to the chat
+          function addMessage(message, isUser = false) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message');
+            messageElement.classList.add(isUser ? 'user-message' : 'bot-message');
+            
+            messageElement.textContent = message;
+            
+            const timestamp = document.createElement('div');
+            timestamp.classList.add('chat-timestamp');
+            const now = new Date();
+            timestamp.textContent = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            messageElement.appendChild(timestamp);
+            chatbotBody.appendChild(messageElement);
+            
+            // Scroll to bottom
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+          }
+
+          // Function to show typing indicator
+          function showTypingIndicator() {
+            const typingIndicator = document.createElement('div');
+            typingIndicator.classList.add('typing-indicator');
+            typingIndicator.id = 'typingIndicator';
+            
+            for (let i = 0; i < 3; i++) {
+              const dot = document.createElement('span');
+              typingIndicator.appendChild(dot);
+            }
+            
+            chatbotBody.appendChild(typingIndicator);
+            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+          }
+
+          // Function to hide typing indicator
+          function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+              typingIndicator.remove();
+            }
+          }
+
+          // Function to process user message and get response
+          function processMessage(message) {
+            const lang = body.classList.contains('bn') ? 'bn' : 'en';
+            message = message.toLowerCase().trim();
+            
+            // Check for matching responses
+            let response = null;
+            
+            // Look for exact matches first
+            if (responses[lang][message]) {
+              response = responses[lang][message];
+            } else {
+              // Look for partial matches
+              for (const key in responses[lang]) {
+                if (message.includes(key) && key.length > 2) {
+                  response = responses[lang][key];
+                  break;
+                }
+              }
+            }
+            
+            // If no match found, use default response
+            if (!response) {
+              response = responses[lang]["default"];
+            }
+            
+            return response;
+          }
+
+          // Initialize chatbot with welcome message
+          function initChatbot() {
+            const lang = body.classList.contains('bn') ? 'bn' : 'en';
+            chatbotBody.innerHTML = ''; // Clear any existing messages
+            addMessage(welcomeMessages[lang]);
+            
+            // Add quick options
+            const optionsContainer = document.createElement('div');
+            optionsContainer.classList.add('chat-options');
+            
+            const options = lang === 'bn' ? 
+              ['সেবাসমূহ', 'জাতীয় পরিচয়পত্র', 'পাসপোর্ট', 'যোগাযোগ'] : 
+              ['Services', 'National ID', 'Passport', 'Contact'];
+            
+            options.forEach(option => {
+              const optionElement = document.createElement('div');
+              optionElement.classList.add('chat-option');
+              optionElement.textContent = option;
+              optionElement.addEventListener('click', () => {
+                addMessage(option, true);
+                showTypingIndicator();
+                
+                setTimeout(() => {
+                  hideTypingIndicator();
+                  addMessage(processMessage(option));
+                }, 1000);
+              });
+              
+              optionsContainer.appendChild(optionElement);
+            });
+            
+            chatbotBody.appendChild(optionsContainer);
+          }
+
+          // Toggle chatbot visibility
+          chatbotButton.addEventListener('click', () => {
+            chatbotContainer.classList.toggle('active');
+            if (chatbotContainer.classList.contains('active') && chatbotBody.children.length === 0) {
+              initChatbot();
+            }
+          });
+
+          // Close chatbot
+          chatbotClose.addEventListener('click', () => {
+            chatbotContainer.classList.remove('active');
+          });
+
+          // Send message on button click
+          chatSend.addEventListener('click', () => {
+            sendMessage();
+          });
+
+          // Send message on Enter key
+          chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+              sendMessage();
+            }
+          });
+
+          // Function to send message
+          function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+              addMessage(message, true);
+              chatInput.value = '';
+              
+              // Show typing indicator
+              showTypingIndicator();
+              
+              // Process message and respond after a delay
+              setTimeout(() => {
+                hideTypingIndicator();
+                addMessage(processMessage(message));
+              }, 1000);
+            }
+          }
+
+          // Reinitialize chatbot when language changes
+          languageOption.forEach(option => {
+            option.addEventListener('click', () => {
+              if (chatbotContainer.classList.contains('active')) {
+                initChatbot();
+              }
+            });
+          });
         });
     </script>
 </body>
