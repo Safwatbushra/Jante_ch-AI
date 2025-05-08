@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jante Chai - AI Chatbot</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            background-color: #f8f9fa;
+            height: 100vh;
+            border-right: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .search-bar {
+            padding: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .new-chat-btn {
+            padding: 10px 15px;
+            margin: 15px;
+            cursor: pointer;
+        }
+        
+        .sidebar-menu {
+            margin-top: auto;
+            padding: 15px;
+        }
+        
+        .sidebar-menu-item {
+            padding: 8px 15px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-menu-item:hover {
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        
+        .logo-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            max-width: 150px;
+            height: auto;
+        }
+        
+        .feature-box {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .chat-message {
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            max-width: 80%;
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background-color: #f1f0f0;
+            margin-left: auto;
+        }
+        
+        .bot-message {
+            background-color: #e3f2fd;
+        }
+        
+        .profile-section {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 20px;
+            align-items: center;
+        }
+        
+        .profile-icon {
+            cursor: pointer;
+            font-size: 1.2rem;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #f1f3f5;
+        }
+        
+        .dropdown-menu {
+            min-width: 120px;
+        }
+        
+        .chat-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: background-color 0.2s;
+        }
+        
+        .chat-item.active {
+            background-color: #e9ecef;
+            border-left: 3px solid #0d6efd;
+        }
+        
+        .chat-item:hover {
+            background-color: #f1f3f5;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            text-align: center;
+            padding: 15px;
+            color: #0d6efd;
+        }
+        
+        .feature-label {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .feature-description {
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: #6c757d;
+            position: absolute;
+            bottom: 2px;
+            right: 8px;
+        }
+        
+        .typing-indicator {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #e3f2fd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            animation: fadeInOut 1.5s infinite;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #0d6efd;
+            margin-right: 3px;
+            animation: bounce 1.5s infinite;
+        }
+        
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .chat-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: bold;
+        }
+        
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Profile Page Styles */
+        .profile-page {
+            display: none;
+            height: 100%;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .profile-header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+            position: relative;
+        }
+        
+        .profile-back-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 3rem;
+            color: #6c757d;
+        }
+        
+        .profile-name {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .profile-email {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+        
+        .profile-section-title {
+            font-weight: bold;
+            margin: 20px 0 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .profile-info-item {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .profile-info-label {
+            width: 120px;
+            font-weight: 500;
+            color: #6c757d;
+        }
+        
+        .profile-info-value {
+            flex: 1;
+        }
+        
+        .profile-action-btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="new-chat-btn">
+                    <button class="btn btn-outline-primary w-100">
+                        <i class="bi bi-plus"></i> New Chat
+                    </button>
+                </div>
+                
+                <div class="chat-list">
+                    <div class="chat-item active" data-chat="default">
+                        <i class="bi bi-chat-left"></i> General Chat
+                    </div>
+                    <div class="chat-item" data-chat="tax">
+                        <i class="bi bi-receipt"></i> Tax Token Help
+                    </div>
+                    <div class="chat-item" data-chat="license">
+                        <i class="bi bi-card-text"></i> License Inquiry
+                    </div>
+                </div>
+                
+                <div class="sidebar-menu">
+                    <div class="sidebar-menu-item" id="settingsBtn">
+                        <i class="bi bi-gear me-2"></i> Settings
+                    </div>
+                    <div class="sidebar-menu-item" id="helpBtn">
+                        <i class="bi bi-question-circle me-2"></i> Help
+                    </div>
+                    <div class="sidebar-menu-item" id="logoutBtn">
+                        <i class="bi bi-box-arrow-right me-2"></i> LOGOUT
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Header with Profile -->
+                <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                    <div class="logo-container">
+                        <div class="logo border p-2">LOGO</div>
+                    </div>
+                    <div class="profile-section">
+                        <div class="dropdown">
+                            <button class="btn btn-link p-0" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle profile-icon"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li><a class="dropdown-item" href="#" id="viewProfileBtn">View Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="shareBtn">Share</a></li>
+                                <li><a class="dropdown-item" href="#" id="archiveBtn">Archive</a></li>
+                                <li><a class="dropdown-item" href="#" id="deleteBtn">Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Home Screen Content (Before Search) -->
+                <div id="homeScreen" class="chat-container">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-box" data-feature="tax">
+                                <div class="feature-icon">
+                                    <i class="bi bi-receipt"></i>
+                                </div>
+                                <div class="feature-label">Tax Token</div>
+                                <p class="feature-description">Get information about your tax token</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-box" data-feature="license">
+                                <div class="feature-icon">
+                                    <i class="bi bi-card-text"></i>
+                                </div>
+                                <div class="feature-label">License</div>
+                                <p class="feature-description">Check your license status and information</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-box" data-feature="id">
+                                <div class="feature-icon">
+                                    <i class="bi bi-person-badge"></i>
+                                </div>
+                                <div class="feature-label">National ID Card</div>
+                                <p class="feature-description">Verify and check your national ID information</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-box" data-feature="vehicle">
+                                <div class="feature-icon">
+                                    <i class="bi bi-car-front"></i>
+                                </div>
+                                <div class="feature-label">Vehicle Registration</div>
+                                <p class="feature-description">Check your vehicle registration details</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-box" data-feature="business">
+                                <div class="feature-icon">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                                <div class="feature-label">Business License</div>
+                                <p class="feature-description">Verify your business license information</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="feature-box" data-feature="general">
+                                <div class="feature-icon">
+                                    <i class="bi bi-question-circle"></i>
+                                </div>
+                                <div class="feature-label">General Inquiries</div>
+                                <p class="feature-description">Ask any other questions you may have</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Screen (After Search) - Hidden by default -->
+                <div id="chatScreen" class="chat-container d-none">
+                    <div class="chat-header">
+                        <i class="bi bi-chat-dots"></i> <span id="chatTitle">Chat</span>
+                    </div>
+                    <div id="chatMessages">
+                        <!-- Messages will be added here dynamically -->
+                    </div>
+                    <div id="typingIndicator" class="typing-indicator d-none">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+                
+                <!-- Profile Page - Hidden by default -->
+                <div id="profilePage" class="profile-page">
+                    <div class="profile-header">
+                        <div class="profile-back-btn" id="profileBackBtn">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </div>
+                        <div class="profile-avatar">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <div class="profile-name">John Doe</div>
+                        <div class="profile-email">john.doe@example.com</div>
+                    </div>
+                    
+                    <div class="container py-4">
+                        <div class="profile-section-title">Personal Information</div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Full Name:</div>
+                            <div class="profile-info-value">John Doe</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Email:</div>
+                            <div class="profile-info-value">john.doe@example.com</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Phone:</div>
+                            <div class="profile-info-value">+1 (555) 123-4567</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Address:</div>
+                            <div class="profile-info-value">123 Main Street, Anytown, USA</div>
+                        </div>
+                        
+                        <div class="profile-section-title">Account Information</div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">User ID:</div>
+                            <div class="profile-info-value">JD12345</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Account Type:</div>
+                            <div class="profile-info-value">Standard</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Member Since:</div>
+                            <div class="profile-info-value">January 15, 2023</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Last Login:</div>
+                            <div class="profile-info-value">Today at 10:30 AM</div>
+                        </div>
+                        
+                        <div class="profile-section-title">Preferences</div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Language:</div>
+                            <div class="profile-info-value">English</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Notifications:</div>
+                            <div class="profile-info-value">Enabled</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                            <button class="btn btn-outline-primary profile-action-btn" id="editProfileBtn">
+                                <i class="bi bi-pencil"></i> Edit Profile
+                            </button>
+                            <button class="btn btn-outline-secondary profile-action-btn" id="changePasswordBtn">
+                                <i class="bi bi-key"></i> Change Password
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="messageInput" placeholder="Type your message...">
+                        <button class="btn btn-outline-primary" type="button" id="sendButton">
+                            <i class="bi bi-send"></i> Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toastNotification">
+        Action completed successfully!
+    </div>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Interactive JavaScript -->
+    <script>
+        // Get elements
+        const homeScreen = document.getElementById('homeScreen');
+        const chatScreen = document.getElementById('chatScreen');
+        const profilePage = document.getElementById('profilePage');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const chatMessages = document.getElementById('chatMessages');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const chatTitle = document.getElementById('chatTitle');
+        const toastNotification = document.getElementById('toastNotification');
+        const viewProfileBtn = document.getElementById('viewProfileBtn');
+        const profileBackBtn = document.getElementById('profileBackBtn');
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const changePasswordBtn = document.getElementById('changePasswordBtn');
+        
+        // Chat history for different topics
+        const chatHistory = {
+            default: [],
+            tax: [],
+            license: [],
+            id: [],
+            vehicle: [],
+            business: [],
+            general: []
+        };
+        
+        // Current active chat
+        let currentChat = 'default';
+        
+        // Last active screen before profile
+        let lastActiveScreen = homeScreen;
+        
+        // Predefined responses for different topics
+        const responses = {
+            default: [
+                "Hello! How can I assist you today?",
+                "I'm Jante Chai, your AI assistant. What would you like to know?",
+                "I can help you with various government services. What are you looking for?"
+            ],
+            tax: [
+                "To check your tax token status, please provide your vehicle registration number.",
+                "Your tax token will expire in 45 days. Would you like to renew it?",
+                "The tax token renewal process takes approximately 3-5 business days."
+            ],
+            license: [
+                "I can help you with license-related queries. What specific information do you need?",
+                "Your license is valid until December 2025. No action is required at this time.",
+                "To renew your license, you'll need to submit Form-A along with the required documents."
+            ],
+            id: [
+                "For National ID card information, please provide your ID number.",
+                "Your National ID card is active and valid.",
+                "You can update your address on your National ID by visiting your local office."
+            ],
+            vehicle: [
+                "I can help you check your vehicle registration details. What's your vehicle number?",
+                "Your vehicle registration is up to date. Next renewal is due in 8 months.",
+                "For vehicle ownership transfer, you'll need to submit Form-29 and Form-30."
+            ],
+            business: [
+                "I can assist with business license inquiries. What's your business registration number?",
+                "Your business license is active. The next renewal is due on January 15, 2026.",
+                "To update your business address, please submit the change request form online."
+            ],
+            general: [
+                "I'm here to help with any government service inquiries. What can I assist you with?",
+                "For general information about government services, you can visit the official portal.",
+                "Is there a specific department or service you're interested in learning more about?"
+            ]
+        };
+        
+        // Function to show toast notification
+        function showToast(message) {
+            toastNotification.textContent = message;
+            toastNotification.classList.add('show');
+            setTimeout(() => {
+                toastNotification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Function to add a message to the chat
+        function addMessage(text, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            if (!isUser) {
+                const logoDiv = document.createElement('div');
+                logoDiv.className = 'd-flex align-items-start';
+                
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'border p-1 me-2';
+                iconDiv.textContent = 'LOGO';
+                
+                const textDiv = document.createElement('div');
+                textDiv.innerHTML = `<p>${text}</p>`;
+                
+                logoDiv.appendChild(iconDiv);
+                logoDiv.appendChild(textDiv);
+                messageDiv.appendChild(logoDiv);
+            } else {
+                messageDiv.innerHTML = `<p>${text}</p>`;
+            }
+            
+            // Add timestamp
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'message-time';
+            const now = new Date();
+            timeSpan.textContent = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            messageDiv.appendChild(timeSpan);
+            
+            chatMessages.appendChild(messageDiv);
+            
+            // Save to chat history
+            chatHistory[currentChat].push({
+                text: text,
+                isUser: isUser,
+                time: now
+            });
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Function to show typing indicator and then respond
+        function showTypingAndRespond(topic) {
+            typingIndicator.classList.remove('d-none');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Random response time between 1-3 seconds
+            const responseTime = Math.floor(Math.random() * 2000) + 1000;
+            
+            setTimeout(() => {
+                typingIndicator.classList.add('d-none');
+                
+                // Get random response for the topic
+                const topicResponses = responses[topic] || responses.default;
+                const randomResponse = topicResponses[Math.floor(Math.random() * topicResponses.length)];
+                
+                addMessage(randomResponse);
+            }, responseTime);
+        }
+        
+        // Function to start a new chat on a specific topic
+        function startNewChat(topic) {
+            currentChat = topic;
+            chatMessages.innerHTML = '';
+            
+            // Set chat title based on topic
+            switch(topic) {
+                case 'tax':
+                    chatTitle.textContent = 'Tax Token Assistance';
+                    break;
+                case 'license':
+                    chatTitle.textContent = 'License Information';
+                    break;
+                case 'id':
+                    chatTitle.textContent = 'National ID Services';
+                    break;
+                case 'vehicle':
+                    chatTitle.textContent = 'Vehicle Registration';
+                    break;
+                case 'business':
+                    chatTitle.textContent = 'Business License';
+                    break;
+                case 'general':
+                    chatTitle.textContent = 'General Inquiries';
+                    break;
+                default:
+                    chatTitle.textContent = 'Chat';
+            }
+            
+            // Show chat screen
+            homeScreen.classList.add('d-none');
+            chatScreen.classList.remove('d-none');
+            profilePage.style.display = 'none';
+            lastActiveScreen = chatScreen;
+            
+            // If chat history exists, load it
+            if (chatHistory[topic] && chatHistory[topic].length > 0) {
+                chatHistory[topic].forEach(msg => {
+                    addMessage(msg.text, msg.isUser);
+                });
+            } else {
+                // Otherwise, show welcome message
+                showTypingAndRespond(topic);
+            }
+            
+            // Update active chat in sidebar
+            document.querySelectorAll('.chat-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.chat === topic) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Focus on input
+            messageInput.focus();
+        }
+        
+        // Function to show profile page
+        function showProfilePage() {
+            // Remember which screen was active
+            lastActiveScreen = homeScreen.classList.contains('d-none') ? chatScreen : homeScreen;
+            
+            // Hide other screens and show profile
+            homeScreen.classList.add('d-none');
+            chatScreen.classList.add('d-none');
+            profilePage.style.display = 'block';
+            
+            // Hide search bar when viewing profile
+            document.querySelector('.search-bar').style.display = 'none';
+        }
+        
+        // Function to go back from profile page
+        function hideProfilePage() {
+            // Show the last active screen
+            if (lastActiveScreen === chatScreen) {
+                homeScreen.classList.add('d-none');
+                chatScreen.classList.remove('d-none');
+            } else {
+                homeScreen.classList.remove('d-none');
+                chatScreen.classList.add('d-none');
+            }
+            
+            // Hide profile page
+            profilePage.style.display = 'none';
+            
+            // Show search bar again
+            document.querySelector('.search-bar').style.display = 'block';
+        }
+        
+        // Event listener for send button
+        sendButton.addEventListener('click', function() {
+            sendMessage();
+        });
+        
+        // Event listener for Enter key
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Function to send message
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (message !== '') {
+                addMessage(message, true);
+                messageInput.value = '';
+                
+                showTypingAndRespond(currentChat);
+            }
+        }
+        
+        // Event listener for feature boxes
+        document.querySelectorAll('.feature-box').forEach(box => {
+            box.addEventListener('click', function() {
+                const feature = this.dataset.feature;
+                startNewChat(feature);
+            });
+        });
+        
+        // Event listener for chat items in sidebar
+        document.querySelectorAll('.chat-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const chat = this.dataset.chat;
+                startNewChat(chat);
+            });
+        });
+        
+        // Event listener for New Chat button
+        document.querySelector('.new-chat-btn button').addEventListener('click', function() {
+            homeScreen.classList.remove('d-none');
+            chatScreen.classList.add('d-none');
+            profilePage.style.display = 'none';
+            lastActiveScreen = homeScreen;
+            messageInput.value = '';
+        });
+        
+        // Event listeners for menu items
+        document.getElementById('settingsBtn').addEventListener('click', function() {
+            showToast('Settings menu opened');
+        });
+        
+        document.getElementById('helpBtn').addEventListener('click', function() {
+            showToast('Help documentation opened');
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            showToast('Logged out successfully');
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        });
+        
+        // Event listeners for dropdown menu
+        document.getElementById('viewProfileBtn').addEventListener('click', function() {
+            showProfilePage();
+        });
+        
+        document.getElementById('shareBtn  {
+            showProfilePage();
+        });
+        
+        document.getElementById('shareBtn').addEventListener('click', function() {
+            showToast('Chat shared successfully');
+        });
+        
+        document.getElementById('archiveBtn').addEventListener('click', function() {
+            showToast('Chat archived');
+        });
+        
+        document.getElementById('deleteBtn').addEventListener('click', function() {
+            showToast('Chat deleted');
+            homeScreen.classList.remove('d-none');
+            chatScreen.classList.add('d-none');
+        });
+        
+        // Event listeners for profile page
+        document.getElementById('profileBackBtn').addEventListener('click', function() {
+            hideProfilePage();
+        });
+        
+        document.getElementById('editProfileBtn').addEventListener('click', function() {
+            showToast('Edit profile functionality will be implemented in the final version');
+        });
+        
+        document.getElementById('changePasswordBtn').addEventListener('click', function() {
+            showToast('Change password functionality will be implemented in the final version');
+        });
+    </script>
+</body>
+</html>
