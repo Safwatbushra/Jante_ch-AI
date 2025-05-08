@@ -1,0 +1,433 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="logo.png" alt="Jante ChAi Logo">
+                <span class="brand-text"><b>Jante ChAi</b></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-primary nav-btn english" href="homepage.html">Home</a>
+                        <a class="btn btn-primary nav-btn bangla" href="homepage.html">হোম</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="language-switcher" id="languageSwitcher">
+                            <div class="current-lang">
+                                <span>EN</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="language-options">
+                                <div class="language-option active" data-lang="en">English</div>
+                                <div class="language-option" data-lang="bn">বাংলা</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dark-mode-toggle" id="darkModeToggle">
+                            <i class="fas fa-sun sun-icon"></i>
+                            <i class="fas fa-moon moon-icon"></i>
+                            <div class="toggle-ball"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section id="auth" class="auth-section">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-image">
+                    <div class="auth-image-content">
+                        <h2 class="english">Welcome <br> to <br> Jante ChAi</h2>
+                        <h2 class="bangla">জানতে চাই-এ স্বাগতম</h2>
+                        <p class="english">Access all government services easily through our secure platform. Create an account or login to get started.</p>
+                        <p class="bangla">আমাদের নিরাপদ প্ল্যাটফর্মের মাধ্যমে সহজেই সমস্ত সরকারি সেবা অ্যাক্সেস করুন। শুরু করতে একটি অ্যাকাউন্ট তৈরি করুন বা লগইন করুন।</p>
+                    </div>
+                </div>
+                <div class="auth-form-container">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" data-tab="login">
+                            <span class="english">Login</span>
+                            <span class="bangla">লগইন</span>
+                        </div>
+                        <div class="auth-tab" data-tab="register">
+                            <span class="english">Register</span>
+                            <span class="bangla">রেজিস্টার</span>
+                        </div>
+                    </div>
+                    <div id="loginForm">
+                        <div class="auth-form">
+                            <h3 class="english">Login to Your Account</h3>
+                            <h3 class="bangla">আপনার অ্যাকাউন্টে লগইন করুন</h3>
+                            <form>
+                                <div class="form-group">
+                                    <label for="loginEmail" class="english">Email or Mobile Number</label>
+                                    <label for="loginEmail" class="bangla">ইমেইল বা মোবাইল নম্বর</label>
+                                    <input type="text" class="form-control" id="loginEmail" placeholder="Enter your email or mobile number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginPassword" class="english">Password</label>
+                                    <label for="loginPassword" class="bangla">পাসওয়ার্ড</label>
+                                    <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password">
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                                            <label class="form-check-label english" for="rememberMe">
+                                                Remember me
+                                            </label>
+                                            <label class="form-check-label bangla" for="rememberMe">
+                                                মনে রাখুন
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="forgot-password">
+                                            <a href="#" class="english">Forgot password?</a>
+                                            <a href="#" class="bangla">পাসওয়ার্ড ভুলে গেছেন?</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary english">Login</button>
+                                <button type="submit" class="btn btn-primary bangla">লগইন করুন</button>
+                                <div class="divider">
+                                    <span class="english">Or</span>
+                                    <span class="bangla">অথবা</span>
+                                </div>
+                                <div class="social-login">
+                                    <a href="#" class="social-login-btn facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="social-login-btn google">
+                                        <i class="fab fa-google"></i>
+                                    </a>
+                                </div>
+                                <div class="register-link">
+                                    <p class="english">Don't have an account? <a href="#" class="switch-auth" data-tab="register">Register</a></p>
+                                    <p class="bangla">অ্যাকাউন্ট নেই? <a href="#" class="switch-auth" data-tab="register">রেজিস্টার করুন</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="registerForm" style="display: none;">
+                        <div class="auth-form">
+                            <h3 class="english">Create a New Account</h3>
+                            <h3 class="bangla">নতুন অ্যাকাউন্ট তৈরি করুন</h3>
+                            <form>
+                                <div class="form-group">
+                                    <label for="registerName" class="english">Full Name</label>
+                                    <label for="registerName" class="bangla">পূর্ণ নাম</label>
+                                    <input type="text" class="form-control" id="registerName" placeholder="Enter your full name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerEmail" class="english">Email</label>
+                                    <label for="registerEmail" class="bangla">ইমেইল</label>
+                                    <input type="email" class="form-control" id="registerEmail" placeholder="Enter your email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerMobile" class="english">Mobile Number</label>
+                                    <label for="registerMobile" class="bangla">মোবাইল নম্বর</label>
+                                    <input type="tel" class="form-control" id="registerMobile" placeholder="Enter your mobile number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerPassword" class="english">Password</label>
+                                    <label for="registerPassword" class="bangla">পাসওয়ার্ড</label>
+                                    <input type="password" class="form-control" id="registerPassword" placeholder="Create a password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerConfirmPassword" class="english">Confirm Password</label>
+                                    <label for="registerConfirmPassword" class="bangla">পাসওয়ার্ড নিশ্চিত করুন</label>
+                                    <input type="password" class="form-control" id="registerConfirmPassword" placeholder="Confirm your password">
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms">
+                                    <label class="form-check-label english" for="agreeTerms">
+                                        I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
+                                    </label>
+                                    <label class="form-check-label bangla" for="agreeTerms">
+                                        আমি <a href="#">শর্তাবলী</a> এবং <a href="#">গোপনীয়তা নীতি</a> মেনে নিচ্ছি
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary english">Register</button>
+                                <button type="submit" class="btn btn-primary bangla">রেজিস্টার করুন</button>
+                                <div class="divider">
+                                    <span class="english">Or</span>
+                                    <span class="bangla">অথবা</span>
+                                </div>
+                                <div class="social-login">
+                                    <a href="#" class="social-login-btn facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="social-login-btn google">
+                                        <i class="fab fa-google"></i>
+                                    </a>
+                                </div>
+                                <div class="register-link">
+                                    <p class="english">Already have an account? <a href="#" class="switch-auth" data-tab="login">Login</a></p>
+                                    <p class="bangla">ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="#" class="switch-auth" data-tab="login">লগইন করুন</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-about">
+                        <h3 class="footer-logo">
+                            <img src="https://placeholder.svg?height=40&width=40&text=JC" alt="Jante ChAi Logo">
+                            <span class="english">Jante ChAi</span>
+                            <span class="bangla">জানতে চাই</span>
+                        </h3>
+                        <p class="english">Use our platform to easily access government information and services. We'll help you save time and effort.</p>
+                        <p class="bangla">সরকারি তথ্য এবং সেবাসমূহ সহজেই পাওয়ার জন্য আমাদের প্ল্যাটফর্ম ব্যবহার করুন। আমরা আপনাকে সময় এবং প্রচেষ্টা বাঁচাতে সাহায্য করব।</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-links">
+                        <h3 class="english">Quick Links</h3>
+                        <h3 class="bangla">দ্রুত লিঙ্ক</h3>
+                        <ul>
+                            <li><a href="#home" class="english">Home</a></li>
+                            <li><a href="#home" class="bangla">হোম</a></li>
+                            <li><a href="#features" class="english">Features</a></li>
+                            <li><a href="#features" class="bangla">বৈশিষ্ট্য</a></li>
+                            <li><a href="#services" class="english">Services</a></li>
+                            <li><a href="#services" class="bangla">সেবাসমূহ</a></li>
+                            <li><a href="#demo" class="english">Demo</a></li>
+                            <li><a href="#demo" class="bangla">ডেমো</a></li>
+                            <li><a href="#auth" class="english">Login/Register</a></li>
+                            <li><a href="#auth" class="bangla">লগইন/রেজিস্টার</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-links">
+                        <h3 class="english">Services</h3>
+                        <h3 class="bangla">সেবাসমূহ</h3>
+                        <ul>
+                            <li><a href="#" class="english">National ID</a></li>
+                            <li><a href="#" class="bangla">জাতীয় পরিচয়পত্র</a></li>
+                            <li><a href="#" class="english">Birth Certificate</a></li>
+                            <li><a href="#" class="bangla">জন্ম নিবন্ধন</a></li>
+                            <li><a href="#" class="english">Passport</a></li>
+                            <li><a href="#" class="bangla">পাসপোর্ট</a></li>
+                            <li><a href="#" class="english">Driving License</a></li>
+                            <li><a href="#" class="bangla">ড্রাইভিং লাইসেন্স</a></li>
+                            <li><a href="#" class="english">Tax Services</a></li>
+                            <li><a href="#" class="bangla">কর সেবা</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-contact">
+                        <h3 class="english">Contact Us</h3>
+                        <h3 class="bangla">যোগাযোগ করুন</h3>
+                        <p class="english"><i class="fas fa-map-marker-alt"></i> 123 Digital Bangladesh Road, Dhaka-1200</p>
+                        <p class="bangla"><i class="fas fa-map-marker-alt"></i> ১২৩ ডিজিটাল বাংলাদেশ রোড, ঢাকা-১২০০</p>
+                        <p class="english"><i class="fas fa-phone-alt"></i> +880 1712 345678</p>
+                        <p class="bangla"><i class="fas fa-phone-alt"></i> +৮৮০ ১৭১২ ৩৪৫৬৭৮</p>
+                        <p class="english"><i class="fas fa-envelope"></i> info@jantechai.com.bd</p>
+                        <p class="bangla"><i class="fas fa-envelope"></i> info@jantechai.com.bd</p>
+                        <p class="english"><i class="fas fa-clock"></i> Monday - Friday: 9am - 5pm</p>
+                        <p class="bangla"><i class="fas fa-clock"></i> সোমবার - শুক্রবার: সকাল ৯টা - বিকাল ৫টা</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="copyright english">© 2023 Jante ChAi. All rights reserved.</p>
+                        <p class="copyright bangla">© ২০২৩ জানতে চাই। সর্বস্বত্ব সংরক্ষিত।</p>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="footer-bottom-links">
+                            <li><a href="#" class="english">Privacy Policy</a></li>
+                            <li><a href="#" class="bangla">গোপনীয়তা নীতি</a></li>
+                            <li><a href="#" class="english">Terms of Service</a></li>
+                            <li><a href="#" class="bangla">ব্যবহারের শর্তাবলী</a></li>
+                            <li><a href="#" class="english">Cookie Policy</a></li>
+                            <li><a href="#" class="bangla">কুকি নীতি</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const body = document.body;
+        const languageSwitcher = document.getElementById('languageSwitcher');
+        const currentLang = languageSwitcher.querySelector('.current-lang');
+        const languageOptions = languageSwitcher.querySelector('.language-options');
+        const languageOption = languageSwitcher.querySelectorAll('.language-option');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const switchAuthLinks = document.querySelectorAll('.switch-auth');
+
+        // Apply saved language and dark mode from localStorage
+        const savedLang = localStorage.getItem('language');
+        if (savedLang === 'bn') {
+            body.classList.add('bn');
+            currentLang.querySelector('span').textContent = 'BN';
+            languageOption.forEach(opt => opt.classList.remove('active'));
+            document.querySelector('.language-option[data-lang="bn"]').classList.add('active');
+        }
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            darkModeToggle.classList.add('active');
+        }
+
+        // Language switcher functionality
+        currentLang.addEventListener('click', () => {
+            languageOptions.classList.toggle('show');
+        });
+        document.addEventListener('click', (e) => {
+            if (!languageSwitcher.contains(e.target)) {
+                languageOptions.classList.remove('show');
+            }
+        });
+        languageOption.forEach(option => {
+            option.addEventListener('click', () => {
+                const lang = option.getAttribute('data-lang');
+                localStorage.setItem('language', lang);
+                currentLang.querySelector('span').textContent = lang.toUpperCase();
+                languageOption.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                languageOptions.classList.remove('show');
+                if (lang === 'bn') {
+                    body.classList.add('bn');
+                } else {
+                    body.classList.remove('bn');
+                }
+            });
+        });
+
+        // Dark mode toggle functionality
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            darkModeToggle.classList.toggle('active');
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        // Auth tabs switching
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                authTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                if (tabId === 'login') {
+                    loginForm.style.display = 'block';
+                    registerForm.style.display = 'none';
+                } else {
+                    loginForm.style.display = 'none';
+                    registerForm.style.display = 'block';
+                }
+            });
+        });
+
+        // Switch auth links (e.g., "Register" link in login form)
+        switchAuthLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabId = link.getAttribute('data-tab');
+                document.querySelector(`.auth-tab[data-tab="${tabId}"]`).click();
+            });
+        });
+
+        // Handle URL hash to show correct form on load
+        const hash = window.location.hash;
+        if (hash === '#register') {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+            authTabs.forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.auth-tab[data-tab="register"]').classList.add('active');
+        } else {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+            authTabs.forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
+        }
+
+        // Form validation for login and register forms
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let valid = true;
+                const inputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="tel"]');
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        valid = false;
+                        input.classList.add('is-invalid');
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                });
+                if (form.closest('#registerForm')) {
+                    const password = document.getElementById('registerPassword');
+                    const confirmPassword = document.getElementById('registerConfirmPassword');
+                    if (password.value !== confirmPassword.value) {
+                        valid = false;
+                        confirmPassword.classList.add('is-invalid');
+                        alert(body.classList.contains('bn') ? 'পাসওয়ার্ড মিলছে না!' : 'Passwords do not match!');
+                    }
+                    const agreeTerms = document.getElementById('agreeTerms');
+                    if (!agreeTerms.checked) {
+                        valid = false;
+                        alert(body.classList.contains('bn') ? 'শর্তাবলী মেনে নিতে হবে!' : 'You must agree to the Terms & Conditions!');
+                    }
+                }
+                if (valid) {
+                    alert(form.closest('#loginForm') ? 
+                        (body.classList.contains('bn') ? 'সফলভাবে লগইন হয়েছে!' : 'Successfully logged in!') : 
+                        (body.classList.contains('bn') ? 'সফলভাবে রেজিস্টার হয়েছে!' : 'Successfully registered!'));
+                    form.reset();
+                }
+            });
+        });
+
+        // Initialize AOS for animations (if used)
+        AOS.init({
+            duration: 800,
+            easing: "ease-in-out",
+            once: true,
+        });
+    });
+    </script>
+</body>
+</html>
