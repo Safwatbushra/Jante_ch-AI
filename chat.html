@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Jante ch-Ai</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .chat-container {
+            display: flex;
+            height: 100vh;
+            background: var(--background-light);
+        }
+
+        .chat-sidebar {
+            width: 300px;
+            background: var(--background-white);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            background: var(--gradient-primary);
+            color: var(--text-light);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .new-chat-btn {
+            margin: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--gradient-primary);
+            color: var(--text-light);
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .new-chat-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 1rem;
+        }
+
+        .chat-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .chat-item:hover {
+            background: var(--background-light);
+        }
+
+        .chat-item.active {
+            background: var(--background-light);
+            border-color: var(--primary-color);
+        }
+
+        .chat-item-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .chat-item-preview {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .suggestions-section {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .suggestions-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .suggestion-item {
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--background-light);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            border: 1px solid transparent;
+        }
+
+        .suggestion-item:hover {
+            background: var(--primary-color);
+            color: var(--text-light);
+            transform: translateX(4px);
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            background: var(--background-white);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .chat-info h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chat-info p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            background: var(--background-light);
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 80%;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .message.ai .message-avatar {
+            background: var(--gradient-primary);
+            color: var(--text-light);
+        }
+
+        .message.user .message-avatar {
+            background: var(--accent-color);
+            color: var(--text-light);
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .message.ai .message-bubble {
+            background: var(--background-white);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .message.user .message-bubble {
+            background: var(--gradient-primary);
+            color: var(--text-light);
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            text-align: right;
+        }
+
+        .message.user .message-time {
+            text-align: left;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            max-width: 80%;
+        }
+
+        .typing-bubble {
+            background: var(--background-white);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 1rem;
+            border-bottom-left-radius: 0.25rem;
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            background: var(--background-white);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            min-height: 44px;
+            max-height: 120px;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 1.5rem;
+            resize: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-primary);
+            color: var(--text-light);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .home-link {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--background-white);
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            z-index: 100;
+        }
+
+        .home-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chat-sidebar {
+                position: fixed;
+                left: -300px;
+                top: 0;
+                height: 100vh;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+
+            .chat-sidebar.open {
+                left: 0;
+            }
+
+            .chat-main {
+                width: 100%;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                background: var(--background-white);
+                color: var(--primary-color);
+                border: none;
+                padding: 0.75rem;
+                border-radius: 0.5rem;
+                box-shadow: var(--shadow-md);
+                cursor: pointer;
+                z-index: 1001;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .home-link {
+                top: 1rem;
+                right: 4rem;
+                padding: 0.75rem;
+            }
+
+            .home-link span {
+                display: none;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Mobile menu button -->
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Sidebar overlay for mobile -->
+        <div class="sidebar-overlay" onclick="closeSidebar()"></div>        <!-- Home link -->
+        <a href="index.html" class="home-link">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+
+        <!-- Sidebar -->
+        <div class="chat-sidebar" id="chatSidebar">
+            <div class="sidebar-header">
+                <h2>Jante ch-Ai</h2>
+                <p>Your AI Government Assistant</p>
+            </div>
+
+            <button class="new-chat-btn" onclick="startNewChat()">
+                <i class="fas fa-plus"></i>
+                New Chat
+            </button>
+
+            <div class="chat-history" id="chatHistory">
+                <!-- Chat history will be populated dynamically -->
+            </div>
+
+            <div class="suggestions-section">
+                <div class="suggestions-title">Quick Questions</div>
+                <div class="suggestion-item" onclick="sendSuggestion('How do I apply for NID?')">
+                    How do I apply for NID?
+                </div>
+                <div class="suggestion-item" onclick="sendSuggestion('Driving license requirements')">
+                    Driving license requirements
+                </div>
+                <div class="suggestion-item" onclick="sendSuggestion('Tax return filing process')">
+                    Tax return filing process
+                </div>
+                <div class="suggestion-item" onclick="sendSuggestion('Passport application fees')">
+                    Passport application fees
+                </div>
+            </div>
+        </div>
+
+        <!-- Main chat area -->
+        <div class="chat-main">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <div class="ai-avatar">JA</div>
+                    <div class="chat-info">
+                        <h3>Jante ch-Ai</h3>
+                        <p>Online • Ready to help</p>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="action-btn" onclick="clearChat()" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="action-btn" onclick="exportChat()" title="Export Chat">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <div class="message-avatar">JA</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            Hello! I'm Jante ch-Ai, your AI assistant for government information in Bangladesh. I can help you with:
+
+• National ID (NID) services
+• Driving license procedures  
+• Tax information and TIN
+• Passport applications
+• Business licenses
+• And much more!
+
+What would you like to know about today?
+                        </div>
+                        <div class="message-time" id="initialTime"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <div class="input-container">
+                    <textarea 
+                        class="chat-input" 
+                        id="chatInput"
+                        placeholder="Type your question about government services..."
+                        rows="1"
+                        onkeydown="handleKeyPress(event)"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="chatResponses.js"></script>
+    <script>
+        let chatHistory = [];
+        let currentChatId = 0;
+
+        // Initialize chat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial time
+            document.getElementById('initialTime').textContent = formatTime(new Date());
+            
+            // Check for question from homepage
+            const userQuestion = sessionStorage.getItem('userQuestion');
+            if (userQuestion) {
+                setTimeout(() => {
+                    document.getElementById('chatInput').value = userQuestion;
+                    sendMessage();
+                    sessionStorage.removeItem('userQuestion');
+                }, 1000);
+            }
+
+            // Auto-resize textarea
+            const chatInput = document.getElementById('chatInput');
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+        });
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+            input.style.height = 'auto';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Simulate AI response delay
+            setTimeout(() => {
+                hideTypingIndicator();
+                const response = getResponse(message);
+                addMessage(response, 'ai');
+                
+                // Update chat history
+                updateChatHistory(message);
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function addMessage(content, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = sender === 'ai' ? 'JA' : 'You';
+            const avatarClass = sender === 'ai' ? 'message-avatar' : 'message-avatar';
+            
+            messageDiv.innerHTML = `
+                <div class="${avatarClass}">${avatar}</div>
+                <div class="message-content">
+                    <div class="message-bubble">${content}</div>
+                    <div class="message-time">${formatTime(new Date())}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Store in chat history
+            chatHistory.push({ content, sender, time: new Date() });
+        }
+
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            
+            typingDiv.innerHTML = `
+                <div class="message-avatar">JA</div>
+                <div class="typing-bubble">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function sendSuggestion(suggestion) {
+            document.getElementById('chatInput').value = suggestion;
+            sendMessage();
+            closeSidebar();
+        }
+
+        function startNewChat() {
+            chatHistory = [];
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = `
+                <div class="message ai">
+                    <div class="message-avatar">JA</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            Hello! I'm Jante ch-Ai, your AI assistant for government information in Bangladesh. I can help you with:
+
+• National ID (NID) services
+• Driving license procedures  
+• Tax information and TIN
+• Passport applications
+• Business licenses
+• And much more!
+
+What would you like to know about today?
+                        </div>
+                        <div class="message-time">${formatTime(new Date())}</div>
+                    </div>
+                </div>
+            `;
+            currentChatId++;
+            closeSidebar();
+        }
+
+        function updateChatHistory(userMessage) {
+            const historyContainer = document.getElementById('chatHistory');
+            const chatItem = document.createElement('div');
+            chatItem.className = 'chat-item';
+            chatItem.onclick = () => loadChat(currentChatId);
+            
+            chatItem.innerHTML = `
+                <div class="chat-item-title">Chat ${currentChatId}</div>
+                <div class="chat-item-preview">${userMessage.substring(0, 50)}${userMessage.length > 50 ? '...' : ''}</div>
+            `;
+            
+            historyContainer.insertBefore(chatItem, historyContainer.firstChild);
+        }
+
+        function loadChat(chatId) {
+            // This would load a specific chat in a real implementation
+            console.log('Loading chat:', chatId);
+        }
+
+        function clearChat() {
+            if (confirm('Are you sure you want to clear this chat?')) {
+                startNewChat();
+            }
+        }
+
+        function exportChat() {
+            const chatText = chatHistory.map(msg => 
+                `[${formatTime(msg.time)}] ${msg.sender.toUpperCase()}: ${msg.content}`
+            ).join('\n\n');
+            
+            const blob = new Blob([chatText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `jante-chat-${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('chatSidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('chatSidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+    </script>
+</body>
+</html>

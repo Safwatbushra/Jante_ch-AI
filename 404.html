@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Jante ch-Ai</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .error-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-hero);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .error-content {
+            max-width: 600px;
+            color: var(--text-light);
+        }
+
+        .error-code {
+            font-size: clamp(4rem, 15vw, 8rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .error-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .error-description {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .error-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .error-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .error-btn.primary {
+            background: var(--background-white);
+            color: var(--primary-color);
+        }
+
+        .error-btn.primary:hover {
+            background: var(--background-light);
+            color: var(--primary-color);
+        }
+
+        .error-illustration {
+            margin: 2rem 0;
+            font-size: 4rem;
+            opacity: 0.8;
+        }
+
+        .search-suggestions {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .suggestions-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .suggestions-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .suggestion-item a {
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .suggestion-item a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .error-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .suggestions-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-content">
+            <div class="error-code">404</div>
+            <h1 class="error-title">Oops! Page Not Found</h1>
+            <div class="error-illustration">
+                <i class="fas fa-robot"></i>
+            </div>
+            <p class="error-description">
+                It looks like the page you're looking for doesn't exist. Don't worry, our AI assistant is still here to help you find the government information you need!
+            </p>
+              <div class="error-actions">
+                <a href="index.html" class="error-btn primary">
+                    <i class="fas fa-home"></i>
+                    Back to Home
+                </a>
+                <a href="chat.html" class="error-btn">
+                    <i class="fas fa-comments"></i>
+                    Ask Jante ch-Ai
+                </a>
+            </div>
+            
+            <div class="search-suggestions">
+                <h3 class="suggestions-title">Popular Government Services</h3>
+                <ul class="suggestions-list">
+                    <li class="suggestion-item">
+                        <a href="chat.html">
+                            <i class="fas fa-id-card"></i>
+                            National ID (NID)
+                        </a>
+                    </li>
+                    <li class="suggestion-item">
+                        <a href="chat.html">
+                            <i class="fas fa-car"></i>
+                            Driving License
+                        </a>
+                    </li>
+                    <li class="suggestion-item">
+                        <a href="chat.html">
+                            <i class="fas fa-calculator"></i>
+                            Tax Information
+                        </a>
+                    </li>
+                    <li class="suggestion-item">
+                        <a href="chat.html">
+                            <i class="fas fa-passport"></i>
+                            Passport Services
+                        </a>
+                    </li>
+                    <li class="suggestion-item">
+                        <a href="chat.html">
+                            <i class="fas fa-graduation-cap"></i>
+                            Education Services
+                        </a>
+                    </li>
+                    <li class="suggestion-item">
+                        <a href="chat.html">
+                            <i class="fas fa-briefcase"></i>
+                            Business License
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorCode = document.querySelector('.error-code');
+            const illustration = document.querySelector('.error-illustration');
+            
+            // Add hover effect to error code
+            errorCode.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1) rotate(2deg)';
+            });
+            
+            errorCode.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+            
+            // Add bounce animation to robot icon
+            illustration.addEventListener('click', function() {
+                this.style.animation = 'bounce 0.6s ease';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 600);
+            });
+        });
+        
+        // Add bounce animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% {
+                    transform: translateY(0);
+                }
+                40% {
+                    transform: translateY(-20px);
+                }
+                60% {
+                    transform: translateY(-10px);
+                }
+            }
+            
+            .error-code {
+                transition: transform 0.3s ease;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
