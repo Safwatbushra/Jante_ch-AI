@@ -8,16 +8,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <nav>
+<body>    <nav>
         <div class="logo">Jante ch-Ai</div>
-        <ul>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul id="navMenu">
             <li><a href="#home">Home</a></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#topics">Topics</a></li>
             <li><a href="#demo">Demo</a></li>
+            <li><a href="login.html" class="nav-auth-btn">Sign up/Log in</a></li>
         </ul>
-        <a href="login.html" class="nav-auth-btn">Sign up/Log in</a>
     </nav>
 
     <!-- Hero Section -->

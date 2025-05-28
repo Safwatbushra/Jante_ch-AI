@@ -5,114 +5,215 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat with Jante ch-Ai</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>    <div class="chat-container">
-        <!-- Mobile menu button -->
-        <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Open chat menu" aria-expanded="false">
-            <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
-
-        <!-- Sidebar overlay for mobile -->
-        <div class="sidebar-overlay" onclick="closeSidebar()" aria-hidden="true"></div>
-        
-        <!-- Home link -->
-        <a href="index.html" class="home-link" aria-label="Go to homepage">
-            <i class="fas fa-home" aria-hidden="true"></i>
-            <span>Home</span>
-        </a>
-
-        <!-- Sidebar -->
-        <aside class="chat-sidebar" id="chatSidebar" role="complementary" aria-label="Chat navigation">
-            <header class="sidebar-header">
-                <h2>Jante ch-Ai</h2>
-                <p>Your AI Government Assistant</p>
-            </header>
-
-            <button class="new-chat-btn" onclick="startNewChat()" aria-label="Start a new chat conversation">
-                <i class="fas fa-plus" aria-hidden="true"></i>
-                New Chat
-            </button>
-
-            <nav class="chat-history" id="chatHistory" aria-label="Chat history">
-                <!-- Chat history will be populated dynamically -->
-            </nav>
-
-            <section class="suggestions-section">
-                <h3 class="suggestions-title">Quick Questions</h3>
-                <div class="suggestion-item" onclick="sendSuggestion('How do I apply for NID?')" role="button" tabindex="0" aria-label="Ask about NID application">
-                    How do I apply for NID?
-                </div>
-                <div class="suggestion-item" onclick="sendSuggestion('Driving license requirements')" role="button" tabindex="0" aria-label="Ask about driving license requirements">
-                    Driving license requirements
-                </div>
-                <div class="suggestion-item" onclick="sendSuggestion('Tax return filing process')" role="button" tabindex="0" aria-label="Ask about tax return filing">
-                    Tax return filing process
-                </div>
-                <div class="suggestion-item" onclick="sendSuggestion('Passport application fees')" role="button" tabindex="0" aria-label="Ask about passport application fees">
-                    Passport application fees
-                </div>
-            </section>
-        </aside>        <!-- Main chat area -->
-        <main class="chat-main" role="main">
-            <header class="chat-header">
-                <div class="chat-title">
-                    <div class="ai-avatar" aria-label="Jante AI Assistant">JA</div>
-                    <div class="chat-info">
-                        <h3>Jante ch-Ai</h3>
-                        <p aria-live="polite">Online • Ready to help</p>
+<body class="chat-body">    <div class="chat-app">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" onclick="closeSidebar()"></div>        <!-- Modern Sidebar -->
+        <aside class="chat-sidebar" id="chatSidebar">
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <div class="sidebar-top-bar">
+                        <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <a href="index.html" class="back-home-btn" aria-label="Back to home">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>Back to Home</span>
+                        </a>
                     </div>
                 </div>
-                <div class="chat-actions" role="toolbar" aria-label="Chat actions">
-                    <button class="action-btn" onclick="clearChat()" title="Clear Chat" aria-label="Clear current chat">
-                        <i class="fas fa-trash" aria-hidden="true"></i>
-                    </button>
-                    <button class="action-btn" onclick="exportChat()" title="Export Chat" aria-label="Export chat history">
-                        <i class="fas fa-download" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </header>
 
-            <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Chat conversation">
-                <div class="message ai">
-                    <div class="message-avatar" aria-label="Jante AI">JA</div>
-                    <div class="message-content">
-                        <div class="message-bubble">
-                            Hello! I'm Jante ch-Ai, your AI assistant for government information in Bangladesh. I can help you with:
+                <button class="new-chat-button" onclick="startNewChat()">
+                    <i class="fas fa-plus"></i>
+                    <span>New Conversation</span>
+                </button>
 
-• National ID (NID) services
-• Driving license procedures  
-• Tax information and TIN
-• Passport applications
-• Business licenses
-• And much more!
-
-What would you like to know about today?
+                <div class="chat-sections">
+                    <div class="section">                        <h4 class="section-title">Recent Chats</h4>
+                        <div class="chat-history" id="chatHistory">
+                            <div class="chat-history-item" onclick="loadChatHistory('nid-application')">
+                                <div class="chat-preview">
+                                    <div class="chat-title">NID Application Help</div>
+                                    <div class="chat-snippet">How do I apply for NID?</div>
+                                    <div class="chat-time">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="chat-history-item" onclick="loadChatHistory('driving-license')">
+                                <div class="chat-preview">
+                                    <div class="chat-title">Driving License Info</div>
+                                    <div class="chat-snippet">What documents needed for...</div>
+                                    <div class="chat-time">Yesterday</div>
+                                </div>
+                            </div>
+                            <div class="chat-history-item" onclick="loadChatHistory('tax-return')">
+                                <div class="chat-preview">
+                                    <div class="chat-title">Tax Return Filing</div>
+                                    <div class="chat-snippet">When is the deadline for...</div>
+                                    <div class="chat-time">3 days ago</div>
+                                </div>
+                            </div>
+                            <div class="chat-history-item" onclick="loadChatHistory('passport-renewal')">
+                                <div class="chat-preview">
+                                    <div class="chat-title">Passport Renewal</div>
+                                    <div class="chat-snippet">Process for passport renewal</div>
+                                    <div class="chat-time">1 week ago</div>
+                                </div>
+                            </div>
+                            <div class="chat-history-item" onclick="loadChatHistory('business-license')">
+                                <div class="chat-preview">
+                                    <div class="chat-title">Business License</div>
+                                    <div class="chat-snippet">Requirements for trade license</div>
+                                    <div class="chat-time">2 weeks ago</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="message-time" id="initialTime"></div>
+                    </div>
+
+                    <div class="section">
+                        <h4 class="section-title">Quick Starters</h4>
+                        <div class="quick-actions">
+                            <button class="quick-action" onclick="sendSuggestion('How do I apply for NID?')">
+                                <i class="fas fa-id-card"></i>
+                                <span>NID Application</span>
+                            </button>
+                            <button class="quick-action" onclick="sendSuggestion('Driving license requirements')">
+                                <i class="fas fa-car"></i>
+                                <span>Driving License</span>
+                            </button>
+                            <button class="quick-action" onclick="sendSuggestion('Tax return filing process')">
+                                <i class="fas fa-file-invoice"></i>
+                                <span>Tax Filing</span>
+                            </button>
+                            <button class="quick-action" onclick="sendSuggestion('Passport application fees')">
+                                <i class="fas fa-passport"></i>
+                                <span>Passport Info</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="header-content">
+                    <div class="chat-info">
+                        <div class="chat-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="chat-details">
+                            <h2>Jante ch-Ai Assistant</h2>
+                            <p class="chat-status">
+                                <span class="status-dot"></span>
+                                Online • Government Info Expert
+                            </p>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="header-btn" onclick="clearChat()" title="Clear conversation">
+                            <i class="fas fa-broom"></i>
+                        </button>
+                        <button class="header-btn" onclick="exportChat()" title="Export chat">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="header-btn" onclick="toggleChatInfo()" title="Chat info">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="chat-input-area" role="region" aria-label="Message input">
-                <div class="input-container">
-                    <label for="chatInput" class="sr-only">Type your message</label>
-                    <textarea 
-                        class="chat-input" 
-                        id="chatInput"
-                        placeholder="Type your question about government services..."
-                        rows="1"
-                        onkeydown="handleKeyPress(event)"
-                        aria-label="Type your question about government services"
-                        autocomplete="off"
-                    ></textarea>
-                    <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Send message">
-                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
-                    </button>
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-content">
+                        <div class="welcome-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h2>Welcome to Jante ch-Ai!</h2>
+                        <p>Your intelligent assistant for Bangladesh government services. I'm here to help you with:</p>
+                        <div class="welcome-features">
+                            <div class="feature">
+                                <i class="fas fa-id-card"></i>
+                                <span>National ID Services</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-car"></i>
+                                <span>Driving License Info</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-file-invoice"></i>
+                                <span>Tax & TIN Services</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-passport"></i>
+                                <span>Passport Applications</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-building"></i>
+                                <span>Business Licenses</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-university"></i>
+                                <span>Educational Certificates</span>
+                            </div>
+                        </div>
+                        <div class="welcome-cta">
+                            <p>Ask me anything about government procedures and I'll provide accurate, up-to-date information!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-section">
+                <div class="input-wrapper">
+                    <div class="input-container">
+                        <button class="attachment-btn" onclick="handleAttachment()" title="Attach file">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <textarea 
+                            class="message-input" 
+                            id="chatInput"
+                            placeholder="Ask about government services, policies, or procedures..."
+                            rows="1"
+                            onkeydown="handleKeyPress(event)"
+                            oninput="adjustTextareaHeight(this)"
+                        ></textarea>
+                        <button class="emoji-btn" onclick="toggleEmojiPicker()" title="Add emoji">
+                            <i class="fas fa-smile"></i>
+                        </button>
+                        <button class="send-button" id="sendBtn" onclick="sendMessage()" title="Send message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="input-footer">
+                        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                            <span>Jante ch-Ai is typing</span>
+                            <div class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="input-suggestions" id="inputSuggestions">
+                            <!-- Quick suggestions will appear here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
-    </div>    <script src="chatResponses.js"></script>
+    </div>
+
+    <script src="chatResponses.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>
