@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Settings - Jante ch-Ai</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add custom styles for settings page */
+        .settings-nav-item {
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .settings-nav-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .settings-nav-item.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .settings-nav-item:hover:not(.active) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Jante ch-Ai</div>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul id="navMenu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="chat.html">Chat</a></li>
+            <li><a href="settings.html" class="nav-auth-btn">Settings</a></li>
+        </ul>
+    </nav>
+
+    <div class="settings-container">
+        <div class="settings-sidebar">
+            <div class="user-profile">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 id="userName">Md. Rahman Ahmed</h3>
+                <p id="userEmail">rahman.ahmed@gmail.com</p>
+            </div>
+            
+            <nav class="settings-nav">
+                <button class="settings-nav-item active" data-section="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profile Information</span>
+                </button>
+                <button class="settings-nav-item" data-section="preferences">
+                    <i class="fas fa-cog"></i>
+                    <span>Preferences</span>
+                </button>
+                <button class="settings-nav-item" data-section="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </button>
+                <button class="settings-nav-item" data-section="security">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Security</span>
+                </button>
+                <button class="settings-nav-item" data-section="data">
+                    <i class="fas fa-download"></i>
+                    <span>My Data</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="settings-main">
+            <div class="settings-header">
+                <h1>Account Settings</h1>
+                <p>Manage your account preferences and personal information</p>
+            </div>
+
+            <!-- Profile Information Section -->
+            <div class="settings-section active" id="profile">
+                <h2>Profile Information</h2>
+                <div class="settings-card">
+                    <form class="settings-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" value="Md. Rahman Ahmed" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="nidNumber">NID Number</label>
+                                <input type="text" id="nidNumber" value="1234567890123" class="form-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" value="rahman.ahmed@gmail.com" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" value="+880 1712-345678" class="form-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input type="date" id="dateOfBirth" value="1985-03-15" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" class="form-input">
+                                    <option value="male" selected>Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea id="address" class="form-input" rows="3">House 45, Road 12, Block C, Mirpur DOHS, Dhaka-1216</textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary">Cancel</button>
+                            <button type="submit" class="btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Preferences Section -->
+            <div class="settings-section" id="preferences">
+                <h2>Preferences</h2>
+                <div class="settings-card">
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <h4>Language</h4>
+                            <p>Choose your preferred language for the interface</p>
+                        </div>
+                        <select class="form-input" style="width: auto;">
+                            <option value="en" selected>English</option>
+                            <option value="bn">বাংলা (Bengali)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <h4>Theme</h4>
+                            <p>Choose between light and dark mode</p>
+                        </div>
+                        <select class="form-input" style="width: auto;">
+                            <option value="light" selected>Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="auto">Auto</option>
+                        </select>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <h4>Chat Auto-Save</h4>
+                            <p>Automatically save your chat conversations</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <h4>Sound Notifications</h4>
+                            <p>Play sound when receiving new messages</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Section -->
+            <div class="settings-section" id="notifications">
+                <h2>Notification Settings</h2>
+                <div class="settings-card">
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <h4>Email Notifications</h4>
+                            <p>Receive updates about new features and important announcements</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <h4>SMS Notifications</h4>
+                            <p>Get SMS alerts for urgent government updates</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <h4>Government Updates</h4>
+                            <p>Receive notifications about policy changes and new services</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <h4>Document Reminders</h4>
+                            <p>Get reminders about document renewals and deadlines</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div class="settings-section" id="security">
+                <h2>Security Settings</h2>
+                <div class="settings-card">
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Change Password</h4>
+                            <p>Update your account password</p>
+                        </div>
+                        <button class="btn-secondary">Change Password</button>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Two-Factor Authentication</h4>
+                            <p>Add an extra layer of security to your account</p>
+                            <span class="security-status enabled">Enabled</span>
+                        </div>
+                        <button class="btn-secondary">Manage 2FA</button>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Login Sessions</h4>
+                            <p>View and manage your active login sessions</p>
+                        </div>
+                        <button class="btn-secondary">View Sessions</button>
+                    </div>
+                    
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Account Recovery</h4>
+                            <p>Set up account recovery options</p>
+                        </div>
+                        <button class="btn-secondary">Setup Recovery</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Data Section -->
+            <div class="settings-section" id="data">
+                <h2>My Data</h2>
+                <div class="settings-card">
+                    <div class="data-item">
+                        <div class="data-info">
+                            <h4>Export Chat History</h4>
+                            <p>Download all your chat conversations with Jante ch-Ai</p>
+                        </div>
+                        <button class="btn-primary">Export Data</button>
+                    </div>
+                    
+                    <div class="data-item">
+                        <div class="data-info">
+                            <h4>Account Usage</h4>
+                            <p>View your account usage statistics and activity</p>
+                        </div>
+                        <button class="btn-secondary">View Usage</button>
+                    </div>
+                    
+                    <div class="data-item">
+                        <div class="data-info">
+                            <h4>Data Privacy</h4>
+                            <p>Learn how we protect and use your data</p>
+                        </div>
+                        <button class="btn-secondary">Privacy Policy</button>
+                    </div>
+
+                    <div class="data-item" id="logoutButton">
+                        <div class="data-info">
+                            <h4>Logout from your Account</h4>
+                            <p>Keep your info safe</p>
+                        </div>
+                        <button class="btn-secondary">Log Out</button>
+                    </div>
+                    
+                    <div class="data-item danger">
+                        <div class="data-info">
+                            <h4>Delete Account</h4>
+                            <p>Permanently delete your account and all associated data</p>
+                        </div>
+                        <button class="btn-danger">Delete Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+    <script>
+        // Settings page functionality
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.settings-nav-item');
+            const sections = document.querySelectorAll('.settings-section');
+            
+            // Enhanced click handling for sidebar navigation
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const targetSection = this.getAttribute('data-section');
+                    
+                    // Remove active class from all nav items and sections
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    sections.forEach(section => section.classList.remove('active'));
+                    
+                    // Add active class to clicked nav item and corresponding section
+                    this.classList.add('active');
+                    const targetElement = document.getElementById(targetSection);
+                    if (targetElement) {
+                        targetElement.classList.add('active');
+                    }
+                    
+                    // Scroll to top of main content
+                    const settingsMain = document.querySelector('.settings-main');
+                    if (settingsMain) {
+                        settingsMain.scrollTop = 0;
+                    }
+                });
+                
+                // Ensure the button is properly clickable
+                item.style.cursor = 'pointer';
+                item.style.userSelect = 'none';
+                item.setAttribute('tabindex', '0');
+                
+                // Add keyboard support
+                item.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+            
+            // Ensure child elements don't interfere with clicks
+            document.querySelectorAll('.settings-nav-item i, .settings-nav-item span').forEach(child => {
+                child.style.pointerEvents = 'none';
+                child.style.userSelect = 'none';
+            });
+            
+            // Form submission handling
+            const settingsForm = document.querySelector('.settings-form');
+            if (settingsForm) {
+                settingsForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Show a loading state
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = 'Saving...';
+                    submitBtn.disabled = true;
+                    
+                    // Simulate save process
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                        alert('Settings saved successfully!');
+                    }, 1000);
+                });
+            }
+            
+            // Handle logout functionality
+            const logoutButton = document.querySelector('#logoutButton button');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to log out?')) {
+                        // Clear login information
+                        localStorage.removeItem('isLoggedIn');
+                        localStorage.removeItem('userName');
+                        
+                        // Show logout message
+                        const overlay = document.createElement('div');
+                        overlay.style.cssText = `
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: rgba(0, 0, 0, 0.8);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            z-index: 9999;
+                            backdrop-filter: blur(5px);
+                        `;
+                        
+                        overlay.innerHTML = `
+                            <div style="
+                                background: white;
+                                padding: 2rem;
+                                border-radius: 1rem;
+                                text-align: center;
+                                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+                            ">
+                                <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;"></i>
+                                <h3 style="margin-bottom: 0.5rem;">Logged Out Successfully</h3>
+                                <p style="color: #6b7280; margin: 0;">Redirecting to home page...</p>
+                            </div>
+                        `;
+                        
+                        document.body.appendChild(overlay);
+                        
+                        // Redirect after a short delay
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    }
+                });
+            }
+            
+            // Handle other action buttons
+            document.querySelectorAll('.data-item button, .security-item button, .preference-item button').forEach(button => {
+                if (!button.closest('#logoutButton')) {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const action = this.textContent.trim();
+                        alert(`${action} functionality would be implemented here.`);
+                    });
+                }
+            });
+            
+            // Add visual feedback for button interactions
+            document.querySelectorAll('.settings-nav-item').forEach(item => {
+                item.addEventListener('mousedown', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                
+                item.addEventListener('mouseup', function() {
+                    this.style.transform = '';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

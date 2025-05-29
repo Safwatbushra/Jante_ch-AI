@@ -21,7 +21,19 @@ document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
         }
     });
 });
-
+const logoutButton = document.getElementById('logoutButton');
+if (logoutButton) {
+    logoutButton.addEventListener('click', function() {
+        if (confirm('Are you sure you want to log out?')) {
+            // Clear login information
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            
+            // Redirect to home page
+            window.location.href = 'index.html';
+        }
+    });
+}
 // Hero form submission
 const heroForm = document.querySelector('.hero-form');
 if (heroForm) {
@@ -250,7 +262,7 @@ function initAuth() {
                     
                     // Simulate successful login
                     alert('Login successful! Welcome to Jante ch-Ai.');
-                    window.location.href = 'chat.html';
+                    window.location.href = 'index.html';
                 }, 1500);
             }
         });
@@ -341,7 +353,7 @@ function initAuth() {
                     
                     // Simulate successful signup
                     alert('Account created successfully! Welcome to Jante ch-Ai.');
-                    window.location.href = 'chat.html';
+                    window.location.href = 'index.html';
                 }, 2000);
             }
         });
@@ -413,6 +425,183 @@ function initAuth() {
             }
         });
     });
+}
+
+// ==============================================
+// DUMMY LOGIN FUNCTIONALITY
+// ==============================================
+
+// Dummy user data
+const dummyUsers = [
+    {
+        email: "user@example.com",
+        password: "password123",
+        name: "John Doe"
+    },
+    {
+        email: "test@gmail.com", 
+        password: "test123",
+        name: "Test User"
+    },
+    {
+        email: "demo@jantechai.com",
+        password: "demo123", 
+        name: "Demo User"
+    }
+];
+
+// Authentication functions
+document.addEventListener('DOMContentLoaded', function() {
+    // Auth tab switching
+    const authTabs = document.querySelectorAll('.auth-tab');
+    const authForms = document.querySelectorAll('.auth-form');
+    
+    authTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+            
+            // Remove active class from all tabs and forms
+            authTabs.forEach(t => t.classList.remove('active'));
+            authForms.forEach(f => f.style.display = 'none');
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            
+            // Show corresponding form
+            if (targetTab === 'login') {
+                document.getElementById('loginForm').style.display = 'block';
+            } else {
+                document.getElementById('signupForm').style.display = 'block';
+            }
+        });
+    });
+    
+    // Auto-fill login form when login button is clicked
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        const loginButton = loginForm.querySelector('.auth-submit');
+        const emailInput = document.getElementById('loginEmail');
+        const passwordInput = document.getElementById('loginPassword');
+        
+        // Auto-fill with dummy credentials immediately when form loads
+        const dummyUser = dummyUsers[0]; // Use first dummy user
+        if (emailInput) emailInput.value = dummyUser.email;
+        if (passwordInput) passwordInput.value = dummyUser.password;
+        
+        // Handle click for submission
+        loginButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Form is already filled, just show success message and redirect
+            showLoginSuccess(dummyUser.name);
+        });
+        
+        // Handle form submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            
+            // Check against dummy users
+            const user = dummyUsers.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                showLoginSuccess(user.name);
+            } else {
+                showLoginError('Invalid email or password. Try clicking the Login button for auto-fill!');
+            }
+        });
+    }
+    
+    // Handle signup form
+    const signupForm = document.getElementById('signupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showSignupError('Passwords do not match!');
+                return;
+            }
+            
+            // Simulate successful signup
+            showSignupSuccess(name);
+        });
+    }
+});
+
+function showLoginSuccess(name) {
+    // Store user data in localStorage
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userName', name);
+    
+    // Show success message
+    const successMsg = document.createElement('div');
+    successMsg.className = 'login-success-message';
+    successMsg.innerHTML = `
+        <div class="success-content">
+            <i class="fas fa-check-circle"></i>
+            <h3>Welcome back, ${name}!</h3>
+            <p>Redirecting to home page...</p>
+        </div>
+    `;
+    document.body.appendChild(successMsg);
+    
+    // Redirect after 2 seconds
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 2000);
+}
+
+function showSignupSuccess(name) {
+    // Store user data in localStorage
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userName', name);
+    
+    // Show success message
+    const successMsg = document.createElement('div');
+    successMsg.className = 'signup-success-message';
+    successMsg.innerHTML = `
+        <div class="success-content">
+            <i class="fas fa-user-check"></i>
+            <h3>Account created successfully!</h3>
+            <p>Welcome, ${name}! Redirecting...</p>
+        </div>
+    `;
+    document.body.appendChild(successMsg);
+    
+    // Redirect after 2 seconds
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 2000);
+}
+
+function showLoginError(message) {
+    const errorDiv = document.getElementById('loginEmailError');
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
+}
+
+function showSignupError(message) {
+    const errorDiv = document.getElementById('signupPasswordError');
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
 }
 
 // ==============================================
