@@ -1,0 +1,2141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jante ChAi - User Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        /* Additional Dashboard Specific Styles */
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            display: none;
+        }
+
+        .mobile-overlay.show {
+            display: block;
+        }
+
+        .mobile-sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 101;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 143, 105, 0.3);
+            transition: var(--transition);
+        }
+
+        .mobile-sidebar-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 991px) {
+            .mobile-sidebar-toggle {
+                display: flex;
+            }
+        }
+
+        /* Service Categories */
+        .service-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .service-category {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark-mode .service-category {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .service-category:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .dark-mode .service-category:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .service-category-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 143, 105, 0.3);
+        }
+
+        .service-category-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0;
+            color: white;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .quick-action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark-mode .quick-action-btn {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quick-action-btn:hover {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            transform: translateY(-2px);
+        }
+
+        /* Chat Input */
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .dark-mode .chat-input {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-voice-btn, .chat-send-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chat-voice-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark-mode .chat-voice-btn {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-send-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 143, 105, 0.3);
+        }
+
+        .chat-voice-btn:hover, .chat-send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .chat-input-field {
+            flex: 1;
+            height: 45px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 0 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .dark-mode .chat-input-field {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-input-field::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .chat-input-field:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(0, 212, 154, 0.2);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            padding: 15px 20px;
+            align-items: center;
+        }
+
+        .typing-indicator.show {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.6);
+            margin: 0 2px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingAnimation {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Dashboard Footer */
+        .dashboard-footer {
+            margin-top: 50px;
+            padding: 20px 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Tab Content Styles */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Services Tab Styles */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .service-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .dark-mode .service-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .dark-mode .service-item:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .service-item-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .service-item-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            box-shadow: 0 5px 15px rgba(0, 143, 105, 0.3);
+        }
+
+        .service-item-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .service-item-status {
+            font-size: 0.85rem;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .status-expired {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        .service-item-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .service-item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .service-action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .btn-primary-service {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            box-shadow: 0 3px 10px rgba(0, 143, 105, 0.3);
+        }
+
+        .btn-secondary-service {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark-mode .btn-secondary-service {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .service-action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Applications Tab Styles */
+        .application-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .dark-mode .application-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .application-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .application-id {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .application-progress {
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-custom {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Notifications Tab Styles */
+        .notification-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .dark-mode .notification-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .notification-item.unread::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: 0 4px 4px 0;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .notification-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .notification-content {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Profile Tab Styles */
+        .profile-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark-mode .profile-section {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-right: 30px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-info h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .profile-info p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+        }
+
+        .profile-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .profile-form label {
+            color: white;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .profile-form .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+
+        .dark-mode .profile-form .form-control {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-form .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .profile-form .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(0, 212, 154, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .dark-mode .profile-form .form-control:focus {
+            background: rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="user-dashboard-body">
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <span class="letter">J</span>
+            <span class="letter">a</span>
+            <span class="letter">n</span>
+            <span class="letter">t</span>
+            <span class="letter">e</span>
+            <span class="letter">_</span>
+            <span class="letter">C</span>
+            <span class="letter">h</span>
+            <span class="letter">A</span>
+            <span class="letter">i</span>
+        </div>
+    </div>
+
+    <!-- Dashboard Particles Background -->
+    <div class="dashboard-particles" id="dashboardParticles"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="homepage.html">
+                <img src="https://placeholder.svg?height=40&width=40&text=JC" alt="Jante ChAi Logo">
+                <span class="brand-text"><b>Jante ChAi</b></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link english" href="homepage.html">Home</a>
+                        <a class="nav-link bangla" href="homepage.html">হোম</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link english" href="#services">Services</a>
+                        <a class="nav-link bangla" href="#services">সেবাসমূহ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link english" href="#notifications">Notifications</a>
+                        <a class="nav-link bangla" href="#notifications">বিজ্ঞপ্তি</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle english" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i> John Doe
+                        </a>
+                        <a class="nav-link dropdown-toggle bangla" href="#" id="profileDropdownBn" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i> জন ডো
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li>
+                                <a class="dropdown-item english" href="#profile"><i class="fas fa-user me-2"></i> My Profile</a>
+                                <a class="dropdown-item bangla" href="#profile"><i class="fas fa-user me-2"></i> আমার প্রোফাইল</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item english" href="#settings"><i class="fas fa-cog me-2"></i> Settings</a>
+                                <a class="dropdown-item bangla" href="#settings"><i class="fas fa-cog me-2"></i> সেটিংস</a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item english" href="homepage.html"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+                                <a class="dropdown-item bangla" href="homepage.html"><i class="fas fa-sign-out-alt me-2"></i> লগআউট</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <div class="language-switcher" id="languageSwitcher">
+                            <div class="current-lang">
+                                <span>EN</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="language-options">
+                                <div class="language-option active" data-lang="en">English</div>
+                                <div class="language-option" data-lang="bn">বাংলা</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dark-mode-toggle" id="darkModeToggle">
+                            <i class="fas fa-sun sun-icon"></i>
+                            <i class="fas fa-moon moon-icon"></i>
+                            <div class="toggle-ball"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+        
+        <!-- Mobile Sidebar Toggle -->
+        <button class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <!-- User Profile -->
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h4 class="user-name english">John Doe</h4>
+                <h4 class="user-name bangla">জন ডো</h4>
+                <p class="user-email">john.doe@example.com</p>
+                <div class="user-status english">Verified</div>
+                <div class="user-status bangla">যাচাইকৃত</div>
+            </div>
+            
+            <!-- Sidebar Menu -->
+            <div class="sidebar-menu">
+                <div class="menu-category english">Main</div>
+                <div class="menu-category bangla">প্রধান</div>
+                
+                <div class="menu-item" data-tab="dashboard">
+                    <div class="menu-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <div class="menu-text english">Dashboard</div>
+                    <div class="menu-text bangla">ড্যাশবোর্ড</div>
+                </div>
+                
+                <div class="menu-item active" data-tab="chat">
+                    <div class="menu-icon"><i class="fas fa-comments"></i></div>
+                    <div class="menu-text english">Chat Assistant</div>
+                    <div class="menu-text bangla">চ্যাট সহকারী</div>
+                </div>
+                
+                <div class="menu-item" data-tab="services">
+                    <div class="menu-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="menu-text english">My Services</div>
+                    <div class="menu-text bangla">আমার সেবাসমূহ</div>
+                </div>
+                
+                <div class="menu-item" data-tab="applications">
+                    <div class="menu-icon"><i class="fas fa-file-alt"></i></div>
+                    <div class="menu-text english">Applications</div>
+                    <div class="menu-text bangla">আবেদনসমূহ</div>
+                    <div class="menu-badge">3</div>
+                </div>
+                
+                <div class="menu-item" data-tab="notifications">
+                    <div class="menu-icon"><i class="fas fa-bell"></i></div>
+                    <div class="menu-text english">Notifications</div>
+                    <div class="menu-text bangla">বিজ্ঞপ্তি</div>
+                    <div class="menu-badge">5</div>
+                </div>
+                
+                <div class="menu-category english">Account</div>
+                <div class="menu-category bangla">অ্যাকাউন্ট</div>
+                
+                <div class="menu-item" data-tab="profile">
+                    <div class="menu-icon"><i class="fas fa-user"></i></div>
+                    <div class="menu-text english">My Profile</div>
+                    <div class="menu-text bangla">আমার প্রোফাইল</div>
+                </div>
+                
+                <div class="menu-item" data-tab="documents">
+                    <div class="menu-icon"><i class="fas fa-folder"></i></div>
+                    <div class="menu-text english">My Documents</div>
+                    <div class="menu-text bangla">আমার ডকুমেন্টস</div>
+                </div>
+                
+                <div class="menu-item" data-tab="settings">
+                    <div class="menu-icon"><i class="fas fa-cog"></i></div>
+                    <div class="menu-text english">Settings</div>
+                    <div class="menu-text bangla">সেটিংস</div>
+                </div>
+                
+                <div class="menu-category english">Support</div>
+                <div class="menu-category bangla">সহায়তা</div>
+                
+                <div class="menu-item" data-tab="help">
+                    <div class="menu-icon"><i class="fas fa-question-circle"></i></div>
+                    <div class="menu-text english">Help Center</div>
+                    <div class="menu-text bangla">সাহায্য কেন্দ্র</div>
+                </div>
+                
+                <div class="menu-item" data-tab="feedback">
+                    <div class="menu-icon"><i class="fas fa-comment-alt"></i></div>
+                    <div class="menu-text english">Feedback</div>
+                    <div class="menu-text bangla">মতামত</div>
+                </div>
+                
+                <div class="menu-item" id="logoutBtn">
+                    <div class="menu-icon"><i class="fas fa-sign-out-alt"></i></div>
+                    <div class="menu-text english">Logout</div>
+                    <div class="menu-text bangla">লগআউট</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Chat Assistant Tab (Default Active) -->
+            <div class="tab-content active" id="chatTab">
+                <div class="dashboard-header">
+                    <h1 class="welcome-message english">Chat Assistant</h1>
+                    <h1 class="welcome-message bangla">চ্যাট সহকারী</h1>
+                    <p class="welcome-subtitle english">Ask any questions about government services and get instant answers.</p>
+                    <p class="welcome-subtitle bangla">সরকারি সেবা সম্পর্কে যেকোনো প্রশ্ন করুন এবং তাৎক্ষণিক উত্তর পান।</p>
+                </div>
+                
+                <!-- Service Categories -->
+                <h2 class="section-title slide-in-left">
+                    <i class="fas fa-th-large"></i>
+                    <span class="english">Service Categories</span>
+                    <span class="bangla">সেবা বিভাগসমূহ</span>
+                </h2>
+                
+                <div class="service-categories slide-in-left">
+                    <div class="service-category" data-service="nid">
+                        <div class="service-category-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <h3 class="service-category-title english">National ID</h3>
+                        <h3 class="service-category-title bangla">জাতীয় পরিচয়পত্র</h3>
+                    </div>
+                    
+                    <div class="service-category" data-service="passport">
+                        <div class="service-category-icon">
+                            <i class="fas fa-passport"></i>
+                        </div>
+                        <h3 class="service-category-title english">Passport</h3>
+                        <h3 class="service-category-title bangla">পাসপোর্ট</h3>
+                    </div>
+                    
+                    <div class="service-category" data-service="birth">
+                        <div class="service-category-icon">
+                            <i class="fas fa-baby"></i>
+                        </div>
+                        <h3 class="service-category-title english">Birth Certificate</h3>
+                        <h3 class="service-category-title bangla">জন্ম নিবন্ধন</h3>
+                    </div>
+                    
+                    <div class="service-category" data-service="driving">
+                        <div class="service-category-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h3 class="service-category-title english">Driving License</h3>
+                        <h3 class="service-category-title bangla">ড্রাইভিং লাইসেন্স</h3>
+                    </div>
+                    
+                    <div class="service-category" data-service="tax">
+                        <div class="service-category-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <h3 class="service-category-title english">Tax Services</h3>
+                        <h3 class="service-category-title bangla">কর সেবা</h3>
+                    </div>
+                </div>
+                
+                <!-- Chat Interface -->
+                <div class="chat-container slide-in-right">
+                    <div class="chat-header">
+                        <div class="chat-header-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div>
+                            <h3 class="chat-header-title english">Jante ChAi Assistant</h3>
+                            <h3 class="chat-header-title bangla">জানতে চাই সহকারী</h3>
+                            <p class="chat-header-subtitle english">Ask me anything about government services</p>
+                            <p class="chat-header-subtitle bangla">সরকারি সেবা সম্পর্কে আমাকে যেকোনো প্রশ্ন করুন</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Bot welcome message -->
+                        <div class="message bot-message">
+                            <div class="message-avatar bot-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <p class="message-text english">Hello! I'm your Jante ChAi assistant. How can I help you today with government services?</p>
+                                <p class="message-text bangla">হ্যালো! আমি আপনার জানতে চাই সহকারী। আজ আমি সরকারি সেবা সম্পর্কে আপনাকে কীভাবে সাহায্য করতে পারি?</p>
+                                <div class="message-time">10:30 AM</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick action suggestions -->
+                        <div class="quick-actions">
+                            <div class="quick-action-btn english" data-query="How to apply for National ID card?">How to apply for National ID card?</div>
+                            <div class="quick-action-btn bangla" data-query="জাতীয় পরিচয়পত্রের জন্য কীভাবে আবেদন করব?">জাতীয় পরিচয়পত্রের জন্য কীভাবে আবেদন করব?</div>
+                            
+                            <div class="quick-action-btn english" data-query="Passport renewal process">Passport renewal process</div>
+                            <div class="quick-action-btn bangla" data-query="পাসপোর্ট নবায়ন প্রক্রিয়া">পাসপোর্ট নবায়ন প্রক্রিয়া</div>
+                            
+                            <div class="quick-action-btn english" data-query="Tax token information">Tax token information</div>
+                            <div class="quick-action-btn bangla" data-query="ট্যাক্স টোকেন তথ্য">ট্যাক্স টোকেন তথ্য</div>
+                            
+                            <div class="quick-action-btn english" data-query="Birth certificate correction">Birth certificate correction</div>
+                            <div class="quick-action-btn bangla" data-query="জন্ম নিবন্ধন সংশোধন">জন্ম নিবন্ধন সংশোধন</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Typing indicator -->
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="message-avatar bot-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat input -->
+                    <div class="chat-input">
+                        <div class="chat-input-container">
+                            <button class="chat-voice-btn" id="voiceBtn">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <input type="text" class="chat-input-field" id="messageInput" placeholder="Type your question here...">
+                            <button class="chat-send-btn" id="sendBtn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dashboard Tab -->
+            <div class="tab-content" id="dashboardTab">
+                <div class="dashboard-header">
+                    <h1 class="welcome-message english">Welcome back, John!</h1>
+                    <h1 class="welcome-message bangla">স্বাগতম, জন!</h1>
+                    <p class="welcome-subtitle english">Here's an overview of your government services and applications.</p>
+                    <p class="welcome-subtitle bangla">এখানে আপনার সরকারি সেবা এবং আবেদনের একটি সংক্ষিপ্ত বিবরণ রয়েছে।</p>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <div class="stat-card fade-in" style="animation-delay: 0.1s;">
+                        <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                        <h3 class="stat-title english">Active Services</h3>
+                        <h3 class="stat-title bangla">সক্রিয় সেবাসমূহ</h3>
+                        <div class="stat-value">4</div>
+                        <p class="stat-description english">Services currently active</p>
+                        <p class="stat-description bangla">বর্তমানে সক্রিয় সেবাসমূহ</p>
+                    </div>
+                    
+                    <div class="stat-card fade-in" style="animation-delay: 0.2s;">
+                        <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+                        <h3 class="stat-title english">Pending Applications</h3>
+                        <h3 class="stat-title bangla">অপেক্ষমান আবেদন</h3>
+                        <div class="stat-value">3</div>
+                        <p class="stat-description english">Applications awaiting approval</p>
+                        <p class="stat-description bangla">অনুমোদনের জন্য অপেক্ষমান আবেদন</p>
+                    </div>
+                    
+                    <div class="stat-card fade-in" style="animation-delay: 0.3s;">
+                        <div class="stat-icon"><i class="fas fa-bell"></i></div>
+                        <h3 class="stat-title english">Notifications</h3>
+                        <h3 class="stat-title bangla">বিজ্ঞপ্তি</h3>
+                        <div class="stat-value">5</div>
+                        <p class="stat-description english">Unread notifications</p>
+                        <p class="stat-description bangla">অপঠিত বিজ্ঞপ্তি</p>
+                    </div>
+                    
+                    <div class="stat-card fade-in" style="animation-delay: 0.4s;">
+                        <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <h3 class="stat-title english">Upcoming Renewals</h3>
+                        <h3 class="stat-title bangla">আসন্ন নবায়ন</h3>
+                        <div class="stat-value">2</div>
+                        <p class="stat-description english">Services due for renewal</p>
+                        <p class="stat-description bangla">নবায়নের জন্য বাকি সেবাসমূহ</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Services Tab -->
+            <div class="tab-content" id="servicesTab">
+                <div class="dashboard-header">
+                    <h1 class="welcome-message english">My Services</h1>
+                    <h1 class="welcome-message bangla">আমার সেবাসমূহ</h1>
+                    <p class="welcome-subtitle english">Manage all your government services in one place.</p>
+                    <p class="welcome-subtitle bangla">এক জায়গায় আপনার সমস্ত সরকারি সেবা পরিচালনা করুন।</p>
+                </div>
+                
+                <div class="service-grid">
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">National ID Card</h4>
+                                <h4 class="service-item-title bangla">জাতীয় পরিচয়পত্র</h4>
+                                <span class="service-item-status status-active english">Active</span>
+                                <span class="service-item-status status-active bangla">সক্রিয়</span>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Your National ID card is active and valid until 2030.</p>
+                        <p class="service-item-description bangla">আপনার জাতীয় পরিচয়পত্র সক্রিয় এবং ২০৩০ সাল পর্যন্ত বৈধ।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">View Details</button>
+                            <button class="service-action-btn btn-primary-service bangla">বিস্তারিত দেখুন</button>
+                            <button class="service-action-btn btn-secondary-service english">Download</button>
+                            <button class="service-action-btn btn-secondary-service bangla">ডাউনলোড</button>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-passport"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">Passport</h4>
+                                <h4 class="service-item-title bangla">পাসপোর্ট</h4>
+                                <span class="service-item-status status-pending english">Renewal Pending</span>
+                                <span class="service-item-status status-pending bangla">নবায়ন অপেক্ষমান</span>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Your passport renewal application is being processed.</p>
+                        <p class="service-item-description bangla">আপনার পাসপোর্ট নবায়ন আবেদন প্রক্রিয়াধীন।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">Track Status</button>
+                            <button class="service-action-btn btn-primary-service bangla">স্ট্যাটাস ট্র্যাক করুন</button>
+                            <button class="service-action-btn btn-secondary-service english">Update Info</button>
+                            <button class="service-action-btn btn-secondary-service bangla">তথ্য আপডেট</button>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-baby"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">Birth Certificate</h4>
+                                <h4 class="service-item-title bangla">জন্ম নিবন্ধন</h4>
+                                <span class="service-item-status status-active english">Active</span>
+                                <span class="service-item-status status-active bangla">সক্রিয়</span>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Your birth certificate is registered and verified.</p>
+                        <p class="service-item-description bangla">আপনার জন্ম নিবন্ধন নিবন্ধিত এবং যাচাইকৃত।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">View Certificate</button>
+                            <button class="service-action-btn btn-primary-service bangla">সার্টিফিকেট দেখুন</button>
+                            <button class="service-action-btn btn-secondary-service english">Request Copy</button>
+                            <button class="service-action-btn btn-secondary-service bangla">কপি অনুরোধ</button>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">Driving License</h4>
+                                <h4 class="service-item-title bangla">ড্রাইভিং লাইসেন্স</h4>
+                                <span class="service-item-status status-expired english">Expired</span>
+                                <span class="service-item-status status-expired bangla">মেয়াদোত্তীর্ণ</span>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Your driving license has expired. Please renew it.</p>
+                        <p class="service-item-description bangla">আপনার ড্রাইভিং লাইসেন্সের মেয়াদ শেষ। অনুগ্রহ করে নবায়ন করুন।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">Renew Now</button>
+                            <button class="service-action-btn btn-primary-service bangla">এখনই নবায়ন</button>
+                            <button class="service-action-btn btn-secondary-service english">View Details</button>
+                            <button class="service-action-btn btn-secondary-service bangla">বিস্তারিত দেখুন</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Applications Tab -->
+            <div class="tab-content" id="applicationsTab">
+                <div class="dashboard-header">
+                    <h1 class="welcome-message english">My Applications</h1>
+                    <h1 class="welcome-message bangla">আমার আবেদনসমূহ</h1>
+                    <p class="welcome-subtitle english">Track the status of all your submitted applications.</p>
+                    <p class="welcome-subtitle bangla">আপনার জমা দেওয়া সমস্ত আবেদনের অবস্থা ট্র্যাক করুন।</p>
+                </div>
+                
+                <div class="application-item">
+                    <div class="application-header">
+                        <div>
+                            <h4 class="application-title english">Passport Renewal Application</h4>
+                            <h4 class="application-title bangla">পাসপোর্ট নবায়ন আবেদন</h4>
+                            <p class="application-id english">Application ID: PR2023001234</p>
+                            <p class="application-id bangla">আবেদন আইডি: PR2023001234</p>
+                        </div>
+                        <span class="service-item-status status-pending english">In Progress</span>
+                        <span class="service-item-status status-pending bangla">প্রক্রিয়াধীন</span>
+                    </div>
+                    <div class="application-progress">
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" style="width: 60%;"></div>
+                        </div>
+                        <p class="progress-text english">Step 3 of 5: Document Verification</p>
+                        <p class="progress-text bangla">ধাপ ৩ এর ৫: ডকুমেন্ট যাচাইকরণ</p>
+                    </div>
+                    <div class="service-item-actions">
+                        <button class="service-action-btn btn-primary-service english">View Details</button>
+                        <button class="service-action-btn btn-primary-service bangla">বিস্তারিত দেখুন</button>
+                        <button class="service-action-btn btn-secondary-service english">Upload Documents</button>
+                        <button class="service-action-btn btn-secondary-service bangla">ডকুমেন্ট আপলোড</button>
+                    </div>
+                </div>
+                
+                <div class="application-item">
+                    <div class="application-header">
+                        <div>
+                            <h4 class="application-title english">Tax Certificate Request</h4>
+                            <h4 class="application-title bangla">কর সার্টিফিকেট অনুরোধ</h4>
+                            <p class="application-id english">Application ID: TC2023005678</p>
+                            <p class="application-id bangla">আবেদন আইডি: TC2023005678</p>
+                        </div>
+                        <span class="service-item-status status-active english">Approved</span>
+                        <span class="service-item-status status-active bangla">অনুমোদিত</span>
+                    </div>
+                    <div class="application-progress">
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" style="width: 100%;"></div>
+                        </div>
+                        <p class="progress-text english">Completed: Ready for Download</p>
+                        <p class="progress-text bangla">সম্পন্ন: ডাউনলোডের জন্য প্রস্তুত</p>
+                    </div>
+                    <div class="service-item-actions">
+                        <button class="service-action-btn btn-primary-service english">Download Certificate</button>
+                        <button class="service-action-btn btn-primary-service bangla">সার্টিফিকেট ডাউনলোড</button>
+                        <button class="service-action-btn btn-secondary-service english">View Details</button>
+                        <button class="service-action-btn btn-secondary-service bangla">বিস্তারিত দেখুন</button>
+                    </div>
+                </div>
+                
+                <div class="application-item">
+                    <div class="application-header">
+                        <div>
+                            <h4 class="application-title english">Birth Certificate Correction</h4>
+                            <h4 class="application-title bangla">জন্ম নিবন্ধন সংশোধন</h4>
+                            <p class="application-id english">Application ID: BC2023009876</p>
+                            <p class="application-id bangla">আবেদন আইডি: BC2023009876</p>
+                        </div>
+                        <span class="service-item-status status-pending english">Under Review</span>
+                        <span class="service-item-status status-pending bangla">পর্যালোচনাধীন</span>
+                    </div>
+                    <div class="application-progress">
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" style="width: 40%;"></div>
+                        </div>
+                        <p class="progress-text english">Step 2 of 5: Initial Review</p>
+                        <p class="progress-text bangla">ধাপ ২ এর ৫: প্রাথমিক পর্যালোচনা</p>
+                    </div>
+                    <div class="service-item-actions">
+                        <button class="service-action-btn btn-primary-service english">Check Status</button>
+                        <button class="service-action-btn btn-primary-service bangla">স্ট্যাটাস চেক করুন</button>
+                        <button class="service-action-btn btn-secondary-service english">Contact Support</button>
+                        <button class="service-action-btn btn-secondary-service bangla">সাপোর্ট যোগাযোগ</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notifications Tab -->
+            <div class="tab-content" id="notificationsTab">
+                <div class="dashboard-header">
+                    <h1 class="welcome-message english">Notifications</h1>
+                    <h1 class="welcome-message bangla">বিজ্ঞপ্তি</h1>
+                    <p class="welcome-subtitle english">Stay updated with important information about your services.</p>
+                    <p class="welcome-subtitle bangla">আপনার সেবা সম্পর্কে গুরুত্বপূর্ণ তথ্য নিয়ে আপডেট থাকুন।</p>
+                </div>
+                
+                <div class="notification-item unread">
+                    <div class="notification-header">
+                        <h4 class="notification-title english">Passport Application Update</h4>
+                        <h4 class="notification-title bangla">পাসপোর্ট আবেদন আপডেট</h4>
+                        <span class="notification-time">2 hours ago</span>
+                    </div>
+                    <p class="notification-content english">Your passport renewal application (PR2023001234) has moved to document verification stage. Please upload the required documents within 7 days.</p>
+                    <p class="notification-content bangla">আপনার পাসপোর্ট নবায়ন আবেদন (PR2023001234) ডকুমেন্ট যাচাইকরণ পর্যায়ে চলে গেছে। অনুগ্রহ করে ৭ দিনের মধ্যে প্রয়োজনীয় ডকুমেন্ট আপলোড করুন।</p>
+                </div>
+                
+                <div class="notification-item unread">
+                    <div class="notification-header">
+                        <h4 class="notification-title english">Tax Certificate Ready</h4>
+                        <h4 class="notification-title bangla">কর সার্টিফিকেট প্রস্তুত</h4>
+                        <span class="notification-time">1 day ago</span>
+                    </div>
+                    <p class="notification-content english">Your tax certificate (TC2023005678) has been approved and is ready for download. Click here to download your certificate.</p>
+                    <p class="notification-content bangla">আপনার কর সার্টিফিকেট (TC2023005678) অনুমোদিত হয়েছে এবং ডাউনলোডের জন্য প্রস্তুত। আপনার সার্টিফিকেট ডাউনলোড করতে এখানে ক্লিক করুন।</p>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-header">
+                        <h4 class="notification-title english">Driving License Expiry Reminder</h4>
+                        <h4 class="notification-title bangla">ড্রাইভিং লাইসেন্স মেয়াদ শেষের অনুস্মারক</h4>
+                        <span class="notification-time">3 days ago</span>
+                    </div>
+                    <p class="notification-content english">Your driving license will expire on December 31, 2023. Please renew it before the expiry date to avoid any inconvenience.</p>
+                    <p class="notification-content bangla">আপনার ড্রাইভিং লাইসেন্সের মেয়াদ ৩১ ডিসেম্বর, ২০২৩ তারিখে শেষ হবে। কোনো অসুবিধা এড়াতে মেয়াদ শেষ হওয়ার আগে অনুগ্রহ করে নবায়ন করুন।</p>
+                </div>
+                
+                <div class="notification-item unread">
+                    <div class="notification-header">
+                        <h4 class="notification-title english">System Maintenance Notice</h4>
+                        <h4 class="notification-title bangla">সিস্টেম রক্ষণাবেক্ষণ বিজ্ঞপ্তি</h4>
+                        <span class="notification-time">5 days ago</span>
+                    </div>
+                    <p class="notification-content english">Scheduled maintenance will be performed on December 15, 2023, from 2:00 AM to 6:00 AM. Some services may be temporarily unavailable during this time.</p>
+                    <p class="notification-content bangla">১৫ ডিসেম্বর, ২০২৩ তারিখে রাত ২:০০ থে
+                    <p class="notification-content bangla">১৫ ডিসেম্বর, ২০২ৃ তারিখে রাত ২:০০ থেকে সকাল ৬:০০ পর্যন্ত নির্ধারিত রক্ষণাবেক্ষণ করা হবে। এই সময়ে কিছু সেবা সাময়িকভাবে অনুপলব্ধ থাকতে পারে।</p>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-header">
+                        <h4 class="notification-title english">Welcome to Jante ChAi</h4>
+                        <h4 class="notification-title bangla">জানতে চাই-এ স্বাগতম</h4>
+                        <span class="notification-time">1 week ago</span>
+                    </div>
+                    <p class="notification-content english">Welcome to Jante ChAi! Your account has been successfully created. You can now access all government services through our platform.</p>
+                    <p class="notification-content bangla">জানতে চাই-এ স্বাগতম! আপনার অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। এখন আপনি আমাদের প্ল্যাটফর্মের মাধ্যমে সমস্ত সরকারি সেবা অ্যাক্সেস করতে পারেন।</p>
+                </div>
+            </div>
+            
+            <!-- Profile Tab -->
+            <div class="tab-content" id="profileTab">
+                <div class="dashboard-header">
+                    <h1 class="welcome-message english">My Profile</h1>
+                    <h1 class="welcome-message bangla">আমার প্রোফাইল</h1>
+                    <p class="welcome-subtitle english">Manage your personal information and account settings.</p>
+                    <p class="welcome-subtitle bangla">আপনার ব্যক্তিগত তথ্য এবং অ্যাকাউন্ট সেটিংস পরিচালনা করুন।</p>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <div class="profile-avatar-large">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h2 class="english">John Doe</h2>
+                            <h2 class="bangla">জন ডো</h2>
+                            <p class="english"><i class="fas fa-envelope me-2"></i> john.doe@example.com</p>
+                            <p class="bangla"><i class="fas fa-envelope me-2"></i> john.doe@example.com</p>
+                            <p class="english"><i class="fas fa-phone me-2"></i> +880 1712 345678</p>
+                            <p class="bangla"><i class="fas fa-phone me-2"></i> +৮৮০ ১৭১২ ৩৪৫৬৭৮</p>
+                            <p class="english"><i class="fas fa-map-marker-alt me-2"></i> Dhaka, Bangladesh</p>
+                            <p class="bangla"><i class="fas fa-map-marker-alt me-2"></i> ঢাকা, বাংলাদেশ</p>
+                        </div>
+                    </div>
+                    
+                    <form class="profile-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="english">Full Name</label>
+                                    <label class="bangla">পূর্ণ নাম</label>
+                                    <input type="text" class="form-control" value="John Doe" placeholder="Enter your full name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="english">Email Address</label>
+                                    <label class="bangla">ইমেইল ঠিকানা</label>
+                                    <input type="email" class="form-control" value="john.doe@example.com" placeholder="Enter your email">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="english">Phone Number</label>
+                                    <label class="bangla">ফোন নম্বর</label>
+                                    <input type="tel" class="form-control" value="+880 1712 345678" placeholder="Enter your phone number">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="english">Date of Birth</label>
+                                    <label class="bangla">জন্ম তারিখ</label>
+                                    <input type="date" class="form-control" value="1990-01-15">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="english">National ID</label>
+                                    <label class="bangla">জাতীয় পরিচয়পত্র</label>
+                                    <input type="text" class="form-control" value="1234567890123" placeholder="Enter your NID number">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="english">Gender</label>
+                                    <label class="bangla">লিঙ্গ</label>
+                                    <select class="form-control">
+                                        <option value="male" class="english">Male</option>
+                                        <option value="male" class="bangla">পুরুষ</option>
+                                        <option value="female" class="english">Female</option>
+                                        <option value="female" class="bangla">মহিলা</option>
+                                        <option value="other" class="english">Other</option>
+                                        <option value="other" class="bangla">অন্যান্য</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="english">Address</label>
+                            <label class="bangla">ঠিকানা</label>
+                            <textarea class="form-control" rows="3" placeholder="Enter your full address">123 Digital Bangladesh Road, Dhaka-1200, Bangladesh</textarea>
+                        </div>
+                        
+                        <div class="service-item-actions">
+                            <button type="submit" class="service-action-btn btn-primary-service english">Update Profile</button>
+                            <button type="submit" class="service-action-btn btn-primary-service bangla">প্রোফাইল আপডেট করুন</button>
+                            <button type="button" class="service-action-btn btn-secondary-service english">Change Password</button>
+                            <button type="button" class="service-action-btn btn-secondary-service bangla">পাসওয়ার্ড পরিবর্তন</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Documents Tab -->
+            <div class="tab-content" id="documentsTab">
+                <div class="dashboard-header">
+                    <h1 class="welcome-message english">My Documents</h1>
+                    <h1 class="welcome-message bangla">আমার ডকুমেন্টস</h1>
+                    <p class="welcome-subtitle english">Access and manage all your government documents.</p>
+                    <p class="welcome-subtitle bangla">আপনার সমস্ত সরকারি ডকুমেন্ট অ্যাক্সেস এবং পরিচালনা করুন।</p>
+                </div>
+                
+                <div class="service-grid">
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">National ID Card</h4>
+                                <h4 class="service-item-title bangla">জাতীয় পরিচয়পত্র</h4>
+                                <span class="service-item-status status-active english">Available</span>
+                                <span class="service-item-status status-active bangla">উপলব্ধ</span>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Digital copy of your National ID card.</p>
+                        <p class="service-item-description bangla">আপনার জাতীয় পরিচয়পত্রের ডিজিটাল কপি।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">Download PDF</button>
+                            <button class="service-action-btn btn-primary-service bangla">পিডিএফ ডাউনলোড</button>
+                            <button class="service-action-btn btn-secondary-service english">View</button>
+                            <button class="service-action-btn btn-secondary-service bangla">দেখুন</button>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">Birth Certificate</h4>
+                                <h4 class="service-item-title bangla">জন্ম নিবন্ধন</h4>
+                                <span class="service-item-status status-active english">Available</span>
+                                <span class="service-item-status status-active bangla">উপলব্ধ</span>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Official birth certificate document.</p>
+                        <p class="service-item-description bangla">অফিসিয়াল জন্ম নিবন্ধন ডকুমেন্ট।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">Download PDF</button>
+                            <button class="service-action-btn btn-primary-service bangla">পিডিএফ ডাউনলোড</button>
+                            <button class="service-action-btn btn-secondary-service english">View</button>
+                            <button class="service-action-btn btn-secondary-service bangla">দেখুন</button>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">Tax Certificate</h4>
+                                <h4 class="service-item-title bangla">কর সার্টিফিকেট</h4>
+                                <span class="service-item-status status-active english">Available</span>
+                                <span class="service-item-status status-active bangla">উপলব্ধ</span>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Latest tax clearance certificate.</p>
+                        <p class="service-item-description bangla">সর্বশেষ কর ছাড়পত্র সার্টিফিকেট।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">Download PDF</button>
+                            <button class="service-action-btn btn-primary-service bangla">পিডিএফ ডাউনলোড</button>
+                            <button class="service-action-btn btn-secondary-service english">View</button>
+                            <button class="service-action-btn btn-secondary-service bangla">দেখুন</button>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-upload"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">Upload Document</h4>
+                                <h4 class="service-item-title bangla">ডকুমেন্ট আপলোড</h4>
+                                <span class="service-item-status status-pending english">Action Required</span>
+                                <span class="service-item-status status-pending bangla">পদক্ষেপ প্রয়োজন</span>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Upload additional documents for verification.</p>
+                        <p class="service-item-description bangla">যাচাইকরণের জন্য অতিরিক্ত ডকুমেন্ট আপলোড করুন।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">Upload Files</button>
+                            <button class="service-action-btn btn-primary-service bangla">ফাইল আপলোড</button>
+                            <button class="service-action-btn btn-secondary-service english">View Requirements</button>
+                            <button class="service-action-btn btn-secondary-service bangla">প্রয়োজনীয়তা দেখুন</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settingsTab">
+                <div class="dashboard-header">
+                    <h1 class="welcome-message english">Settings</h1>
+                    <h1 class="welcome-message bangla">সেটিংস</h1>
+                    <p class="welcome-subtitle english">Customize your account preferences and security settings.</p>
+                    <p class="welcome-subtitle bangla">আপনার অ্যাকাউন্ট পছন্দ এবং নিরাপত্তা সেটিংস কাস্টমাইজ করুন।</p>
+                </div>
+                
+                <div class="profile-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-cog"></i>
+                        <span class="english">General Settings</span>
+                        <span class="bangla">সাধারণ সেটিংস</span>
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="english">Language Preference</label>
+                                <label class="bangla">ভাষার পছন্দ</label>
+                                <select class="form-control">
+                                    <option value="en" class="english">English</option>
+                                    <option value="en" class="bangla">ইংরেজি</option>
+                                    <option value="bn" class="english">Bengali</option>
+                                    <option value="bn" class="bangla">বাংলা</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="english">Theme</label>
+                                <label class="bangla">থিম</label>
+                                <select class="form-control">
+                                    <option value="light" class="english">Light Mode</option>
+                                    <option value="light" class="bangla">লাইট মোড</option>
+                                    <option value="dark" class="english">Dark Mode</option>
+                                    <option value="dark" class="bangla">ডার্ক মোড</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-bell"></i>
+                        <span class="english">Notification Settings</span>
+                        <span class="bangla">বিজ্ঞপ্তি সেটিংস</span>
+                    </h3>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                        <label class="form-check-label english" for="emailNotifications">
+                            Email Notifications
+                        </label>
+                        <label class="form-check-label bangla" for="emailNotifications">
+                            ইমেইল বিজ্ঞপ্তি
+                        </label>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="smsNotifications" checked>
+                        <label class="form-check-label english" for="smsNotifications">
+                            SMS Notifications
+                        </label>
+                        <label class="form-check-label bangla" for="smsNotifications">
+                            এসএমএস বিজ্ঞপ্তি
+                        </label>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="pushNotifications">
+                        <label class="form-check-label english" for="pushNotifications">
+                            Push Notifications
+                        </label>
+                        <label class="form-check-label bangla" for="pushNotifications">
+                            পুশ বিজ্ঞপ্তি
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-shield-alt"></i>
+                        <span class="english">Security Settings</span>
+                        <span class="bangla">নিরাপত্তা সেটিংস</span>
+                    </h3>
+                    
+                    <div class="service-item-actions mb-3">
+                        <button class="service-action-btn btn-primary-service english">Change Password</button>
+                        <button class="service-action-btn btn-primary-service bangla">পাসওয়ার্ড পরিবর্তন</button>
+                        <button class="service-action-btn btn-secondary-service english">Enable 2FA</button>
+                        <button class="service-action-btn btn-secondary-service bangla">২এফএ সক্রিয় করুন</button>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="loginAlerts" checked>
+                        <label class="form-check-label english" for="loginAlerts">
+                            Login Alerts
+                        </label>
+                        <label class="form-check-label bangla" for="loginAlerts">
+                            লগইন সতর্কতা
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="service-item-actions">
+                    <button class="service-action-btn btn-primary-service english">Save Settings</button>
+                    <button class="service-action-btn btn-primary-service bangla">সেটিংস সংরক্ষণ</button>
+                    <button class="service-action-btn btn-secondary-service english">Reset to Default</button>
+                    <button class="service-action-btn btn-secondary-service bangla">ডিফল্টে রিসেট</button>
+                </div>
+            </div>
+            
+            <!-- Help Tab -->
+            <div class="tab-content" id="helpTab">
+                <div class="dashboard-header">
+                    <h1 class="welcome-message english">Help Center</h1>
+                    <h1 class="welcome-message bangla">সাহায্য কেন্দ্র</h1>
+                    <p class="welcome-subtitle english">Find answers to common questions and get support.</p>
+                    <p class="welcome-subtitle bangla">সাধারণ প্রশ্নের উত্তর খুঁজুন এবং সহায়তা পান।</p>
+                </div>
+                
+                <div class="service-grid">
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">FAQ</h4>
+                                <h4 class="service-item-title bangla">প্রায়শই জিজ্ঞাসিত প্রশ্ন</h4>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Find answers to frequently asked questions.</p>
+                        <p class="service-item-description bangla">প্রায়শই জিজ্ঞাসিত প্রশ্নের উত্তর খুঁজুন।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">View FAQ</button>
+                            <button class="service-action-btn btn-primary-service bangla">FAQ দেখুন</button>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">User Guide</h4>
+                                <h4 class="service-item-title bangla">ব্যবহারকারী গাইড</h4>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Step-by-step guides for using our services.</p>
+                        <p class="service-item-description bangla">আমাদের সেবা ব্যবহারের জন্য ধাপে ধাপে গাইড।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">Read Guide</button>
+                            <button class="service-action-btn btn-primary-service bangla">গাইড পড়ুন</button>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">Contact Support</h4>
+                                <h4 class="service-item-title bangla">সাপোর্ট যোগাযোগ</h4>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Get help from our support team.</p>
+                        <p class="service-item-description bangla">আমাদের সাপোর্ট টিমের কাছ থেকে সাহায্য নিন।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">Contact Us</button>
+                            <button class="service-action-btn btn-primary-service bangla">যোগাযোগ করুন</button>
+                        </div>
+                    </div>
+                    
+                    <div class="service-item">
+                        <div class="service-item-header">
+                            <div class="service-item-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div>
+                                <h4 class="service-item-title english">Video Tutorials</h4>
+                                <h4 class="service-item-title bangla">ভিডিও টিউটোরিয়াল</h4>
+                            </div>
+                        </div>
+                        <p class="service-item-description english">Watch video tutorials for better understanding.</p>
+                        <p class="service-item-description bangla">ভাল বোঝার জন্য ভিডিও টিউটোরিয়াল দেখুন।</p>
+                        <div class="service-item-actions">
+                            <button class="service-action-btn btn-primary-service english">Watch Videos</button>
+                            <button class="service-action-btn btn-primary-service bangla">ভিডিও দেখুন</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Feedback Tab -->
+            <div class="tab-content" id="feedbackTab">
+                <div class="dashboard-header">
+                    <h1 class="welcome-message english">Feedback</h1>
+                    <h1 class="welcome-message bangla">মতামত</h1>
+                    <p class="welcome-subtitle english">Share your feedback to help us improve our services.</p>
+                    <p class="welcome-subtitle bangla">আমাদের সেবা উন্নত করতে সাহায্য করার জন্য আপনার মতামত শেয়ার করুন।</p>
+                </div>
+                
+                <div class="profile-section">
+                    <form class="profile-form">
+                        <div class="form-group">
+                            <label class="english">Feedback Type</label>
+                            <label class="bangla">মতামতের ধরন</label>
+                            <select class="form-control">
+                                <option value="suggestion" class="english">Suggestion</option>
+                                <option value="suggestion" class="bangla">পরামর্শ</option>
+                                <option value="complaint" class="english">Complaint</option>
+                                <option value="complaint" class="bangla">অভিযোগ</option>
+                                <option value="compliment" class="english">Compliment</option>
+                                <option value="compliment" class="bangla">প্রশংসা</option>
+                                <option value="bug" class="english">Bug Report</option>
+                                <option value="bug" class="bangla">বাগ রিপোর্ট</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="english">Subject</label>
+                            <label class="bangla">বিষয়</label>
+                            <input type="text" class="form-control" placeholder="Enter feedback subject">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="english">Your Feedback</label>
+                            <label class="bangla">আপনার মতামত</label>
+                            <textarea class="form-control" rows="6" placeholder="Please share your detailed feedback here..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="english">Rating</label>
+                            <label class="bangla">রেটিং</label>
+                            <div class="rating-stars">
+                                <i class="fas fa-star" data-rating="1"></i>
+                                <i class="fas fa-star" data-rating="2"></i>
+                                <i class="fas fa-star" data-rating="3"></i>
+                                <i class="fas fa-star" data-rating="4"></i>
+                                <i class="fas fa-star" data-rating="5"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="service-item-actions">
+                            <button type="submit" class="service-action-btn btn-primary-service english">Submit Feedback</button>
+                            <button type="submit" class="service-action-btn btn-primary-service bangla">মতামত জমা দিন</button>
+                            <button type="button" class="service-action-btn btn-secondary-service english">Clear Form</button>
+                            <button type="button" class="service-action-btn btn-secondary-service bangla">ফর্ম পরিষ্কার</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="dashboard-footer">
+                <p class="english">© 2023 Jante ChAi. All rights reserved.</p>
+                <p class="bangla">© ২০২৩ জানতে চাই। সর্বস্বত্ব সংরক্ষিত।</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initialize AOS animation library
+            AOS.init({
+                duration: 800,
+                easing: "ease-in-out",
+                once: true,
+            });
+            
+            // Create particles for dashboard background (same as homepage)
+            const dashboardParticles = document.getElementById('dashboardParticles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('span');
+                particle.classList.add('particle');
+                
+                // Random size
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.left = `${Math.random() * 100}%`;
+                
+                // Random animation duration and delay
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 10;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                
+                dashboardParticles.appendChild(particle);
+            }
+            
+            // Preloader
+            const preloader = document.querySelector(".preloader");
+            window.addEventListener("load", () => {
+                setTimeout(() => {
+                    preloader.style.opacity = "0";
+                    setTimeout(() => {
+                        preloader.style.display = "none";
+                    }, 500);
+                }, 1500);
+            });
+            
+            // Navbar scroll effect
+            const navbar = document.querySelector(".navbar");
+            window.addEventListener("scroll", () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add("scrolled");
+                } else {
+                    navbar.classList.remove("scrolled");
+                }
+            });
+            
+            // Language switcher
+            const languageSwitcher = document.getElementById('languageSwitcher');
+            const currentLang = languageSwitcher.querySelector('.current-lang');
+            const languageOptions = languageSwitcher.querySelector('.language-options');
+            const languageOption = languageSwitcher.querySelectorAll('.language-option');
+            const body = document.body;
+            
+            // Check for saved language preference
+            const savedLang = localStorage.getItem('language');
+            if (savedLang === 'bn') {
+                body.classList.add('bn');
+                currentLang.querySelector('span').textContent = 'BN';
+                languageOption.forEach(opt => opt.classList.remove('active'));
+                document.querySelector('.language-option[data-lang="bn"]').classList.add('active');
+            }
+            
+            currentLang.addEventListener('click', () => {
+                languageOptions.classList.toggle('show');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!languageSwitcher.contains(e.target)) {
+                    languageOptions.classList.remove('show');
+                }
+            });
+            
+            languageOption.forEach(option => {
+                option.addEventListener('click', () => {
+                    const lang = option.getAttribute('data-lang');
+                    localStorage.setItem('language', lang);
+                    currentLang.querySelector('span').textContent = lang.toUpperCase();
+                    languageOption.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    languageOptions.classList.remove('show');
+                    if (lang === 'bn') {
+                        body.classList.add('bn');
+                    } else {
+                        body.classList.remove('bn');
+                    }
+                });
+            });
+            
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            
+            // Check for saved theme preference
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                body.classList.add('dark-mode');
+                darkModeToggle.classList.add('active');
+            }
+            
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                darkModeToggle.classList.toggle('active');
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
+            
+            // Sidebar menu tabs
+            const menuItems = document.querySelectorAll('.menu-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const tabId = item.getAttribute('data-tab');
+                    
+                    if (!tabId) return; // Skip items without data-tab (like logout)
+                    
+                    // Update active menu item
+                    menuItems.forEach(mi => mi.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    // Show corresponding tab content
+                    tabContents.forEach(tab => {
+                        tab.classList.remove('active');
+                        if (tab.id === `${tabId}Tab`) {
+                            tab.classList.add('active');
+                        }
+                    });
+                    
+                    // Close mobile sidebar if open
+                    if (window.innerWidth < 992) {
+                        sidebar.classList.remove('show');
+                        mobileOverlay.classList.remove('show');
+                    }
+                });
+            });
+            
+            // Mobile sidebar toggle
+            const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const mobileOverlay = document.getElementById('mobileOverlay');
+            
+            mobileSidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('show');
+                mobileOverlay.classList.toggle('show');
+            });
+            
+            mobileOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('show');
+                mobileOverlay.classList.remove('show');
+            });
+            
+            // Logout button
+            const logoutBtn = document.getElementById('logoutBtn');
+            logoutBtn.addEventListener('click', () => {
+                if (confirm(body.classList.contains('bn') ? 'আপনি কি লগআউট করতে চান?' : 'Are you sure you want to logout?')) {
+                    // Clear any stored user data
+                    localStorage.removeItem('userToken');
+                    // Redirect to homepage
+                    window.location.href = 'homepage.html';
+                }
+            });
+            
+            // Chat functionality
+            const messageInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const chatMessages = document.getElementById('chatMessages');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const quickActionBtns = document.querySelectorAll('.quick-action-btn');
+            const serviceCategories = document.querySelectorAll('.service-category');
+            
+            // Chat responses database
+            const chatResponses = {
+                'how to apply for national id card?': {
+                    english: 'To apply for a National ID card, you need to visit your nearest registration office with the following documents: Birth certificate, passport-size photographs, and proof of address. The process typically takes 7-10 working days.',
+                    bangla: 'জাতীয় পরিচয়পত্রের জন্য আবেদন করতে, আপনাকে নিম্নলিখিত ডকুমেন্ট নিয়ে নিকটস্থ নিবন্ধন অফিসে যেতে হবে: জন্ম নিবন্ধন, পাসপোর্ট সাইজের ছবি, এবং ঠিকানার প্রমাণ। প্রক্রিয়াটি সাধারণত ৭-১০ কার্যদিবস সময় নেয়।'
+                },
+                'passport renewal process': {
+                    english: 'For passport renewal, visit the passport office with your old passport, application form, recent photographs, and fee payment receipt. Online application is also available through the official website.',
+                    bangla: 'পাসপোর্ট নবায়নের জন্য, আপনার পুরানো পাসপোর্ট, আবেদনপত্র, সাম্প্রতিক ছবি, এবং ফি পেমেন্ট রসিদ নিয়ে পাসপোর্ট অফিসে যান। অনলাইন আবেদনও অফিসিয়াল ওয়েবসাইটের মাধ্যমে উপলব্ধ।'
+                },
+                'tax token information': {
+                    english: 'Tax tokens can be obtained from your local city corporation or municipality office. You need to provide property documents and previous year\'s tax receipt. Payment can be made online or at the office.',
+                    bangla: 'ট্যাক্স টোকেন আপনার স্থানীয় সিটি কর্পোরেশন বা পৌরসভা অফিস থেকে পেতে পারেন। আপনাকে সম্পত্তির ডকুমেন্ট এবং পূর্ববর্তী বছরের কর রসিদ প্রদান করতে হবে। পেমেন্ট অনলাইনে বা অফিসে করা যায়।'
+                },
+                'birth certificate correction': {
+                    english: 'To correct information in your birth certificate, submit an application to the registrar office with supporting documents. The correction process may take 15-30 days depending on the type of correction needed.',
+                    bangla: 'আপনার জন্ম নিবন্ধনে তথ্য সংশোধন করতে, সহায়ক ডকুমেন্ট সহ রেজিস্ট্রার অফিসে একটি আবেদন জমা দিন। সংশোধনের ধরনের উপর নির্ভর করে সংশোধন প্রক্রিয়া ১৫-৩০ দিন সময় নিতে পারে।'
+                }
+            };
+            
+            // Function to add message to chat
+            function addMessage(message, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+                
+                const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar ${isUser ? 'user-avatar-chat' : 'bot-avatar'}">
+                        <i class="fas ${isUser ? 'fa-user' : 'fa-robot'}"></i>
+                    </div>
+                    <div class="message-content">
+                        <p class="message-text">${message}</p>
+                        <div class="message-time">${currentTime}</div>
+                    </div>
+                `;
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to show typing indicator
+            function showTypingIndicator() {
+                typingIndicator.classList.add('show');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to hide typing indicator
+            function hideTypingIndicator() {
+                typingIndicator.classList.remove('show');
+            }
+            
+            // Function to get bot response
+            function getBotResponse(query) {
+                const lowerQuery = query.toLowerCase();
+                const isEnglish = !body.classList.contains('bn');
+                
+                // Check for exact matches first
+                for (const [key, response] of Object.entries(chatResponses)) {
+                    if (lowerQuery.includes(key.toLowerCase()) || key.toLowerCase().includes(lowerQuery)) {
+                        return isEnglish ? response.english : response.bangla;
+                    }
+                }
+                
+                // Default responses for common keywords
+                if (lowerQuery.includes('hello') || lowerQuery.includes('hi') || lowerQuery.includes('হ্যালো')) {
+                    return isEnglish ? 
+                        'Hello! How can I help you with government services today?' : 
+                        'হ্যালো! আজ আমি সরকারি সেবা নিয়ে আপনাকে কীভাবে সাহায্য করতে পারি?';
+                }
+                
+                if (lowerQuery.includes('thank') || lowerQuery.includes('ধন্যবাদ')) {
+                    return isEnglish ? 
+                        'You\'re welcome! Is there anything else I can help you with?' : 
+                        'আপনাকে স্বাগতম! আর কিছু আছে যাতে আমি সাহায্য করতে পারি?';
+                }
+                
+                // Default response
+                return isEnglish ? 
+                    'I understand you\'re asking about government services. Could you please be more specific about which service you need help with? You can ask about National ID, Passport, Birth Certificate, Driving License, or Tax services.' : 
+                    'আমি বুঝতে পারছি আপনি সরকারি সেবা সম্পর্কে জিজ্ঞাসা করছেন। আপনি কোন সেবা নিয়ে সাহায্য চান সে বিষয়ে আরো নির্দিষ্ট হতে পারেন? আপনি জাতীয় পরিচয়পত্র, পাসপোর্ট, জন্ম নিবন্ধন, ড্রাইভিং লাইসেন্স, বা কর সেবা সম্পর্কে জিজ্ঞাসা করতে পারেন।';
+            }
+            
+            // Function to send message
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                if (!message) return;
+                
+                // Add user message
+                addMessage(message, true);
+                messageInput.value = '';
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Simulate bot response delay
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const botResponse = getBotResponse(message);
+                    addMessage(botResponse);
+                }, 1000 + Math.random() * 2000); // Random delay between 1-3 seconds
+            }
+            
+            // Send button click
+            sendBtn.addEventListener('click', sendMessage);
+            
+            // Enter key press
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Quick action buttons
+            quickActionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const query = btn.getAttribute('data-query');
+                    messageInput.value = query;
+                    sendMessage();
+                });
+            });
+            
+            // Service category clicks
+            serviceCategories.forEach(category => {
+                category.addEventListener('click', () => {
+                    const service = category.getAttribute('data-service');
+                    const isEnglish = !body.classList.contains('bn');
+                    
+                    let query = '';
+                    switch(service) {
+                        case 'nid':
+                            query = isEnglish ? 'How to apply for National ID card?' : 'জাতীয় পরিচয়পত্রের জন্য কীভাবে আবেদন করব?';
+                            break;
+                        case 'passport':
+                            query = isEnglish ? 'Passport renewal process' : 'পাসপোর্ট নবায়ন প্রক্রিয়া';
+                            break;
+                        case 'birth':
+                            query = isEnglish ? 'Birth certificate correction' : 'জন্ম নিবন্ধন সংশোধন';
+                            break;
+                        case 'driving':
+                            query = isEnglish ? 'How to get driving license?' : 'ড্রাইভিং লাইসেন্স কীভাবে পাবো?';
+                            break;
+                        case 'tax':
+                            query = isEnglish ? 'Tax token information' : 'ট্যাক্স টোকেন তথ্য';
+                            break;
+                    }
+                    
+                    messageInput.value = query;
+                    sendMessage();
+                });
+            });
+            
+            // Voice button (placeholder functionality)
+            const voiceBtn = document.getElementById('voiceBtn');
+            voiceBtn.addEventListener('click', () => {
+                const isEnglish = !body.classList.contains('bn');
+                alert(isEnglish ? 'Voice input feature coming soon!' : 'ভয়েস ইনপুট ফিচার শীঘ্রই আসছে!');
+            });
+            
+            // Rating stars functionality
+            const ratingStars = document.querySelectorAll('.rating-stars i');
+            let currentRating = 0;
+            
+            ratingStars.forEach(star => {
+                star.addEventListener('click', () => {
+                    currentRating = parseInt(star.getAttribute('data-rating'));
+                    updateStarDisplay();
+                });
+                
+                star.addEventListener('mouseover', () => {
+                    const hoverRating = parseInt(star.getAttribute('data-rating'));
+                    updateStarDisplay(hoverRating);
+                });
+            });
+            
+            document.querySelector('.rating-stars').addEventListener('mouseleave', () => {
+                updateStarDisplay();
+            });
+            
+            function updateStarDisplay(rating = currentRating) {
+                ratingStars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.style.color = '#ffc107';
+                    } else {
+                        star.style.color = 'rgba(255, 255, 255, 0.3)';
+                    }
+                });
+            }
+            
+            // Initialize star display
+            updateStarDisplay();
+            
+            // Form submissions (placeholder functionality)
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const isEnglish = !body.classList.contains('bn');
+                    alert(isEnglish ? 'Form submitted successfully!' : 'ফর্ম সফলভাবে জমা দেওয়া হয়েছে!');
+                });
+            });
+            
+            // Notification click handlers
+            const notificationItems = document.querySelectorAll('.notification-item');
+            notificationItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    item.classList.remove('unread');
+                });
+            });
+            
+            // Service action button handlers
+            const serviceActionBtns = document.querySelectorAll('.service-action-btn');
+            serviceActionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const isEnglish = !body.classList.contains('bn');
+                    const action = btn.textContent.trim();
+                    
+                    if (action.includes('Download') || action.includes('ডাউনলোড')) {
+                        alert(isEnglish ? 'Download started!' : 'ডাউনলোড শুরু হয়েছে!');
+                    } else if (action.includes('View') || action.includes('দেখুন')) {
+                        alert(isEnglish ? 'Opening document viewer...' : 'ডকুমেন্ট ভিউয়ার খোলা হচ্ছে...');
+                    } else if (action.includes('Upload') || action.includes('আপলোড')) {
+                        alert(isEnglish ? 'File upload dialog would open here.' : 'ফাইল আপলোড ডায়ালগ এখানে খুলবে।');
+                    } else {
+                        alert(isEnglish ? `${action} functionality coming soon!` : `${action} ফিচার শীঘ্রই আসছে!`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
