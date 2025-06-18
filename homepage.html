@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jante ChAi - Government Services Portal</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <span class="letter">J</span>
+            <span class="letter">a</span>
+            <span class="letter">n</span>
+            <span class="letter">t</span>
+            <span class="letter">e</span>
+            <span class="letter">_</span>
+            <span class="letter">C</span>
+            <span class="letter">h</span>
+            <span class="letter">A</span>
+            <span class="letter">i</span>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="p4.png" alt="" class="navbar-logo">
+                <!--<span class="brand-text"><b>Jante ChAi</b></span>-->
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active english" href="#home">Home</a>
+                        <a class="nav-link active bangla" href="#home">হোম</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link english" href="#features">Features</a>
+                        <a class="nav-link bangla" href="#features">বৈশিষ্ট্য</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link english" href="#services">Services</a>
+                        <a class="nav-link bangla" href="#services">সেবাসমূহ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link english" href="#demo">Demo</a>
+                        <a class="nav-link bangla" href="#demo">ডেমো</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary nav-btn english" href="auth.html">Login/Register</a>
+                        <a class="btn btn-primary nav-btn bangla" href="auth.html">লগইন/রেজিস্টার</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="language-switcher" id="languageSwitcher">
+                            <div class="current-lang">
+                                <span>EN</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="language-options">
+                                <div class="language-option active" data-lang="en">English</div>
+                                <div class="language-option" data-lang="bn">বাংলা</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dark-mode-toggle" id="darkModeToggle">
+                            <i class="fas fa-sun sun-icon"></i>
+                            <i class="fas fa-moon moon-icon"></i>
+                            <div class="toggle-ball"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section - Redesigned -->
+    <section id="home" class="hero-section">
+        <div class="hero-particles" id="heroParticles"></div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="hero-content">
+                        <h1 class="hero-title english">Jante ChAi</h1>
+                        <h1 class="hero-title bangla">জানতে চাই</h1>
+                        <p class="hero-subtitle english">Access government services at your fingertips. Get information about National ID, Passport, Birth Certificate, License, and Tax services easily through our platform.</p>
+                        <p class="hero-subtitle bangla">সরকারি তথ্য এবং সেবাসমূহ এখন আপনার হাতের মুঠোয়। আমাদের প্ল্যাটফর্মে আপনি সহজেই জাতীয় পরিচয়পত্র, পাসপোর্ট, জন্ম নিবন্ধন, লাইসেন্স এবং কর সংক্রান্ত তথ্য পেতে পারেন।</p>
+                        <div class="hero-buttons">
+                            <a href="#services" class="btn btn-primary btn-lg english">View Services</a>
+                            <a href="#services" class="btn btn-primary btn-lg bangla">সেবাসমূহ দেখুন</a>
+                            <a href="#auth" class="btn btn-outline-light btn-lg english">Create Account</a>
+                            <a href="#auth" class="btn btn-outline-light btn-lg bangla">একাউন্ট খুলুন</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-flex justify-content-center" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="hero-image-container">
+                        <img src="https://placeholder.svg?height=500&width=500&text=Digital+Bangladesh" alt="Digital Bangladesh" class="hero-image">
+                        <div class="service-badge badge-1">
+                            <i class="fas fa-id-card"></i>
+                            <span class="english">National ID</span>
+                            <span class="bangla">জাতীয় পরিচয়পত্র</span>
+                        </div>
+                        <div class="service-badge badge-2">
+                            <i class="fas fa-passport"></i>
+                            <span class="english">Passport</span>
+                            <span class="bangla">পাসপোর্ট</span>
+                        </div>
+                        <div class="service-badge badge-3">
+                            <i class="fas fa-file-alt"></i>
+                            <span class="english">Birth Certificate</span>
+                            <span class="bangla">জন্ম নিবন্ধন</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-shape">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+              <path d="M0,96L48,112C96,128,..."></path>
+          </svg>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header text-center" data-aos="fade-up">
+                <h2 class="english">Why Choose <span class="highlight">Jante ChAi</span>?</h2>
+                <h2 class="bangla">কেন <span class="highlight">জানতে চাই</span> বেছে নিবেন?</h2>
+                <p class="english">Discover our unique features that make us special</p>
+                <p class="bangla">আমাদের অনন্য বৈশিষ্ট্যগুলি আবিষ্কার করুন</p>
+            </div>
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3 class="english">Save Time</h3>
+                        <h3 class="bangla">সময় বাঁচান</h3>
+                        <p class="english">No more waiting in lines. Get government services in just a few minutes through our platform.</p>
+                        <p class="bangla">আর লাইনে দাঁড়াতে হবে না। আমাদের প্ল্যাটফর্মে সরকারি সেবাগুলি পেতে মাত্র কয়েক মিনিট সময় লাগবে।</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="english">Smart Search</h3>
+                        <h3 class="bangla">স্মার্ট সার্চ</h3>
+                        <p class="english">Our advanced search system helps you quickly find the information you need.</p>
+                        <p class="bangla">আমাদের উন্নত সার্চ সিস্টেম আপনাকে দ্রুত প্রয়োজনীয় তথ্য খুঁজে পেতে সাহায্য করবে।</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="english">Secure Access</h3>
+                        <h3 class="bangla">নিরাপদ অ্যাক্সেস</h3>
+                        <p class="english">Your personal information is always protected. We follow the highest security standards.</p>
+                        <p class="bangla">আপনার ব্যক্তিগত তথ্য সর্বদা সুরক্ষিত থাকবে। আমরা সর্বোচ্চ নিরাপত্তা মান অনুসরণ করি।</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="english">Mobile Ready</h3>
+                        <h3 class="bangla">মোবাইল রেডি</h3>
+                        <p class="english">Use our services from any device. Our website is completely mobile-friendly.</p>
+                        <p class="bangla">যেকোনো ডিভাইস থেকে আমাদের সেবা ব্যবহার করুন। আমাদের ওয়েবসাইট সম্পূর্ণ মোবাইল ফ্রেন্ডলি।</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <h3 class="english">User Friendly</h3>
+                        <h3 class="bangla">ব্যবহারকারী বান্ধব</h3>
+                        <p class="english">Easy interface and Bengali language support will help you use the service easily.</p>
+                        <p class="bangla">সহজ ইন্টারফেস এবং বাংলা ভাষার সমর্থন আপনাকে সহজেই সেবা ব্যবহার করতে সাহায্য করবে।</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="600">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h3 class="english">Always Updated</h3>
+                        <h3 class="bangla">সর্বদা আপডেটেড</h3>
+                        <p class="english">Get the latest updates on government rules and procedures on our platform.</p>
+                        <p class="bangla">সরকারি নিয়ম ও প্রক্রিয়ার সর্বশেষ আপডেট আমাদের প্ল্যাটফর্মে পাবেন।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-header text-center" data-aos="fade-up">
+                <h2 class="english">Our <span class="highlight">Services</span></h2>
+                <h2 class="bangla">আমাদের <span class="highlight">সেবাসমূহ</span></h2>
+                <p class="english">Government services now at your fingertips</p>
+                <p class="bangla">সরকারি সেবাগুলি এখন আপনার হাতের মুঠোয়</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=NID+Card" alt="National ID Card" class="service-image">
+                        <h3 class="english">National ID Card</h3>
+                        <h3 class="bangla">জাতীয় পরিচয়পত্র</h3>
+                        <p class="english">All information related to National ID Card, application process, and status check.</p>
+                        <p class="bangla">জাতীয় পরিচয়পত্র সংক্রান্ত সকল তথ্য, আবেদন প্রক্রিয়া, এবং স্ট্যাটাস চেক করুন।</p>
+                        <a href="#" class="service-link english">Learn More  পরিচয়পত্র সংক্রান্ত সকল তথ্য, আবেদন প্রক্রিয়া, এবং স্ট্যাটাস চেক করুন।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=Birth+Certificate" alt="Birth Certificate" class="service-image">
+                        <h3 class="english">Birth Certificate</h3>
+                        <h3 class="bangla">জন্ম নিবন্ধন</h3>
+                        <p class="english">Apply for birth registration online, make corrections, and collect copies.</p>
+                        <p class="bangla">অনলাইনে জন্ম নিবন্ধন আবেদন করুন, সংশোধন করুন এবং কপি সংগ্রহ করুন।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=Passport" alt="Passport" class="service-image">
+                        <h3 class="english">Passport</h3>
+                        <h3 class="bangla">পাসপোর্ট</h3>
+                        <p class="english">Apply for passport, renew, and track status easily.</p>
+                        <p class="bangla">পাসপোর্ট আবেদন, নবায়ন এবং স্ট্যাটাস ট্র্যাকিং সহজেই করুন।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=Driving+License" alt="Driving License" class="service-image">
+                        <h3 class="english">Driving License</h3>
+                        <h3 class="bangla">ড্রাইভিং লাইসেন্স</h3>
+                        <p class="english">Apply for driving license, renew, and verify information.</p>
+                        <p class="bangla">ড্রাইভিং লাইসেন্স আবেদন, নবায়ন এবং তথ্য যাচাই করুন।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=Tax+Services" alt="Tax Services" class="service-image">
+                        <h3 class="english">Tax Services</h3>
+                        <h3 class="bangla">কর সেবা</h3>
+                        <p class="english">e-TIN registration, return submission, and tax-related information.</p>
+                        <p class="bangla">ই-টিআইএন নিবন্ধন, রিটার্ন দাখিল এবং কর সংক্রান্ত তথ্য পান।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="600">
+                    <div class="service-card">
+                        <img src="https://placeholder.svg?height=150&width=300&text=Land+Records" alt="Land Records" class="service-image">
+                        <h3 class="english">Land Records</h3>
+                        <h3 class="bangla">ভূমি রেকর্ড</h3>
+                        <p class="english">Land records, parcha, and khatian related information online.</p>
+                        <p class="bangla">ভূমি রেকর্ড, পর্চা এবং খতিয়ান সংক্রান্ত তথ্য অনলাইনে পান।</p>
+                        <a href="#" class="service-link english">Learn More <i class="fas fa-arrow-right"></i></a>
+                        <a href="#" class="service-link bangla">আরও জানুন <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <div class="section-header text-center" data-aos="fade-up">
+                <h2 class="english">How <span class="highlight">Jante ChAi</span> Works?</h2>
+                <h2 class="bangla">কিভাবে <span class="highlight">জানতে চাই</span> কাজ করে?</h2>
+                <p class="english">See the easy process of using our service</p>
+                <p class="bangla">আমাদের সেবা ব্যবহারের সহজ প্রক্রিয়া দেখুন</p>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto" data-aos="fade-up">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Jante ChAi Demo Video" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="row demo-steps">
+                <div class="col-md-6" data-aos="fade-right">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4 class="english">Register</h4>
+                            <h4 class="bangla">রেজিস্ট্রেশন করুন</h4>
+                            <p class="english">Create an account with your mobile number and email.</p>
+                            <p class="bangla">আপনার মোবাইল নম্বর এবং ইমেইল দিয়ে একটি অ্যাকাউন্ট তৈরি করুন।</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4 class="english">Select Service</h4>
+                            <h4 class="bangla">সেবা নির্বাচন করুন</h4>
+                            <p class="english">Choose the government service you need.</p>
+                            <p class="bangla">আপনার প্রয়োজনীয় সরকারি সেবাটি বেছে নিন।</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-left">
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4 class="english">Provide Information</h4>
+                            <h4 class="bangla">তথ্য প্রদান করুন</h4>
+                            <p class="english">Provide your necessary information and follow the instructions.</p>
+                            <p class="bangla">আপনার প্রয়োজনীয় তথ্য প্রদান করুন এবং নির্দেশনা অনুসরণ করুন।</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4 class="english">Get Results</h4>
+                            <h4 class="bangla">ফলাফল পান</h4>
+                            <p class="english">Easily get the information or service you need.</p>
+                            <p class="bangla">আপনার প্রয়োজনীয় তথ্য বা সেবা সহজেই পেয়ে যান।</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-about">
+                        <h3 class="footer-logo">
+                            <img src="p2.png" alt="Jante ChAi Logo">
+                            <span class="english">Jante ChAi</span>
+                            <span class="bangla">জানতে চাই</span>
+                        </h3>
+                        <p class="english">Use our platform to easily access government information and services. We'll help you save time and effort.</p>
+                        <p class="bangla">সরকারি তথ্য এবং সেবাসমূহ সহজেই পাওয়ার জন্য আমাদের প্ল্যাটফর্ম ব্যবহার করুন। আমরা আপনাকে সময় এবং প্রচেষ্টা বাঁচাতে সাহায্য করব।</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-links">
+                        <h3 class="english">Quick Links</h3>
+                        <h3 class="bangla">দ্রুত লিঙ্ক</h3>
+                        <ul>
+                            <li><a href="#home" class="english">Home</a></li>
+                            <li><a href="#home" class="bangla">হোম</a></li>
+                            <li><a href="#features" class="english">Features</a></li>
+                            <li><a href="#features" class="bangla">বৈশিষ্ট্য</a></li>
+                            <li><a href="#services" class="english">Services</a></li>
+                            <li><a href="#services" class="bangla">সেবাসমূহ</a></li>
+                            <li><a href="#demo" class="english">Demo</a></li>
+                            <li><a href="#demo" class="bangla">ডেমো</a></li>
+                            <li><a href="#auth" class="english">Login/Register</a></li>
+                            <li><a href="#auth" class="bangla">লগইন/রেজিস্টার</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-links">
+                        <h3 class="english">Services</h3>
+                        <h3 class="bangla">সেবাসমূহ</h3>
+                        <ul>
+                            <li><a href="#" class="english">National ID</a></li>
+                            <li><a href="#" class="bangla">জাতীয় পরিচয়পত্র</a></li>
+                            <li><a href="#" class="english">Birth Certificate</a></li>
+                            <li><a href="#" class="bangla">জন্ম নিবন্ধন</a></li>
+                            <li><a href="#" class="english">Passport</a></li>
+                            <li><a href="#" class="bangla">পাসপোর্ট</a></li>
+                            <li><a href="#" class="english">Driving License</a></li>
+                            <li><a href="#" class="bangla">ড্রাইভিং লাইসেন্স</a></li>
+                            <li><a href="#" class="english">Tax Services</a></li>
+                            <li><a href="#" class="bangla">কর সেবা</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-contact">
+                        <h3 class="english">Contact Us</h3>
+                        <h3 class="bangla">যোগাযোগ করুন</h3>
+                        <p class="english"><i class="fas fa-map-marker-alt"></i> 123 Digital Bangladesh Road, Dhaka-1200</p>
+                        <p class="bangla"><i class="fas fa-map-marker-alt"></i> ১২৩ ডিজিটাল বাংলাদেশ রোড, ঢাকা-১২০০</p>
+                        <p class="english"><i class="fas fa-phone-alt"></i> +880 1712 345678</p>
+                        <p class="bangla"><i class="fas fa-phone-alt"></i> +৮৮০ ১৭১২ ৩৪৫৬৭৮</p>
+                        <p class="english"><i class="fas fa-envelope"></i> info@jantechai.com.bd</p>
+                        <p class="bangla"><i class="fas fa-envelope"></i> info@jantechai.com.bd</p>
+                        <p class="english"><i class="fas fa-clock"></i> Monday - Friday: 9am - 5pm</p>
+                        <p class="bangla"><i class="fas fa-clock"></i> সোমবার - শুক্রবার: সকাল ৯টা - বিকাল ৫টা</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="copyright english">© 2023 Jante ChAi. All rights reserved.</p>
+                        <p class="copyright bangla">© ২০২৩ জানতে চাই। সর্বস্বত্ব সংরক্ষিত।</p>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="footer-bottom-links">
+                            <li><a href="#" class="english">Privacy Policy</a></li>
+                            <li><a href="#" class="bangla">গোপনীয়তা নীতি</a></li>
+                            <li><a href="#" class="english">Terms of Service</a></li>
+                            <li><a href="#" class="bangla">ব্যবহারের শর্তাবলী</a></li>
+                            <li><a href="#" class="english">Cookie Policy</a></li>
+                            <li><a href="#" class="bangla">কুকি নীতি</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Embedded JavaScript -->
+    <script>
+        /*
+         * Jante ChAi - Main JavaScript
+         * Animations, interactions, and functionality
+         */
+
+        // Wait for the DOM to be fully loaded
+        document.addEventListener("DOMContentLoaded", () => {
+          // Initialize AOS animation library
+          AOS.init({
+            duration: 800,
+            easing: "ease-in-out",
+            once: true,
+          });
+
+          // Create particles for hero section
+          const heroParticles = document.getElementById('heroParticles');
+          for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('span');
+            particle.classList.add('particle');
+            
+            // Random size
+            const size = Math.random() * 10 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.left = `${Math.random() * 100}%`;
+            
+            // Random animation duration and delay
+            const duration = Math.random() * 20 + 10;
+            const delay = Math.random() * 10;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.animationDelay = `${delay}s`;
+            
+            heroParticles.appendChild(particle);
+          }
+
+          // Preloader
+          const preloader = document.querySelector(".preloader");
+          window.addEventListener("load", () => {
+            setTimeout(() => {
+              preloader.style.opacity = "0";
+              setTimeout(() => {
+                preloader.style.display = "none";
+              }, 500);
+            }, 1500);
+          });
+
+          // Navbar scroll effect
+          const navbar = document.querySelector(".navbar");
+          window.addEventListener("scroll", () => {
+            if (window.scrollY > 50) {
+              navbar.classList.add("scrolled");
+            } else {
+              navbar.classList.remove("scrolled");
+            }
+          });
+
+          // Active nav link based on scroll position
+          const sections = document.querySelectorAll("section");
+          const navLinks = document.querySelectorAll(".nav-link");
+
+          window.addEventListener("scroll", () => {
+            let current = "";
+
+            sections.forEach((section) => {
+              const sectionTop = section.offsetTop;
+              const sectionHeight = section.clientHeight;
+
+              if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                current = section.getAttribute("id");
+              }
+            });
+
+            navLinks.forEach((link) => {
+              link.classList.remove("active");
+              if (link.getAttribute("href") === `#${current}`) {
+                link.classList.add("active");
+              }
+            });
+          });
+
+          // Back to top button
+          const backToTopButton = document.getElementById("backToTop");
+
+          window.addEventListener("scroll", () => {
+            if (window.scrollY > 300) {
+              backToTopButton.classList.add("active");
+            } else {
+              backToTopButton.classList.remove("active");
+            }
+          });
+
+          backToTopButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          });
+
+          // Smooth scrolling for anchor links
+          document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+            anchor.addEventListener("click", function (e) {
+              e.preventDefault();
+
+              const targetId = this.getAttribute("href");
+              if (targetId === "#") return;
+
+              const targetElement = document.querySelector(targetId);
+              if (targetElement) {
+                const navbarHeight = document.querySelector(".navbar").offsetHeight;
+                const targetPosition = targetElement.offsetTop - navbarHeight;
+
+                window.scrollTo({
+                  top: targetPosition,
+                  behavior: "smooth",
+                });
+
+                // Close mobile menu if open
+                const navbarCollapse = document.querySelector(".navbar-collapse");
+                if (navbarCollapse.classList.contains("show")) {
+                  document.querySelector(".navbar-toggler").click();
+                }
+              }
+            });
+          });
+
+          // Language switcher
+          const languageSwitcher = document.getElementById('languageSwitcher');
+          const currentLang = languageSwitcher.querySelector('.current-lang');
+          const languageOptions = languageSwitcher.querySelector('.language-options');
+          const languageOption = languageSwitcher.querySelectorAll('.language-option');
+          const body = document.body;
+
+          currentLang.addEventListener('click', () => {
+            languageOptions.classList.toggle('show');
+          });
+
+          document.addEventListener('click', (e) => {
+            if (!languageSwitcher.contains(e.target)) {
+              languageOptions.classList.remove('show');
+            }
+          });
+
+          languageOption.forEach(option => {
+            option.addEventListener('click', () => {
+              const lang = option.getAttribute('data-lang');
+              const langText = lang.toUpperCase();
+              
+              // Update current language
+              currentLang.querySelector('span').textContent = langText;
+              
+              // Update active class
+              languageOption.forEach(opt => opt.classList.remove('active'));
+              option.classList.add('active');
+              
+              // Hide options
+              languageOptions.classList.remove('show');
+              
+              // Toggle language class on body
+              if (lang === 'bn') {
+                body.classList.add('bn');
+              } else {
+                body.classList.remove('bn');
+              }
+            });
+          });
+
+          // Auth tabs
+          const authTabs = document.querySelectorAll('.auth-tab');
+          const loginForm = document.getElementById('loginForm');
+          const registerForm = document.getElementById('registerForm');
+          const switchAuthLinks = document.querySelectorAll('.switch-auth');
+
+          authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+              const tabId = tab.getAttribute('data-tab');
+              
+              // Update active tab
+              authTabs.forEach(t => t.classList.remove('active'));
+              tab.classList.add('active');
+              
+              // Show corresponding form
+              if (tabId === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+              } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+              }
+            });
+          });
+
+          switchAuthLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+              e.preventDefault();
+              const tabId = link.getAttribute('data-tab');
+              
+              // Find and click the corresponding tab
+              document.querySelector(`.auth-tab[data-tab="${tabId}"]`).click();
+            });
+          });
+
+          // Dark mode toggle
+          const darkModeToggle = document.getElementById('darkModeToggle');
+
+          // Check for saved theme preference
+          if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            darkModeToggle.classList.add('active');
+          }
+
+          darkModeToggle.addEventListener('click', () => {
+            // Toggle dark mode
+            body.classList.toggle('dark-mode');
+            darkModeToggle.classList.toggle('active');
+            
+            // Save preference
+            if (body.classList.contains('dark-mode')) {
+              localStorage.setItem('darkMode', 'enabled');
+            } else {
+              localStorage.setItem('darkMode', 'disabled');
+            }
+          });
+
+          // Form validation
+          const forms = document.querySelectorAll('form');
+          forms.forEach(form => {
+            form.addEventListener('submit', (e) => {
+              e.preventDefault();
+              
+              // Simple validation
+              let valid = true;
+              const inputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="tel"]');
+              
+              inputs.forEach(input => {
+                if (!input.value.trim()) {
+                  valid = false;
+                  input.classList.add('is-invalid');
+                } else {
+                  input.classList.remove('is-invalid');
+                }
+              });
+              
+              if (form.closest('#registerForm')) {
+                const password = document.getElementById('registerPassword');
+                const confirmPassword = document.getElementById('registerConfirmPassword');
+                
+                if (password.value !== confirmPassword.value) {
+                  valid = false;
+                  confirmPassword.classList.add('is-invalid');
+                  alert(body.classList.contains('bn') ? 'পাসওয়ার্ড মিলছে না!' : 'Passwords do not match!');
+                }
+                
+                const agreeTerms = document.getElementById('agreeTerms');
+                if (!agreeTerms.checked) {
+                  valid = false;
+                  alert(body.classList.contains('bn') ? 'শর্তাবলী মেনে নিতে হবে!' : 'You must agree to the Terms & Conditions!');
+                }
+              }
+              
+              document.querySelectorAll('.feature-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    // Remove active class from all cards
+                    document.querySelectorAll('.feature-card').forEach(c => c.classList.remove('active'));
+                    // Add active class to the clicked card
+                    card.classList.add('active');
+                });
+            });
+
+              if (valid) {
+                // Here you would normally send the form data to a server
+                // For demo purposes, we'll just show a success message
+                alert(form.closest('#loginForm') ? 
+                  (body.classList.contains('bn') ? 'সফলভাবে লগইন হয়েছে!' : 'Successfully logged in!') : 
+                  (body.classList.contains('bn') ? 'সফলভাবে রেজিস্টার হয়েছে!' : 'Successfully registered!'));
+                form.reset();
+              }
+            });
+          });
+        });
+    </script>
+</body>
+</html>

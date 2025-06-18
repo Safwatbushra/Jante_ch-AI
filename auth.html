@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - Jante ChAi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #008f69;
+            --primary-dark: #006A4E;
+            --primary-light: #00d49a;
+            --secondary-color: #F42A41;
+            --secondary-dark: #d01c31;
+            --secondary-light: #ff5c6f;
+            --dark-color: #2d2d2d;
+            --light-color: #f8f9fa;
+            --gray-color: #6c757d;
+            --success-color: #28a745;
+            --info-color: #17a2b8;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --body-font: "Montserrat", sans-serif;
+            --bangla-font: "Hind Siliguri", sans-serif;
+            --heading-font: "Montserrat", sans-serif;
+            --transition: all 0.3s ease;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --card-bg: white;
+            --input-bg: white;
+            --footer-bg: #2d2d2d;
+            --footer-text: rgba(255, 255, 255, 0.7);
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+            --hero-gradient: linear-gradient(135deg, #004d38 0%, #003366 100%);
+            --card-border: 1px solid rgba(0, 0, 0, 0.1);
+            --hero-text: white;
+        }
+
+        .dark-mode {
+            --primary-color: #00d49a;
+            --primary-dark: #00b383;
+            --primary-light: #00ffbd;
+            --secondary-color: #ff5c6f;
+            --secondary-dark: #F42A41;
+            --secondary-light: #ff8a99;
+            --dark-color: #f8f9fa;
+            --light-color: #121212;
+            --gray-color: #adb5bd;
+            --card-bg: #1e1e1e;
+            --input-bg: #2c2c2c;
+            --footer-bg: #0a0a0a;
+            --footer-text: rgba(255, 255, 255, 0.8);
+            --navbar-bg: rgba(18, 18, 18, 0.95);
+            --hero-gradient: linear-gradient(135deg, #04241b 0%, #020c15 100%);
+            --card-border: 1px solid rgba(255, 255, 255, 0.1);
+            --hero-text: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--body-font);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--dark-color);
+            overflow-x: hidden;
+            background-color: var(--light-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 400;
+        }
+
+        .bangla {
+            font-family: var(--bangla-font);
+            display: none;
+        }
+
+        body.bn .bangla {
+            display: block;
+        }
+
+        body.bn .english {
+            display: none;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            padding: 5px 0;
+            transition: var(--transition);
+            background-color: var(--navbar-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand img {
+            height: 60px;
+            width: auto;
+            transform: translateY(-3px);
+        }
+
+        .navbar-brand {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            line-height: 1;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-color);
+            margin: 0 15px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .navbar-toggler {
+            border: none;
+            color: var(--dark-color);
+            font-size: 24px;
+        }
+
+        .nav-btn {
+            margin-left: 10px;
+            padding: 8px 20px;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            position: relative;
+            margin-left: 15px;
+            cursor: pointer;
+        }
+
+        .language-switcher .current-lang {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: rgba(0, 143, 105, 0.1);
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .language-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 10px 0;
+            min-width: 120px;
+            z-index: 100;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .language-options.show {
+            display: block;
+        }
+
+        .language-option {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .language-option:hover {
+            background-color: rgba(0, 143, 105, 0.1);
+        }
+
+        .language-option.active {
+            background-color: rgba(0, 143, 105, 0.2);
+            color: var(--primary-color);
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            width: 60px;
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 30px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+        }
+
+        .dark-mode-toggle.active {
+            background-color: var(--primary-color);
+        }
+
+        .dark-mode-toggle .sun-icon,
+        .dark-mode-toggle .moon-icon {
+            font-size: 14px;
+            color: #888;
+            z-index: 1;
+        }
+
+        .dark-mode-toggle.active .sun-icon {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .dark-mode-toggle.active .moon-icon {
+            color: white;
+        }
+
+        .dark-mode-toggle .toggle-ball {
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-mode-toggle.active .toggle-ball {
+            transform: translateX(30px);
+        }
+
+        /* Auth Section */
+        .auth-section {
+            background: linear-gradient(135deg, #f0f8f5 0%, #e0f0eb 100%);
+            padding: 100px 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .dark-mode .auth-section {
+            background: linear-gradient(135deg, #1a2420 0%, #0d1916 100%);
+        }
+
+        .auth-container {
+            display: flex;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            background-color: var(--card-bg);
+            max-width: 1000px;
+            margin: 0 auto;
+            min-height: 600px;
+        }
+
+        .auth-image {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(0, 143, 105, 0.9) 0%, rgba(0, 106, 78, 0.9) 100%),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 600"><rect fill="%23008f69" width="500" height="600"/><circle fill="%23ffffff" fill-opacity="0.1" cx="100" cy="100" r="50"/><circle fill="%23ffffff" fill-opacity="0.1" cx="400" cy="200" r="30"/><circle fill="%23ffffff" fill-opacity="0.1" cx="200" cy="400" r="40"/><circle fill="%23ffffff" fill-opacity="0.1" cx="350" cy="500" r="25"/></svg>');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-image-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .auth-image-content h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .auth-image-content p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .auth-form-container {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .auth-tabs {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            font-weight: 600;
+            position: relative;
+            transition: var(--transition);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .auth-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .auth-tab.active {
+            color: var(--primary-color);
+            background-color: rgba(0, 143, 105, 0.05);
+        }
+
+        .auth-tab.active::after {
+            width: 100%;
+        }
+
+        .auth-form h3 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            height: 50px;
+            border-radius: var(--border-radius);
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            background-color: var(--input-bg);
+            color: var(--dark-color);
+            width: 100%;
+        }
+
+        .dark-mode .form-control {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 143, 105, 0.25);
+            outline: none;
+        }
+
+        .form-control.is-valid {
+            border-color: var(--success-color);
+        }
+
+        .form-control.is-invalid {
+            border-color: var(--danger-color);
+        }
+
+        .validation-message {
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .validation-message.success {
+            color: var(--success-color);
+        }
+
+        .validation-message.error {
+            color: var(--danger-color);
+        }
+
+        .validation-message.show {
+            display: block;
+        }
+
+        .password-strength {
+            margin-top: 10px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .btn {
+            font-weight: 500;
+            padding: 12px 30px;
+            border-radius: 50px;
+            transition: var(--transition);
+            text-transform: capitalize;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            background-color: var(--gray-color);
+            border-color: var(--gray-color);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-form .btn {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .dark-mode .divider::before,
+        .dark-mode .divider::after {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            background-color: var(--card-bg);
+            padding: 0 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-login-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .dark-mode .social-login-btn {
+            background-color: #2c2c2c;
+            color: var(--light-color);
+        }
+
+        .social-login-btn:hover {
+            transform: translateY(-5px);
+            color: white;
+        }
+
+        .social-login-btn.facebook {
+            background-color: #3b5998;
+            color: white;
+        }
+
+        .social-login-btn.google {
+            background-color: #db4437;
+            color: white;
+        }
+
+        .form-check {
+            margin-top: 15px;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: var(--transition);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+
+        .notification.warning {
+            background-color: var(--warning-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991px) {
+            .auth-container {
+                flex-direction: column;
+                max-width: 500px;
+            }
+
+            .auth-image {
+                min-height: 200px;
+            }
+
+            .auth-form-container {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .auth-section {
+                padding: 50px 0;
+            }
+
+            .auth-form-container {
+                padding: 20px;
+            }
+
+            .auth-image-content h2 {
+                font-size: 24px;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="homepage.html">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/p4-3CmAeNW1EDMtw0hU2YqW3Qn08YdJYG.png" alt="Jante ChAi Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-primary nav-btn english" href="homepage.html">Home</a>
+                        <a class="btn btn-primary nav-btn bangla" href="homepage.html">হোম</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="language-switcher" id="languageSwitcher">
+                            <div class="current-lang">
+                                <span>EN</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="language-options">
+                                <div class="language-option active" data-lang="en">English</div>
+                                <div class="language-option" data-lang="bn">বাংলা</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dark-mode-toggle" id="darkModeToggle">
+                            <i class="fas fa-sun sun-icon"></i>
+                            <i class="fas fa-moon moon-icon"></i>
+                            <div class="toggle-ball"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Section -->
+    <section id="auth" class="auth-section">
+        <div class="container">
+            <div class="auth-container fade-in">
+                <div class="auth-image">
+                    <div class="auth-image-content">
+                        <h2 class="english">Welcome <br> to <br> Jante ChAi</h2>
+                        <h2 class="bangla">জানতে চাই-এ স্বাগতম</h2>
+                        <p class="english">Access all government services easily through our secure platform. Create an account or login to get started.</p>
+                        <p class="bangla">আমাদের নিরাপদ প্ল্যাটফর্মের মাধ্যমে সহজেই সমস্ত সরকারি সেবা অ্যাক্সেস করুন। শুরু করতে একটি অ্যাকাউন্ট তৈরি করুন বা লগইন করুন।</p>
+                    </div>
+                </div>
+                <div class="auth-form-container">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" data-tab="login">
+                            <span class="english">Login</span>
+                            <span class="bangla">লগইন</span>
+                        </div>
+                        <div class="auth-tab" data-tab="register">
+                            <span class="english">Register</span>
+                            <span class="bangla">রেজিস্টার</span>
+                        </div>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div id="loginForm" class="slide-in">
+                        <div class="auth-form">
+                            <h3 class="english">Login to Your Account</h3>
+                            <h3 class="bangla">আপনার অ্যাকাউন্টে লগইন করুন</h3>
+                            <form id="loginFormElement" novalidate>
+                                <div class="form-group">
+                                    <label for="loginEmail" class="english">Email or Mobile Number</label>
+                                    <label for="loginEmail" class="bangla">ইমেইল বা মোবাইল নম্বর</label>
+                                    <input type="text" class="form-control" id="loginEmail" name="loginEmail" 
+                                           placeholder="Enter your email or mobile number" required>
+                                    <div class="validation-message" id="loginEmailMessage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginPassword" class="english">Password</label>
+                                    <label for="loginPassword" class="bangla">পাসওয়ার্ড</label>
+                                    <input type="password" class="form-control" id="loginPassword" name="loginPassword" 
+                                           placeholder="Enter your password" required>
+                                    <div class="validation-message" id="loginPasswordMessage"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                                            <label class="form-check-label english" for="rememberMe">Remember me</label>
+                                            <label class="form-check-label bangla" for="rememberMe">মনে রাখুন</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="forgot-password">
+                                            <a href="#" class="english" id="forgotPasswordLink">Forgot password?</a>
+                                            <a href="#" class="bangla" id="forgotPasswordLink">পাসওয়ার্ড ভুলে গেছেন?</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="loginBtn">
+                                    <span class="loading-spinner" id="loginSpinner"></span>
+                                    <span class="english">Login</span>
+                                    <span class="bangla">লগইন করুন</span>
+                                </button>
+                                <div class="divider">
+                                    <span class="english">Or</span>
+                                    <span class="bangla">অথবা</span>
+                                </div>
+                                <div class="social-login">
+                                    <a href="#" class="social-login-btn facebook" id="facebookLogin">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="social-login-btn google" id="googleLogin">
+                                        <i class="fab fa-google"></i>
+                                    </a>
+                                </div>
+                                <div class="register-link">
+                                    <p class="english">Don't have an account? <a href="#" class="switch-auth" data-tab="register">Register</a></p>
+                                    <p class="bangla">অ্যাকাউন্ট নেই? <a href="#" class="switch-auth" data-tab="register">রেজিস্টার করুন</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="registerForm" style="display: none;" class="slide-in">
+                        <div class="auth-form">
+                            <h3 class="english">Create a New Account</h3>
+                            <h3 class="bangla">নতুন অ্যাকাউন্ট তৈরি করুন</h3>
+                            <form id="registerFormElement" novalidate>
+                                <div class="form-group">
+                                    <label for="registerName" class="english">Full Name</label>
+                                    <label for="registerName" class="bangla">পূর্ণ নাম</label>
+                                    <input type="text" class="form-control" id="registerName" name="registerName" 
+                                           placeholder="Enter your full name" required>
+                                    <div class="validation-message" id="registerNameMessage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerEmail" class="english">Email</label>
+                                    <label for="registerEmail" class="bangla">ইমেইল</label>
+                                    <input type="email" class="form-control" id="registerEmail" name="registerEmail" 
+                                           placeholder="Enter your email" required>
+                                    <div class="validation-message" id="registerEmailMessage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerMobile" class="english">Mobile Number</label>
+                                    <label for="registerMobile" class="bangla">মোবাইল নম্বর</label>
+                                    <input type="tel" class="form-control" id="registerMobile" name="registerMobile" 
+                                           placeholder="Enter your mobile number" required>
+                                    <div class="validation-message" id="registerMobileMessage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerPassword" class="english">Password</label>
+                                    <label for="registerPassword" class="bangla">পাসওয়ার্ড</label>
+                                    <input type="password" class="form-control" id="registerPassword" name="registerPassword" 
+                                           placeholder="Create a password" required>
+                                    <div class="password-strength" id="passwordStrength" style="display: none;">
+                                        <div class="strength-bar">
+                                            <div class="strength-fill" id="strengthFill"></div>
+                                        </div>
+                                        <div class="strength-text" id="strengthText"></div>
+                                    </div>
+                                    <div class="validation-message" id="registerPasswordMessage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerConfirmPassword" class="english">Confirm Password</label>
+                                    <label for="registerConfirmPassword" class="bangla">পাসওয়ার্ড নিশ্চিত করুন</label>
+                                    <input type="password" class="form-control" id="registerConfirmPassword" name="registerConfirmPassword" 
+                                           placeholder="Confirm your password" required>
+                                    <div class="validation-message" id="registerConfirmPasswordMessage"></div>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                    <label class="form-check-label english" for="agreeTerms">
+                                        I agree to the <a href="#" id="termsLink">Terms & Conditions</a> and <a href="#" id="privacyLink">Privacy Policy</a>
+                                    </label>
+                                    <label class="form-check-label bangla" for="agreeTerms">
+                                        আমি <a href="#" id="termsLinkBn">শর্তাবলী</a> এবং <a href="#" id="privacyLinkBn">গোপনীয়তা নীতি</a> মেনে নিচ্ছি
+                                    </label>
+                                    <div class="validation-message" id="agreeTermsMessage"></div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="registerBtn">
+                                    <span class="loading-spinner" id="registerSpinner"></span>
+                                    <span class="english">Register</span>
+                                    <span class="bangla">রেজিস্টার করুন</span>
+                                </button>
+                                <div class="divider">
+                                    <span class="english">Or</span>
+                                    <span class="bangla">অথবা</span>
+                                </div>
+                                <div class="social-login">
+                                    <a href="#" class="social-login-btn facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="social-login-btn google">
+                                        <i class="fab fa-google"></i>
+                                    </a>
+                                </div>
+                                <div class="register-link">
+                                    <p class="english">Already have an account? <a href="#" class="switch-auth" data-tab="login">Login</a></p>
+                                    <p class="bangla">ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="#" class="switch-auth" data-tab="login">লগইন করুন</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Enhanced JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const body = document.body;
+            
+            // Language and Dark Mode Setup
+            const languageSwitcher = document.getElementById('languageSwitcher');
+            const currentLang = languageSwitcher.querySelector('.current-lang');
+            const languageOptions = languageSwitcher.querySelector('.language-options');
+            const languageOption = languageSwitcher.querySelectorAll('.language-option');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+
+            // Apply saved preferences
+            const savedLang = localStorage.getItem('language');
+            if (savedLang === 'bn') {
+                body.classList.add('bn');
+                currentLang.querySelector('span').textContent = 'BN';
+                languageOption.forEach(opt => opt.classList.remove('active'));
+                document.querySelector('.language-option[data-lang="bn"]').classList.add('active');
+            }
+            
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                body.classList.add('dark-mode');
+                darkModeToggle.classList.add('active');
+            }
+
+            // Language switcher functionality
+            currentLang.addEventListener('click', () => {
+                languageOptions.classList.toggle('show');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!languageSwitcher.contains(e.target)) {
+                    languageOptions.classList.remove('show');
+                }
+            });
+
+            languageOption.forEach(option => {
+                option.addEventListener('click', () => {
+                    const lang = option.getAttribute('data-lang');
+                    localStorage.setItem('language', lang);
+                    currentLang.querySelector('span').textContent = lang.toUpperCase();
+                    languageOption.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    languageOptions.classList.remove('show');
+                    
+                    if (lang === 'bn') {
+                        body.classList.add('bn');
+                    } else {
+                        body.classList.remove('bn');
+                    }
+                });
+            });
+
+            // Dark mode toggle
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                darkModeToggle.classList.toggle('active');
+                
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
+
+            // Tab switching
+            const authTabs = document.querySelectorAll('.auth-tab');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const switchAuthLinks = document.querySelectorAll('.switch-auth');
+
+            authTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            switchAuthLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tabId = link.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            function switchTab(tabId) {
+                authTabs.forEach(t => t.classList.remove('active'));
+                document.querySelector(`.auth-tab[data-tab="${tabId}"]`).classList.add('active');
+                
+                if (tabId === 'login') {
+                    loginForm.style.display = 'block';
+                    registerForm.style.display = 'none';
+                    clearValidation('registerFormElement');
+                } else {
+                    loginForm.style.display = 'none';
+                    registerForm.style.display = 'block';
+                    clearValidation('loginFormElement');
+                }
+            }
+
+            // Validation Functions
+            function showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                
+                document.getElementById('notificationContainer').appendChild(notification);
+                
+                setTimeout(() => notification.classList.add('show'), 100);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+
+            function validateEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            function validateMobile(mobile) {
+                const mobileRegex = /^(\+88)?01[3-9]\d{8}$/;
+                return mobileRegex.test(mobile.replace(/\s/g, ''));
+            }
+
+            function validatePassword(password) {
+                const minLength = password.length >= 8;
+                const hasUpper = /[A-Z]/.test(password);
+                const hasLower = /[a-z]/.test(password);
+                const hasNumber = /\d/.test(password);
+                const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+                
+                return {
+                    isValid: minLength && hasUpper && hasLower && hasNumber,
+                    strength: [minLength, hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length,
+                    requirements: {
+                        minLength,
+                        hasUpper,
+                        hasLower,
+                        hasNumber,
+                        hasSpecial
+                    }
+                };
+            }
+
+            function showValidationMessage(fieldId, message, isValid) {
+                const field = document.getElementById(fieldId);
+                const messageElement = document.getElementById(fieldId + 'Message');
+                
+                if (isValid) {
+                    field.classList.remove('is-invalid');
+                    field.classList.add('is-valid');
+                    messageElement.className = 'validation-message success show';
+                    messageElement.textContent = message;
+                } else {
+                    field.classList.remove('is-valid');
+                    field.classList.add('is-invalid');
+                    messageElement.className = 'validation-message error show';
+                    messageElement.textContent = message;
+                }
+            }
+
+            function clearValidation(formId) {
+                const form = document.getElementById(formId);
+                const fields = form.querySelectorAll('.form-control');
+                const messages = form.querySelectorAll('.validation-message');
+                
+                fields.forEach(field => {
+                    field.classList.remove('is-valid', 'is-invalid');
+                });
+                
+                messages.forEach(message => {
+                    message.classList.remove('show');
+                });
+            }
+
+            // Real-time validation
+            const loginEmail = document.getElementById('loginEmail');
+            const loginPassword = document.getElementById('loginPassword');
+            const registerName = document.getElementById('registerName');
+            const registerEmail = document.getElementById('registerEmail');
+            const registerMobile = document.getElementById('registerMobile');
+            const registerPassword = document.getElementById('registerPassword');
+            const registerConfirmPassword = document.getElementById('registerConfirmPassword');
+
+            // Login email validation
+            loginEmail.addEventListener('blur', () => {
+                const value = loginEmail.value.trim();
+                const isEnglish = !body.classList.contains('bn');
+                
+                if (!value) {
+                    showValidationMessage('loginEmail', 
+                        isEnglish ? 'Email or mobile number is required' : 'ইমেইল বা মোবাইল নম্বর প্রয়োজন', 
+                        false);
+                } else if (validateEmail(value) || validateMobile(value)) {
+                    showValidationMessage('loginEmail', 
+                        isEnglish ? 'Valid input' : 'বৈধ ইনপুট', 
+                        true);
+                } else {
+                    showValidationMessage('loginEmail', 
+                        isEnglish ? 'Please enter a valid email or mobile number' : 'অনুগ্রহ করে একটি বৈধ ইমেইল বা মোবাইল নম্বর লিখুন', 
+                        false);
+                }
+            });
+
+            // Login password validation
+            loginPassword.addEventListener('blur', () => {
+                const value = loginPassword.value;
+                const isEnglish = !body.classList.contains('bn');
+                
+                if (!value) {
+                    showValidationMessage('loginPassword', 
+                        isEnglish ? 'Password is required' : 'পাসওয়ার্ড প্রয়োজন', 
+                        false);
+                } else if (value.length < 6) {
+                    showValidationMessage('loginPassword', 
+                        isEnglish ? 'Password must be at least 6 characters' : 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে', 
+                        false);
+                } else {
+                    showValidationMessage('loginPassword', 
+                        isEnglish ? 'Password looks good' : 'পাসওয়ার্ড ঠিক আছে', 
+                        true);
+                }
+            });
+
+            // Register name validation
+            registerName.addEventListener('blur', () => {
+                const value = registerName.value.trim();
+                const isEnglish = !body.classList.contains('bn');
+                
+                if (!value) {
+                    showValidationMessage('registerName', 
+                        isEnglish ? 'Full name is required' : 'পূর্ণ নাম প্রয়োজন', 
+                        false);
+                } else if (value.length < 2) {
+                    showValidationMessage('registerName', 
+                        isEnglish ? 'Name must be at least 2 characters' : 'নাম কমপক্ষে ২ অক্ষরের হতে হবে', 
+                        false);
+                } else {
+                    showValidationMessage('registerName', 
+                        isEnglish ? 'Name looks good' : 'নাম ঠিক আছে', 
+                        true);
+                }
+            });
+
+            // Register email validation
+            registerEmail.addEventListener('blur', () => {
+                const value = registerEmail.value.trim();
+                const isEnglish = !body.classList.contains('bn');
+                
+                if (!value) {
+                    showValidationMessage('registerEmail', 
+                        isEnglish ? 'Email is required' : 'ইমেইল প্রয়োজন', 
+                        false);
+                } else if (!validateEmail(value)) {
+                    showValidationMessage('registerEmail', 
+                        isEnglish ? 'Please enter a valid email address' : 'অনুগ্রহ করে একটি বৈধ ইমেইল ঠিকানা লিখুন', 
+                        false);
+                } else {
+                    showValidationMessage('registerEmail', 
+                        isEnglish ? 'Email looks good' : 'ইমেইল ঠিক আছে', 
+                        true);
+                }
+            });
+
+            // Register mobile validation
+            registerMobile.addEventListener('blur', () => {
+                const value = registerMobile.value.trim();
+                const isEnglish = !body.classList.contains('bn');
+                
+                if (!value) {
+                    showValidationMessage('registerMobile', 
+                        isEnglish ? 'Mobile number is required' : 'মোবাইল নম্বর প্রয়োজন', 
+                        false);
+                } else if (!validateMobile(value)) {
+                    showValidationMessage('registerMobile', 
+                        isEnglish ? 'Please enter a valid Bangladeshi mobile number' : 'অনুগ্রহ করে একটি বৈধ বাংলাদেশী মোবাইল নম্বর লিখুন', 
+                        false);
+                } else {
+                    showValidationMessage('registerMobile', 
+                        isEnglish ? 'Mobile number looks good' : 'মোবাইল নম্বর ঠিক আছে', 
+                        true);
+                }
+            });
+
+            // Password strength indicator
+            registerPassword.addEventListener('input', () => {
+                const value = registerPassword.value;
+                const strengthContainer = document.getElementById('passwordStrength');
+                const strengthFill = document.getElementById('strengthFill');
+                const strengthText = document.getElementById('strengthText');
+                const isEnglish = !body.classList.contains('bn');
+                
+                if (value.length > 0) {
+                    strengthContainer.style.display = 'block';
+                    const validation = validatePassword(value);
+                    const strengthPercentage = (validation.strength / 5) * 100;
+                    
+                    strengthFill.style.width = strengthPercentage + '%';
+                    
+                    if (validation.strength <= 2) {
+                        strengthFill.style.backgroundColor = '#dc3545';
+                        strengthText.textContent = isEnglish ? 'Weak' : 'দুর্বল';
+                        strengthText.style.color = '#dc3545';
+                    } else if (validation.strength <= 3) {
+                        strengthFill.style.backgroundColor = '#ffc107';
+                        strengthText.textContent = isEnglish ? 'Medium' : 'মাঝারি';
+                        strengthText.style.color = '#ffc107';
+                    } else {
+                        strengthFill.style.backgroundColor = '#28a745';
+                        strengthText.textContent = isEnglish ? 'Strong' : 'শক্তিশালী';
+                        strengthText.style.color = '#28a745';
+                    }
+                } else {
+                    strengthContainer.style.display = 'none';
+                }
+            });
+
+            // Register password validation
+            registerPassword.addEventListener('blur', () => {
+                const value = registerPassword.value;
+                const isEnglish = !body.classList.contains('bn');
+                const validation = validatePassword(value);
+                
+                if (!value) {
+                    showValidationMessage('registerPassword', 
+                        isEnglish ? 'Password is required' : 'পাসওয়ার্ড প্রয়োজন', 
+                        false);
+                } else if (!validation.isValid) {
+                    showValidationMessage('registerPassword', 
+                        isEnglish ? 'Password must be at least 8 characters with uppercase, lowercase, and number' : 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে এবং বড় হাতের অক্ষর, ছোট হাতের অক্ষর ও সংখ্যা থাকতে হবে', 
+                        false);
+                } else {
+                    showValidationMessage('registerPassword', 
+                        isEnglish ? 'Strong password!' : 'শক্তিশালী পাসওয়ার্ড!', 
+                        true);
+                }
+            });
+
+            // Confirm password validation
+            registerConfirmPassword.addEventListener('blur', () => {
+                const password = registerPassword.value;
+                const confirmPassword = registerConfirmPassword.value;
+                const isEnglish = !body.classList.contains('bn');
+                
+                if (!confirmPassword) {
+                    showValidationMessage('registerConfirmPassword', 
+                        isEnglish ? 'Please confirm your password' : 'অনুগ্রহ করে আপনার পাসওয়ার্ড নিশ্চিত করুন', 
+                        false);
+                } else if (password !== confirmPassword) {
+                    showValidationMessage('registerConfirmPassword', 
+                        isEnglish ? 'Passwords do not match' : 'পাসওয়ার্ড মিলছে না', 
+                        false);
+                } else {
+                    showValidationMessage('registerConfirmPassword', 
+                        isEnglish ? 'Passwords match!' : 'পাসওয়ার্ড মিলেছে!', 
+                        true);
+                }
+            });
+
+            // Form submissions
+            const loginFormElement = document.getElementById('loginFormElement');
+            const registerFormElement = document.getElementById('registerFormElement');
+
+            loginFormElement.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const loginBtn = document.getElementById('loginBtn');
+                const loginSpinner = document.getElementById('loginSpinner');
+                const isEnglish = !body.classList.contains('bn');
+                
+                // Show loading
+                loginBtn.disabled = true;
+                loginSpinner.style.display = 'inline-block';
+                
+                // Simulate API call
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    // Store user session
+                    localStorage.setItem('userLoggedIn', 'true');
+                    localStorage.setItem('userName', loginEmail.value);
+                    
+                    showNotification(
+                        isEnglish ? 'Login successful! Redirecting...' : 'সফলভাবে লগইন হয়েছে! রিডাইরেক্ট করা হচ্ছে...', 
+                        'success'
+                    );
+                    
+                    setTimeout(() => {
+                        window.location.href = 'user.html';
+                    }, 1500);
+                    
+                } catch (error) {
+                    showNotification(
+                        isEnglish ? 'Login failed. Please try again.' : 'লগইন ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।', 
+                        'error'
+                    );
+                } finally {
+                    loginBtn.disabled = false;
+                    loginSpinner.style.display = 'none';
+                }
+            });
+
+            registerFormElement.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const registerBtn = document.getElementById('registerBtn');
+                const registerSpinner = document.getElementById('registerSpinner');
+                const agreeTerms = document.getElementById('agreeTerms');
+                const isEnglish = !body.classList.contains('bn');
+                
+                // Check terms agreement
+                if (!agreeTerms.checked) {
+                    showValidationMessage('agreeTerms', 
+                        isEnglish ? 'You must agree to the Terms & Conditions' : 'আপনাকে শর্তাবলী মেনে নিতে হবে', 
+                        false);
+                    return;
+                }
+                
+                // Show loading
+                registerBtn.disabled = true;
+                registerSpinner.style.display = 'inline-block';
+                
+                // Simulate API call
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    
+                    showNotification(
+                        isEnglish ? 'Registration successful! Please login to continue.' : 'সফলভাবে রেজিস্ট্রেশন হয়েছে! লগইন করতে এগিয়ে যান।', 
+                        'success'
+                    );
+                    
+                    // Switch to login tab
+                    setTimeout(() => {
+                        switchTab('login');
+                        registerFormElement.reset();
+                        clearValidation('registerFormElement');
+                    }, 2000);
+                    
+                } catch (error) {
+                    showNotification(
+                        isEnglish ? 'Registration failed. Please try again.' : 'রেজিস্ট্রেশন ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।', 
+                        'error'
+                    );
+                } finally {
+                    registerBtn.disabled = false;
+                    registerSpinner.style.display = 'none';
+                }
+            });
+
+            // Social login handlers
+            document.getElementById('facebookLogin').addEventListener('click', (e) => {
+                e.preventDefault();
+                const isEnglish = !body.classList.contains('bn');
+                showNotification(
+                    isEnglish ? 'Facebook login coming soon!' : 'ফেসবুক লগইন শীঘ্রই আসছে!', 
+                    'warning'
+                );
+            });
+
+            document.getElementById('googleLogin').addEventListener('click', (e) => {
+                e.preventDefault();
+                const isEnglish = !body.classList.contains('bn');
+                showNotification(
+                    isEnglish ? 'Google login coming soon!' : 'গুগল লগইন শীঘ্রই আসছে!', 
+                    'warning'
+                );
+            });
+
+            // Forgot password handler
+            document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                const isEnglish = !body.classList.contains('bn');
+                const email = prompt(
+                    isEnglish ? 'Enter your email address:' : 'আপনার ইমেইল ঠিকানা লিখুন:'
+                );
+                
+                if (email && validateEmail(email)) {
+                    showNotification(
+                        isEnglish ? 'Password reset link sent to your email!' : 'পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হয়েছে!', 
+                        'success'
+                    );
+                } else if (email) {
+                    showNotification(
+                        isEnglish ? 'Please enter a valid email address.' : 'অনুগ্রহ করে একটি বৈধ ইমেইল ঠিকানা লিখুন।', 
+                        'error'
+                    );
+                }
+            });
+
+            // Terms and Privacy links
+            document.getElementById('termsLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Terms & Conditions page coming soon!', 'info');
+            });
+
+            document.getElementById('privacyLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification('Privacy Policy page coming soon!', 'info');
+            });
+
+            // Handle URL hash for direct form access
+            const hash = window.location.hash;
+            if (hash === '#register') {
+                switchTab('register');
+            }
+        });
+    </script>
+</body>
+</html>
