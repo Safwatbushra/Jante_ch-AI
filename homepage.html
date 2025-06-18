@@ -12,6 +12,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
+    <style>
+        .logo-dark { display: none; }
+        body.dark-mode .logo-light { display: none !important; }
+        body.dark-mode .logo-dark  { display: inline-block !important; }
+        body:not(.dark-mode) .logo-light { display: inline-block !important; }
+        body:not(.dark-mode) .logo-dark  { display: none !important; }
+    </style>
 </head>
 <body>
     <!-- Preloader -->
@@ -34,7 +41,10 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="p4.png" alt="" class="navbar-logo">
+                <div class="site-logo">
+                    <img src="p4.png" alt="Site Logo" class="logo-light" />
+                    <img src="dark-01.png" alt="Site Logo" class="logo-dark" />
+                </div>
                 <!--<span class="brand-text"><b>Jante ChAi</b></span>-->
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

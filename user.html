@@ -951,6 +951,11 @@
         .menu-item .text { color:#111; }
         .menu-item:hover { background:#f0f0f0; }
         /* PLUS_DROPDOWN_END */
+
+        body.dark .site-logo img,
+        body.dark .site-logo svg {
+          filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 1px #fff);
+        }
     </style>
 </head>
 <body>
@@ -961,7 +966,9 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="homepage.html">
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/p4-UjII0J45qs970Tdi4uGXfDTJniw6rY.png" alt="Jante ChAi Logo">
+                <div class="site-logo">
+                  <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/p4-UjII0J45qs970Tdi4uGXfDTJniw6rY.png" alt="Jante ChAi Logo">
+                </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="fas fa-bars"></i>
