@@ -924,6 +924,33 @@
                 opacity: 0;
             }
         }
+
+        /* Chat Bubble Colors */
+        .message.user-message .message-content {
+            background: #008f69 !important; /* Green for user */
+            color: #fff;
+            margin-left: auto;
+        }
+        .message.bot-message .message-content {
+            background: #444c56 !important; /* Ash/Grey for bot */
+            color: #fff;
+        }
+        /* Remove user icon space */
+        .message.user-message .message-avatar {
+            display: none !important;
+        }
+
+        /* PLUS_DROPDOWN_START */
+        .plus-button { margin-right:8px; cursor:pointer; }
+        .plus-menu { position:absolute; background:white; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.15); }
+        .plus-menu.hidden { display:none; }
+        .plus-menu:not(.hidden) { display:block; }
+        .menu-item { padding:8px 12px; cursor:pointer; display:flex; align-items:center; color:#111; }
+        .menu-item .icon { margin-right:8px; font-size:1.2em; }
+        .menu-item .chevron { margin-left:auto; font-size:1.2em; }
+        .menu-item .text { color:#111; }
+        .menu-item:hover { background:#f0f0f0; }
+        /* PLUS_DROPDOWN_END */
     </style>
 </head>
 <body>
@@ -1004,8 +1031,7 @@
                 <h4 class="user-name english">John Doe</h4>
                 <h4 class="user-name bangla">জন ডো</h4>
                 <p class="user-email">john.doe@example.com</p>
-                <div class="user-status english">Verified</div>
-                <div class="user-status bangla">যাচাইকৃত</div>
+                <div class="user-status english">Verify</div>
             </div>
             
             <!-- Sidebar Menu -->
@@ -1183,6 +1209,18 @@
                             <button class="chat-voice-btn" id="voiceBtn">
                                 <i class="fas fa-microphone"></i>
                             </button>
+                            <button id="plus-btn" class="plus-button"><i class="fas fa-plus"></i></button>
+                            <div id="plus-menu" class="plus-menu hidden">
+                                <div id="add-photos" class="menu-item">
+                                    <span class="icon">📎</span>
+                                    <span class="text">Add photos and files</span>
+                                </div>
+                                <div id="add-apps" class="menu-item">
+                                    <span class="icon">📂</span>
+                                    <span class="text">Add from apps</span>
+                                    <span class="chevron">›</span>
+                                </div>
+                            </div>
                             <input type="text" class="chat-input-field" id="messageInput" placeholder="Type your question here...">
                             <button class="chat-send-btn" id="sendBtn">
                                 <i class="fas fa-paper-plane"></i>
@@ -1675,10 +1713,21 @@
                 addMessage(message, true);
                 messageInput.value = '';
                 
+                // Hide/remove quick actions after user sends a message
+                hideQuickActions();
+                
                 setTimeout(() => {
                     const botResponse = getBotResponse(message);
                     addMessage(botResponse);
                 }, 1000 + Math.random() * 2000);
+            }
+            
+            // Function to hide/remove quick actions
+            function hideQuickActions() {
+                const quickActions = document.querySelector('.quick-actions');
+                if (quickActions) {
+                    quickActions.style.display = 'none';
+                }
             }
             
             // Send button click
@@ -1702,6 +1751,8 @@
                     if (messageInput) {
                         messageInput.value = query;
                         sendMessage();
+                        // Hide/remove quick actions after quick action is used
+                        hideQuickActions();
                     }
                 });
             });
@@ -1765,6 +1816,22 @@
                     }
                 });
             });
+            
+            /* PLUS_DROPDOWN_START */
+            // Inserted plus-button and dropdown in chat input wrapper
+            const plusBtn  = document.getElementById('plus-btn');
+            const plusMenu = document.getElementById('plus-menu');
+            plusBtn.addEventListener('click', e => {
+              e.stopPropagation();
+              plusMenu.classList.toggle('hidden');
+            });
+            document.addEventListener('click', () => plusMenu.classList.add('hidden'));
+            document.getElementById('add-photos')
+                    .addEventListener('click', () => {
+                      alert('Photos and files feature coming soon!');
+                      plusMenu.classList.add('hidden');
+                    });
+            /* PLUS_DROPDOWN_END */
         });
     </script>
 </body>
