@@ -37,12 +37,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
 
-  // Initialize AOS animation library
-  AOS.init({
-    duration: 800,
-    easing: "ease-in-out",
-    once: true,
-  });
   // Create particles for hero section with enhanced error handling
   const heroParticles = document.getElementById('heroParticles');
   if (heroParticles && typeof heroParticles.appendChild === 'function') {
