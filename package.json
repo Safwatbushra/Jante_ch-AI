@@ -1,7 +1,31 @@
 {
   "dependencies": {
-    "@supabase/supabase-js": "^2.50.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
-    "groq-sdk": "^0.25.0"
-  }
+    "express": "^5.1.0",
+    "groq-sdk": "^0.25.0",
+    "mongodb": "^6.17.0"
+  },
+  "name": "jante_ch-ai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server-clean.js",
+  "scripts": {
+    "start": "node server-clean.js",
+    "dev": "node --watch server-clean.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Safwatbushra/Jante_ch-AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Safwatbushra/Jante_ch-AI/issues"
+  },
+  "homepage": "https://github.com/Safwatbushra/Jante_ch-AI#readme"
 }

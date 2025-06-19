@@ -42,3 +42,6 @@ class Config {    constructor() {
 
 // Create global config instance
 window.appConfig = new Config();
+console.log('Config created:', window.appConfig);
+console.log('Config isConfigured:', window.appConfig.isConfigured());
+console.log('Supabase config:', window.appConfig.getSupabaseConfig());

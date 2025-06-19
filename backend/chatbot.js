@@ -1,4 +1,4 @@
-import { supabase } from './supabase.js'
+import { mongodb } from './mongodb.js'
 import { getChatCompletion, GROQ_MODELS } from './groq.js'
 import { 
   createChatSession, 
@@ -8,14 +8,15 @@ import {
 } from './database.js'
 
 export class ChatBot {
-  constructor() {
+  constructor(userId) {
+    this.userId = userId
     this.currentSessionId = null
     this.model = GROQ_MODELS.LLAMA_8B // Fast model for quick responses
   }
 
   // Start new chat session
   async startNewChat(title = 'New Chat') {
-    const { data: sessionId, error } = await createChatSession(title)
+    const { data: sessionId, error } = await createChatSession(title, this.userId)
     if (error) throw new Error(`Failed to create session: ${error.message}`)
     
     this.currentSessionId = sessionId
@@ -43,6 +44,7 @@ export class ChatBot {
       // Save user message
       const { error: userError } = await saveMessage(
         targetSessionId, 
+        this.userId,
         'user', 
         userMessage
       )
@@ -63,11 +65,10 @@ export class ChatBot {
 
       if (groqError) {
         throw new Error(`Groq API error: ${groqError}`)
-      }
-
-      // Save AI response
+      }      // Save AI response
       const { error: aiError } = await saveMessage(
         targetSessionId, 
+        this.userId,
         'assistant', 
         aiResponse
       )

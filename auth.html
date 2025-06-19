@@ -495,9 +495,7 @@
         .register-link {
             text-align: center;
             margin-top: 20px;
-        }
-
-        .loading-spinner {
+        }        .loading-spinner {
             display: none;
             width: 20px;
             height: 20px;
@@ -508,9 +506,24 @@
             margin-right: 10px;
         }
 
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn:disabled .loading-spinner {
+            display: inline-block;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        .auth-form.disabled {
+            pointer-events: none;
+            opacity: 0.7;
         }
 
         .notification {
@@ -801,16 +814,11 @@
             </div>
         </div>
     </section>    <!-- Notification Container -->
-    <div id="notificationContainer"></div>    <!-- Supabase JS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-      <!-- Bootstrap JS -->
+    <div id="notificationContainer"></div>    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Configuration Module -->
-    <script src="js/config.js"></script>
-    
-    <!-- Authentication Module -->
-    <script src="js/auth.js"></script>
+    <!-- Authentication Module (MongoDB) -->
+    <script src="js/auth-simple.js"></script>
     
     <!-- Main JS -->
     <script src="js/main.js"></script>
@@ -964,8 +972,7 @@
                     loginForm.style.display = 'none';
                     registerForm.style.display = 'block';
                     clearValidation('loginFormElement');
-                }
-            }
+                }            }
 
             // Validation Functions
             function showNotification(message, type = 'success') {
@@ -977,10 +984,25 @@
                 
                 setTimeout(() => notification.classList.add('show'), 100);
                 
+                // Show success and info messages longer, error messages shorter
+                const duration = type === 'error' ? 4000 : (type === 'info' ? 6000 : 3000);
+                
                 setTimeout(() => {
                     notification.classList.remove('show');
                     setTimeout(() => notification.remove(), 300);
-                }, 3000);
+                }, duration);            }
+
+            // Redirect function with fallback
+            function redirectToPage(url, delay = 1500) {
+                setTimeout(() => {
+                    try {
+                        window.location.href = url;
+                    } catch (error) {
+                        console.error('Redirect error:', error);
+                        // Fallback redirect
+                        window.location.assign(url);
+                    }
+                }, delay);
             }
 
             function validateEmail(email) {
@@ -1243,50 +1265,78 @@
                 const loginSpinner = document.getElementById('loginSpinner');
                 const isEnglish = !body.classList.contains('bn');
                 
-                // Show loading
+                // Client-side validation first
+                const email = loginEmail.value.trim();
+                const password = loginPassword.value;
+                
+                if (!email) {
+                    showNotification(
+                        isEnglish ? 'Please enter your email or mobile number.' : 'অনুগ্রহ করে আপনার ইমেইল বা মোবাইল নম্বর লিখুন।',
+                        'error'
+                    );
+                    return;
+                }
+                
+                if (!password) {
+                    showNotification(
+                        isEnglish ? 'Please enter your password.' : 'অনুগ্রহ করে আপনার পাসওয়ার্ড লিখুন।',
+                        'error'
+                    );
+                    return;
+                }
+                  // Show loading
                 loginBtn.disabled = true;
                 loginSpinner.style.display = 'inline-block';
-                
-                try {
-                    // Use Supabase authentication
-                    const email = loginEmail.value.trim();
-                    const password = loginPassword.value;
-                    
+                document.querySelector('.auth-form').classList.add('disabled');                try {
                     // Wait for auth manager to be ready
-                    while (!window.authManager || !window.authManager.supabase) {
+                    let waitCount = 0;
+                    while (!window.authManager && waitCount < 50) {
                         await new Promise(resolve => setTimeout(resolve, 100));
+                        waitCount++;
                     }
                     
-                    const result = await window.authManager.signIn(email, password);
+                    if (!window.authManager) {
+                        throw new Error('AuthManager not available');
+                    }
                     
-                    if (result.success) {
+                    console.log('Calling authManager.signIn...');
+                    const result = await window.authManager.signIn(email, password);
+                    console.log('SignIn result:', result);
+                      if (result.success) {
                         showNotification(
-                            isEnglish ? 'Login successful! Redirecting...' : 'সফলভাবে লগইন হয়েছে! রিডাইরেক্ট করা হচ্ছে...', 
+                            isEnglish ? 'Login successful! Redirecting to dashboard...' : 'সফলভাবে লগইন হয়েছে! ড্যাশবোর্ডে রিডাইরেক্ট করা হচ্ছে...', 
                             'success'
                         );
+                          // Clear form
+                        loginFormElement.reset();
+                        clearValidation('loginFormElement');
                         
-                        setTimeout(() => {
-                            window.location.href = 'user.html';
-                        }, 1500);
+                        // Wait a moment for the notification then redirect
+                        redirectToPage('user.html');
                     } else {
                         throw new Error(result.error);
                     }
-                    
-                } catch (error) {
+                      } catch (error) {
                     console.error('Login error:', error);
                     let errorMessage = isEnglish ? 'Login failed. Please check your credentials.' : 'লগইন ব্যর্থ। অনুগ্রহ করে আপনার তথ্য পরীক্ষা করুন।';
                     
                     // Handle specific error messages
-                    if (error.message.includes('Invalid login credentials')) {
-                        errorMessage = isEnglish ? 'Invalid email or password.' : 'ভুল ইমেইল বা পাসওয়ার্ড।';
+                    if (error.message.includes('Invalid login credentials') || error.message.includes('invalid_grant')) {
+                        errorMessage = isEnglish ? 'Invalid email or password. Please check your credentials and try again.' : 'ভুল ইমেইল বা পাসওয়ার্ড। অনুগ্রহ করে আপনার তথ্য পরীক্ষা করে আবার চেষ্টা করুন।';
                     } else if (error.message.includes('Email not confirmed')) {
-                        errorMessage = isEnglish ? 'Please verify your email before logging in.' : 'লগইন করার আগে অনুগ্রহ করে আপনার ইমেইল যাচাই করুন।';
+                        errorMessage = isEnglish ? 'Please verify your email before logging in. Check your inbox for the verification link.' : 'লগইন করার আগে অনুগ্রহ করে আপনার ইমেইল যাচাই করুন। যাচাইকরণ লিংকের জন্য আপনার ইনবক্স চেক করুন।';
+                    } else if (error.message.includes('No user found')) {
+                        errorMessage = isEnglish ? 'No account found with this email. Please register first or check your email address.' : 'এই ইমেইলের সাথে কোন অ্যাকাউন্ট পাওয়া যায়নি। অনুগ্রহ করে প্রথমে রেজিস্টার করুন বা আপনার ইমেইল ঠিকানা পরীক্ষা করুন।';
+                    } else if (error.message.includes('Too many requests')) {
+                        errorMessage = isEnglish ? 'Too many login attempts. Please wait a few minutes before trying again.' : 'অনেক বেশি লগইন চেষ্টা। অনুগ্রহ করে কয়েক মিনিট অপেক্ষা করে আবার চেষ্টা করুন।';
+                    } else if (error.message.includes('Network') || error.message.includes('fetch')) {
+                        errorMessage = isEnglish ? 'Network error. Please check your internet connection and try again.' : 'নেটওয়ার্ক সমস্যা। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';
                     }
                     
-                    showNotification(errorMessage, 'error');
-                } finally {
+                    showNotification(errorMessage, 'error');                } finally {
                     loginBtn.disabled = false;
                     loginSpinner.style.display = 'none';
+                    document.querySelector('.auth-form').classList.remove('disabled');
                 }
             });            registerFormElement.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -1296,6 +1346,53 @@
                 const agreeTerms = document.getElementById('agreeTerms');
                 const isEnglish = !body.classList.contains('bn');
                 
+                // Client-side validation first
+                const fullName = registerName.value.trim();
+                const email = registerEmail.value.trim();
+                const mobile = registerMobile.value.trim();
+                const password = registerPassword.value;
+                const confirmPassword = registerConfirmPassword.value;
+                
+                if (!fullName) {
+                    showNotification(
+                        isEnglish ? 'Please enter your full name.' : 'অনুগ্রহ করে আপনার পূর্ণ নাম লিখুন।',
+                        'error'
+                    );
+                    return;
+                }
+                
+                if (!email) {
+                    showNotification(
+                        isEnglish ? 'Please enter your email address.' : 'অনুগ্রহ করে আপনার ইমেইল ঠিকানা লিখুন।',
+                        'error'
+                    );
+                    return;
+                }
+                
+                if (!mobile) {
+                    showNotification(
+                        isEnglish ? 'Please enter your mobile number.' : 'অনুগ্রহ করে আপনার মোবাইল নম্বর লিখুন।',
+                        'error'
+                    );
+                    return;
+                }
+                
+                if (!password) {
+                    showNotification(
+                        isEnglish ? 'Please create a password.' : 'অনুগ্রহ করে একটি পাসওয়ার্ড তৈরি করুন।',
+                        'error'
+                    );
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showNotification(
+                        isEnglish ? 'Passwords do not match.' : 'পাসওয়ার্ড মিলছে না।',
+                        'error'
+                    );
+                    return;
+                }
+                
                 // Check terms agreement
                 if (!agreeTerms.checked) {
                     showValidationMessage('agreeTerms', 
@@ -1303,23 +1400,22 @@
                         false);
                     return;
                 }
-                
-                // Show loading
+                  // Show loading
                 registerBtn.disabled = true;
                 registerSpinner.style.display = 'inline-block';
-                
-                try {
+                document.querySelector('.auth-form').classList.add('disabled');                try {
                     // Wait for auth manager to be ready
-                    while (!window.authManager || !window.authManager.supabase) {
+                    let waitCount = 0;
+                    while (!window.authManager && waitCount < 50) {
+                        console.log('Waiting for authManager (register)...', waitCount);
                         await new Promise(resolve => setTimeout(resolve, 100));
+                        waitCount++;
                     }
                     
-                    // Get form data
-                    const fullName = registerName.value.trim();
-                    const email = registerEmail.value.trim();
-                    const mobile = registerMobile.value.trim();
-                    const password = registerPassword.value;
-                    
+                    if (!window.authManager) {
+                        throw new Error('AuthManager not available');
+                    }
+                      // Get form data (already validated above)
                     // Validate data
                     if (!window.authManager.validateEmail(email)) {
                         throw new Error(isEnglish ? 'Please enter a valid email address.' : 'অনুগ্রহ করে একটি বৈধ ইমেইল ঠিকানা লিখুন।');
@@ -1333,43 +1429,53 @@
                     if (!passwordValidation.isValid) {
                         throw new Error(isEnglish ? 'Password must be at least 8 characters with uppercase, lowercase, and number.' : 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে এবং বড় হাতের অক্ষর, ছোট হাতের অক্ষর ও সংখ্যা থাকতে হবে।');
                     }
-                    
-                    // Register user with Supabase
+                      // Register user with MongoDB
                     const result = await window.authManager.signUp(email, password, fullName, mobile);
-                    
-                    if (result.success) {
+                      if (result.success) {
                         showNotification(
-                            isEnglish ? 'Registration successful! Please check your email to verify your account.' : 'সফলভাবে রেজিস্ট্রেশন হয়েছে! অনুগ্রহ করে আপনার ইমেইল যাচাই করুন।', 
+                            isEnglish ? 'Registration successful! Please check your email to verify your account before logging in.' : 'সফলভাবে রেজিস্ট্রেশন হয়েছে! লগইন করার আগে অনুগ্রহ করে আপনার ইমেইল যাচাই করুন।', 
                             'success'
                         );
+                        
+                        // Clear form
+                        registerFormElement.reset();
+                        clearValidation('registerFormElement');
                         
                         // Switch to login tab after success
                         setTimeout(() => {
                             switchTab('login');
-                            registerFormElement.reset();
-                            clearValidation('registerFormElement');
-                        }, 2000);
+                            // Show additional guidance
+                            showNotification(
+                                isEnglish ? 'Check your email for the verification link, then return here to log in.' : 'যাচাইকরণ লিংকের জন্য আপনার ইমেইল চেক করুন, তারপর লগইন করতে এখানে ফিরে আসুন।', 
+                                'info'
+                            );
+                        }, 3000);
                     } else {
                         throw new Error(result.error);
                     }
-                    
-                } catch (error) {
+                      } catch (error) {
                     console.error('Registration error:', error);
                     let errorMessage = isEnglish ? 'Registration failed. Please try again.' : 'রেজিস্ট্রেশন ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।';
                     
                     // Handle specific error messages
-                    if (error.message.includes('User already registered')) {
-                        errorMessage = isEnglish ? 'An account with this email already exists.' : 'এই ইমেইল দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট রয়েছে।';
+                    if (error.message.includes('User already registered') || error.message.includes('already been registered')) {
+                        errorMessage = isEnglish ? 'An account with this email already exists. Please use a different email or try logging in.' : 'এই ইমেইল দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট রয়েছে। অনুগ্রহ করে অন্য ইমেইল ব্যবহার করুন বা লগইন করার চেষ্টা করুন।';
                     } else if (error.message.includes('Password should be at least')) {
                         errorMessage = isEnglish ? 'Password must be at least 6 characters long.' : 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।';
                     } else if (error.message.includes('valid email')) {
                         errorMessage = isEnglish ? 'Please enter a valid email address.' : 'অনুগ্রহ করে একটি বৈধ ইমেইল ঠিকানা লিখুন।';
+                    } else if (error.message.includes('Signup is disabled')) {
+                        errorMessage = isEnglish ? 'Account registration is currently disabled. Please contact support.' : 'অ্যাকাউন্ট রেজিস্ট্রেশন বর্তমানে নিষ্ক্রিয়। অনুগ্রহ করে সাপোর্টের সাথে যোগাযোগ করুন।';
+                    } else if (error.message.includes('Network') || error.message.includes('fetch')) {
+                        errorMessage = isEnglish ? 'Network error. Please check your internet connection and try again.' : 'নেটওয়ার্ক সমস্যা। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';
+                    } else if (error.message.includes('weak password')) {
+                        errorMessage = isEnglish ? 'Password is too weak. Please use a stronger password with uppercase, lowercase, numbers, and special characters.' : 'পাসওয়ার্ড খুবই দুর্বল। অনুগ্রহ করে বড় হাতের অক্ষর, ছোট হাতের অক্ষর, সংখ্যা এবং বিশেষ চিহ্ন সহ একটি শক্তিশালী পাসওয়ার্ড ব্যবহার করুন।';
                     }
                     
-                    showNotification(errorMessage, 'error');
-                } finally {
+                    showNotification(errorMessage, 'error');                } finally {
                     registerBtn.disabled = false;
                     registerSpinner.style.display = 'none';
+                    document.querySelector('.auth-form').classList.remove('disabled');
                 }
             });            // Social login handlers
             document.getElementById('facebookLogin').addEventListener('click', async (e) => {
@@ -1377,43 +1483,41 @@
                 const isEnglish = !body.classList.contains('bn');
                 
                 try {
-                    // Wait for auth manager to be ready
-                    while (!window.authManager || !window.authManager.supabase) {
+                    // Wait for auth manager to be ready with timeout
+                    let waitCount = 0;
+                    while ((!window.authManager || !window.authManager.supabase) && waitCount < 50) {
                         await new Promise(resolve => setTimeout(resolve, 100));
+                        waitCount++;
                     }
-                    
-                    const result = await window.authManager.signInWithFacebook();
-                    if (!result.success) {
-                        throw new Error(result.error);
+                      if (!window.authManager) {
+                        throw new Error('Authentication service not available');
                     }
+                      showNotification(
+                        isEnglish ? 'Facebook login coming soon!' : 'ফেসবুক লগইন শীঘ্রই আসছে!', 
+                        'info'
+                    );
                 } catch (error) {
-                    console.error('Facebook login error:', error);
                     showNotification(
-                        isEnglish ? 'Facebook login failed. Please try again.' : 'ফেসবুক লগইন ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।', 
-                        'error'
+                        isEnglish ? 'Facebook login coming soon!' : 'ফেসবুক লগইন শীঘ্রই আসছে!', 
+                        'info'
                     );
                 }
-            });
-
-            document.getElementById('googleLogin').addEventListener('click', async (e) => {
+            });            document.getElementById('googleLogin').addEventListener('click', async (e) => {
                 e.preventDefault();
                 const isEnglish = !body.classList.contains('bn');
                 
                 try {
-                    // Wait for auth manager to be ready
-                    while (!window.authManager || !window.authManager.supabase) {
-                        await new Promise(resolve => setTimeout(resolve, 100));
+                    if (!window.authManager) {
+                        throw new Error('Authentication service not available');
                     }
-                    
-                    const result = await window.authManager.signInWithGoogle();
-                    if (!result.success) {
-                        throw new Error(result.error);
-                    }
+                      showNotification(
+                        isEnglish ? 'Google login coming soon!' : 'গুগল লগইন শীঘ্রই আসছে!', 
+                        'info'
+                    );
                 } catch (error) {
-                    console.error('Google login error:', error);
                     showNotification(
-                        isEnglish ? 'Google login failed. Please try again.' : 'গুগল লগইন ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।', 
-                        'error'
+                        isEnglish ? 'Google login coming soon!' : 'গুগল লগইন শীঘ্রই আসছে!', 
+                        'info'
                     );
                 }
             });
@@ -1424,20 +1528,12 @@
                 const isEnglish = !body.classList.contains('bn');
                 const email = prompt(
                     isEnglish ? 'Enter your email address:' : 'আপনার ইমেইল ঠিকানা লিখুন:'
-                );
-                
-                if (email && window.authManager && window.authManager.validateEmail(email)) {
+                );                if (email && window.authManager && window.authManager.validateEmail(email)) {
                     try {
-                        // Wait for auth manager to be ready
-                        while (!window.authManager || !window.authManager.supabase) {
-                            await new Promise(resolve => setTimeout(resolve, 100));
-                        }
-                        
                         const result = await window.authManager.resetPassword(email);
-                        
-                        if (result.success) {
+                          if (result.success) {
                             showNotification(
-                                isEnglish ? 'Password reset link sent to your email!' : 'পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হয়েছে!', 
+                                isEnglish ? 'Password reset link sent to your email! Check your inbox and spam folder.' : 'পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হয়েছে! আপনার ইনবক্স এবং স্প্যাম ফোল্ডার চেক করুন।', 
                                 'success'
                             );
                         } else {
@@ -1445,10 +1541,15 @@
                         }
                     } catch (error) {
                         console.error('Password reset error:', error);
-                        showNotification(
-                            isEnglish ? 'Failed to send reset email. Please try again.' : 'রিসেট ইমেইল পাঠাতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।', 
-                            'error'
-                        );
+                        let errorMessage = isEnglish ? 'Failed to send reset email. Please try again.' : 'রিসেট ইমেইল পাঠাতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।';
+                        
+                        if (error.message.includes('User not found')) {
+                            errorMessage = isEnglish ? 'No account found with this email address. Please check the email or register first.' : 'এই ইমেইল ঠিকানার সাথে কোন অ্যাকাউন্ট পাওয়া যায়নি। অনুগ্রহ করে ইমেইল পরীক্ষা করুন বা প্রথমে রেজিস্টার করুন।';
+                        } else if (error.message.includes('rate limit')) {
+                            errorMessage = isEnglish ? 'Too many reset attempts. Please wait a few minutes before trying again.' : 'অনেক বেশি রিসেট চেষ্টা। অনুগ্রহ করে কয়েক মিনিট অপেক্ষা করে আবার চেষ্টা করুন।';
+                        }
+                        
+                        showNotification(errorMessage, 'error');
                     }
                 } else if (email) {
                     showNotification(

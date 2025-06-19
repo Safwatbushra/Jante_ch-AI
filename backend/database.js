@@ -1,59 +1,150 @@
-import { supabase } from './supabase.js'
+import { mongodb, ObjectId } from './mongodb.js';
 
 // Chat session functions
-export async function createChatSession(title = 'New Chat') {
-  const { data, error } = await supabase.rpc('create_chat_session', {
-    session_title: title
-  })
-  return { data, error }
+export async function createChatSession(title = 'New Chat', userId) {
+  try {
+    const db = mongodb.getDb();
+    
+    const newSession = {
+      title,
+      userId: new ObjectId(userId),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const result = await db.collection('chat_sessions').insertOne(newSession);
+    
+    return { 
+      data: result.insertedId, 
+      error: null 
+    };
+  } catch (error) {
+    return { 
+      data: null, 
+      error: { message: error.message }
+    };
+  }
 }
 
-export async function getUserChatSessions() {
-  const { data, error } = await supabase.rpc('get_user_chat_sessions')
-  return { data, error }
+export async function getUserChatSessions(userId) {
+  try {
+    const db = mongodb.getDb();
+    
+    const sessions = await db.collection('chat_sessions')
+      .find({ userId: new ObjectId(userId) })
+      .sort({ updatedAt: -1 })
+      .toArray();
+    
+    return { 
+      data: sessions, 
+      error: null 
+    };
+  } catch (error) {
+    return { 
+      data: null, 
+      error: { message: error.message }
+    };
+  }
 }
 
 export async function getChatMessages(sessionId) {
-  const { data, error } = await supabase
-    .from('messages')
-    .select('*')
-    .eq('session_id', sessionId)
-    .order('created_at', { ascending: true })
-  
-  return { data, error }
+  try {
+    const db = mongodb.getDb();
+    
+    const messages = await db.collection('messages')
+      .find({ sessionId: new ObjectId(sessionId) })
+      .sort({ createdAt: 1 })
+      .toArray();
+    
+    return { 
+      data: messages, 
+      error: null 
+    };
+  } catch (error) {
+    return { 
+      data: null, 
+      error: { message: error.message }
+    };
+  }
 }
 
 // Message functions
-export async function saveMessage(sessionId, role, content) {
-  const { data, error } = await supabase
-    .from('messages')
-    .insert({
-      session_id: sessionId,
-      user_id: (await supabase.auth.getUser()).data.user?.id,
+export async function saveMessage(sessionId, userId, role, content) {
+  try {
+    const db = mongodb.getDb();
+    
+    const newMessage = {
+      sessionId: new ObjectId(sessionId),
+      userId: new ObjectId(userId),
       role: role,
-      content: content
-    })
-    .select()
-  
-  return { data, error }
+      content: content,
+      createdAt: new Date()
+    };
+
+    const result = await db.collection('messages').insertOne(newMessage);
+    
+    return { 
+      data: result.insertedId, 
+      error: null 
+    };
+  } catch (error) {
+    return { 
+      data: null, 
+      error: { message: error.message }
+    };
+  }
 }
 
 export async function updateChatTitle(sessionId, title) {
-  const { data, error } = await supabase
-    .from('chat_sessions')
-    .update({ title: title, updated_at: new Date().toISOString() })
-    .eq('id', sessionId)
-    .select()
-  
-  return { data, error }
+  try {
+    const db = mongodb.getDb();
+    
+    const result = await db.collection('chat_sessions').updateOne(
+      { _id: new ObjectId(sessionId) },
+      { 
+        $set: { 
+          title: title, 
+          updatedAt: new Date() 
+        }
+      }
+    );
+    
+    return { 
+      data: result.modifiedCount > 0, 
+      error: null 
+    };
+  } catch (error) {
+    return { 
+      data: null, 
+      error: { message: error.message }
+    };
+  }
 }
 
 // User profile functions
-export async function createUserProfile(userId, email) {
-  const { data, error } = await supabase
-    .from('profiles')
-    .insert({ id: userId, email: email })
-    .select()
-  
-  return { data, error }
+export async function createUserProfile(userId, email, fullName, mobile) {
+  try {
+    const db = mongodb.getDb();
+    
+    const newProfile = {
+      _id: new ObjectId(userId),
+      email,
+      fullName,
+      mobile,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const result = await db.collection('profiles').insertOne(newProfile);
+    
+    return { 
+      data: result.insertedId, 
+      error: null 
+    };
+  } catch (error) {
+    return { 
+      data: null, 
+      error: { message: error.message }
+    };
+  }
 }
