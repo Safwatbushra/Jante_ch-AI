@@ -1088,9 +1088,11 @@
                         isEnglish ? 'Password must be at least 6 characters' : 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে', 
                         false);
                 } else {
-                    showValidationMessage('loginPassword', 
-                        isEnglish ? 'Password looks good' : 'পাসওয়ার্ড ঠিক আছে', 
-                        true);
+                    // Remove validation styling for password - no tick mark
+                    const field = document.getElementById('loginPassword');
+                    const messageElement = document.getElementById('loginPasswordMessage');
+                    field.classList.remove('is-invalid', 'is-valid');
+                    messageElement.classList.remove('show');
                 }
             });
 
@@ -1202,9 +1204,11 @@
                         isEnglish ? 'Password must be at least 8 characters with uppercase, lowercase, and number' : 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে এবং বড় হাতের অক্ষর, ছোট হাতের অক্ষর ও সংখ্যা থাকতে হবে', 
                         false);
                 } else {
-                    showValidationMessage('registerPassword', 
-                        isEnglish ? 'Strong password!' : 'শক্তিশালী পাসওয়ার্ড!', 
-                        true);
+                    // Remove validation styling for password - no tick mark
+                    const field = document.getElementById('registerPassword');
+                    const messageElement = document.getElementById('registerPasswordMessage');
+                    field.classList.remove('is-invalid', 'is-valid');
+                    messageElement.classList.remove('show');
                 }
             });
 
@@ -1223,9 +1227,11 @@
                         isEnglish ? 'Passwords do not match' : 'পাসওয়ার্ড মিলছে না', 
                         false);
                 } else {
-                    showValidationMessage('registerConfirmPassword', 
-                        isEnglish ? 'Passwords match!' : 'পাসওয়ার্ড মিলেছে!', 
-                        true);
+                    // Remove validation styling for confirm password - no tick mark
+                    const field = document.getElementById('registerConfirmPassword');
+                    const messageElement = document.getElementById('registerConfirmPasswordMessage');
+                    field.classList.remove('is-invalid', 'is-valid');
+                    messageElement.classList.remove('show');
                 }
             });
 
