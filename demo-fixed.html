@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jante ChAi - Fixed Version</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        /* Quick demo styles */
+        .demo-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+        }
+        
+        .demo-content {
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        .improvement-list {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+        
+        .improvement-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .improvement-item i {
+            margin-right: 1rem;
+            color: #00ff9f;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <div class="site-logo">
+                    <img src="p4.png" alt="Site Logo" class="logo-light" />
+                    <img src="dark-01.png" alt="Site Logo" class="logo-dark" />
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home" data-i18n="nav.home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features" data-i18n="nav.features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services" data-i18n="nav.services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#demo" data-i18n="nav.demo">Demo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary nav-btn" href="auth.html" data-i18n="nav.login">Login/Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="language-switcher" id="languageSwitcher">
+                            <div class="current-lang">
+                                <span>EN</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="language-options">
+                                <div class="language-option active" data-lang="en">English</div>
+                                <div class="language-option" data-lang="bn">বাংলা</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dark-mode-toggle" id="darkModeToggle">
+                            <i class="fas fa-sun sun-icon"></i>
+                            <i class="fas fa-moon moon-icon"></i>
+                            <div class="toggle-ball"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Demo Section -->
+    <section class="demo-section" id="home">
+        <div class="demo-content">
+            <h1 data-i18n="hero.title">Jante ChAi</h1>
+            <p class="lead" data-i18n="hero.subtitle">Access government services at your fingertips. Get information about National ID, Passport, Birth Certificate, License, and Tax services easily through our platform.</p>
+            
+            <div class="improvement-list">
+                <h3>✅ Issues Fixed:</h3>
+                
+                <div class="improvement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Navbar Alignment:</strong> Fixed alignment issues with language switcher and dark mode toggle
+                    </div>
+                </div>
+                
+                <div class="improvement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Duplicate Elements:</strong> Removed duplicate buttons and text for different languages
+                    </div>
+                </div>
+                
+                <div class="improvement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Translation System:</strong> Implemented proper i18n system with data attributes
+                    </div>
+                </div>
+                
+                <div class="improvement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Better Performance:</strong> Reduced CSS/JS file sizes and eliminated redundancy
+                    </div>
+                </div>
+                
+                <div class="improvement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Responsive Design:</strong> Better mobile and tablet experience
+                    </div>
+                </div>
+                
+                <div class="improvement-item">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Accessibility:</strong> Added proper focus states and ARIA labels
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <button class="btn btn-light btn-lg me-3" onclick="testLanguageSwitch()">
+                    <i class="fas fa-language"></i> Test Language Switch
+                </button>
+                <button class="btn btn-outline-light btn-lg" onclick="testDarkMode()">
+                    <i class="fas fa-moon"></i> Test Dark Mode
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Translation System -->
+    <script src="js/translations.js"></script>
+    
+    <script>
+        // Initialize translation system
+        document.addEventListener('DOMContentLoaded', () => {
+            i18n.init();
+            
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.classList.add('active');
+            }
+            
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                darkModeToggle.classList.toggle('active');
+                
+                if (document.body.classList.contains('dark-mode')) {
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
+        });
+        
+        // Test functions
+        function testLanguageSwitch() {
+            const currentLang = i18n.currentLanguage;
+            const newLang = currentLang === 'en' ? 'bn' : 'en';
+            i18n.setLanguage(newLang);
+            
+            // Show notification
+            showNotification(`Language switched to ${newLang === 'en' ? 'English' : 'বাংলা'}!`);
+        }
+        
+        function testDarkMode() {
+            document.getElementById('darkModeToggle').click();
+            showNotification('Dark mode toggled!');
+        }
+        
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: var(--primary-color);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

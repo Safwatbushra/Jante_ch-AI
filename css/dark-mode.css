@@ -1,0 +1,227 @@
+/* 
+ * Dark Mode Styles for Jante ChAi
+ * This file contains all dark mode specific styles and variables
+ */
+
+/* Dark Mode CSS Variables */
+.dark-mode {
+  --primary-color: #00d49a;
+  --primary-dark: #00b383;
+  --primary-light: #00ffbd;
+  --secondary-color: #ff5c6f;
+  --secondary-dark: #F42A41;
+  --secondary-light: #ff8a99;
+  --dark-color: #f8f9fa;
+  --light-color: #121212;
+  --gray-color: #adb5bd;
+  --card-bg: #1e1e1e;
+  --input-bg: #2c2c2c;
+  --footer-bg: #0a0a0a;
+  --footer-text: rgba(255, 255, 255, 0.8);  --navbar-bg: rgba(18, 18, 18, 0.95);
+  --hero-gradient: linear-gradient(135deg, #04241b 0%, #020c15 100%);
+  --card-border: 1px solid rgba(255, 255, 255, 0.1);
+  --hero-text: #ffffff;
+  --chat-primary: #00d49a;
+  --chat-bg: #1e1e1e;
+  --chat-text: #f8f9fa;
+  --chat-user-bubble: #004d38;
+  --chat-bot-bubble: #2c2c2c;
+}
+
+/* Dark Mode Toggle Component - Uses unified system from main styles.css */
+
+/* Logo visibility control for dark/light mode */
+.logo-dark { 
+  display: none; 
+}
+
+body.dark-mode .logo-light { 
+  display: none !important; 
+}
+
+body.dark-mode .logo-dark { 
+  display: inline-block !important; 
+}
+
+body:not(.dark-mode) .logo-light { 
+  display: inline-block !important; 
+}
+
+body:not(.dark-mode) .logo-dark { 
+  display: none !important; 
+}
+
+/* Dark mode specific component styles */
+.dark-mode .navbar.scrolled {
+  background: var(--navbar-bg) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dark-mode .navbar.scrolled .current-lang {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--light-color);
+}
+
+.dark-mode .navbar.scrolled .dark-mode-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .navbar.scrolled .dark-mode-toggle .sun-icon {
+  color: rgba(255, 215, 0, 0.8) !important;
+}
+
+.dark-mode .navbar.scrolled .dark-mode-toggle .moon-icon {
+  color: #ffffff !important;
+}
+
+/* Dark mode form controls */
+.dark-mode .form-control {
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--input-bg);
+  color: var(--dark-color);
+}
+
+.dark-mode .form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(0, 212, 154, 0.25);
+}
+
+/* Dark mode language options */
+.dark-mode .language-options {
+  background: var(--card-bg);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .language-option {
+  color: var(--dark-color);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .language-option:hover {
+  background: rgba(0, 123, 255, 0.1);
+}
+
+/* Dark mode service cards */
+.dark-mode .service-card {
+  background: var(--card-bg);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .service-card:hover {
+  border-color: var(--primary-color);
+}
+
+/* Dark mode services section background - match features section */
+.dark-mode .services-section {
+  background: var(--light-color);
+}
+
+.dark-mode .services-section .section-header h2 {
+  color: var(--dark-color);
+}
+
+.dark-mode .services-section .section-header p {
+  color: var(--gray-color);
+}
+
+.dark-mode .service-card h3 {
+  color: var(--primary-color);
+}
+
+.dark-mode .service-card p {
+  color: var(--gray-color);
+}
+
+.dark-mode .service-link {
+  color: var(--primary-color);
+}
+
+.dark-mode .service-link:hover {
+  color: var(--primary-dark);
+}
+
+.dark-mode .divider::before,
+.dark-mode .divider::after {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .divider span {
+  background-color: var(--card-bg);
+}
+
+/* Dark mode site logo effects - removed white glow */
+body.dark-mode .site-logo img,
+body.dark-mode .site-logo svg {
+  filter: none;
+}
+
+/* Simple Dark Mode Navbar Link Effects */
+.dark-mode .nav-link {
+  color: var(--light-color);
+}
+
+.dark-mode .nav-link:hover {
+  color: var(--primary-color);
+}
+
+.dark-mode .nav-link.active {
+  color: var(--primary-color);
+}
+
+.dark-mode .nav-link:focus {
+  outline: none;
+  color: var(--primary-color);
+}
+
+/* Responsive dark mode adjustments */
+@media (max-width: 991.98px) {
+  .dark-mode-toggle {
+    margin: 0.5rem auto;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .dark-mode-toggle {
+    width: 45px;
+    height: 22px;
+  }
+  
+  .dark-mode-toggle .sun-icon,
+  .dark-mode-toggle .moon-icon {
+    font-size: 0.7rem;
+  }
+  
+  .toggle-ball {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .dark-mode-toggle.active .toggle-ball {
+    transform: translateX(23px);
+  }
+}
+
+/* Focus states for accessibility */
+.dark-mode-toggle:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for dark mode changes */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode particles animation */
+.dark-mode .particle {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Dark mode hero section adjustments */
+.dark-mode .hero-section {
+  background: var(--hero-gradient);
+}
