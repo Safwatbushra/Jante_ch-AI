@@ -1,11 +1,11 @@
-import { mongodb } from './mongodb.js'
+import { mongodb } from '../config/mongodb.js'
 import { getChatCompletion, GROQ_MODELS } from './groq.js'
 import { 
   createChatSession, 
   saveMessage, 
   getChatMessages,
   updateChatTitle 
-} from './database.js'
+} from '../config/database.js'
 
 export class ChatBot {
   constructor(userId) {

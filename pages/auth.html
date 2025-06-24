@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - Jante ChAi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../assets/styles/main.css" rel="stylesheet">
+    <link href="../assets/styles/auth.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="homepage.html">
+                <div class="site-logo">
+                    <img src="../assets/images/p4.png" alt="Jante ChAi Logo" class="logo-image logo-light" />
+                    <img src="../assets/images/dark-01.png" alt="Jante ChAi Logo" class="logo-image logo-dark" />
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-primary nav-btn english" href="homepage.html">Home</a>
+                        <a class="btn btn-primary nav-btn bangla" href="homepage.html">হোম</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="language-switcher" id="languageSwitcher">
+                            <div class="current-lang">
+                                <span>EN</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="language-options">
+                                <div class="language-option active" data-lang="en">English</div>
+                                <div class="language-option" data-lang="bn">বাংলা</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dark-mode-toggle" id="darkModeToggle">
+                            <i class="fas fa-sun sun-icon"></i>
+                            <i class="fas fa-moon moon-icon"></i>
+                            <div class="toggle-ball"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Section -->
+    <section id="auth" class="auth-section">
+        <div class="container">
+            <div class="auth-container fade-in">
+                <div class="auth-image">
+                    <div class="auth-image-content">
+                        <h2 class="english">Welcome <br> to <br> Jante ChAi</h2>
+                        <h2 class="bangla">জানতে চাই-এ স্বাগতম</h2>
+                        <p class="english">Access all government services easily through our secure platform. Create an account or login to get started.</p>
+                        <p class="bangla">আমাদের নিরাপদ প্ল্যাটফর্মের মাধ্যমে সহজেই সমস্ত সরকারি সেবা অ্যাক্সেস করুন। শুরু করতে একটি অ্যাকাউন্ট তৈরি করুন বা লগইন করুন।</p>
+                    </div>
+                </div>
+                <div class="auth-form-container">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" data-tab="login">
+                            <span class="english">Login</span>
+                            <span class="bangla">লগইন</span>
+                        </div>
+                        <div class="auth-tab" data-tab="register">
+                            <span class="english">Register</span>
+                            <span class="bangla">রেজিস্টার</span>
+                        </div>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div id="loginFormContainer" class="slide-in">
+                        <div class="auth-form">
+                            <h3 class="english">Login to Your Account</h3>
+                            <h3 class="bangla">আপনার অ্যাকাউন্টে লগইন করুন</h3>
+                            <form id="loginForm" novalidate>
+                                <div class="form-group">
+                                    <label for="loginEmail" class="english">Email or Mobile Number</label>
+                                    <label for="loginEmail" class="bangla">ইমেইল বা মোবাইল নম্বর</label>
+                                    <input type="text" class="form-control" id="loginEmail" name="loginEmail" 
+                                           placeholder="Enter your email or mobile number" required>
+                                    <div class="validation-message" id="loginEmailMessage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginPassword" class="english">Password</label>
+                                    <label for="loginPassword" class="bangla">পাসওয়ার্ড</label>
+                                    <input type="password" class="form-control" id="loginPassword" name="loginPassword" 
+                                           placeholder="Enter your password" required>
+                                    <div class="validation-message" id="loginPasswordMessage"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                                            <label class="form-check-label english" for="rememberMe">Remember me</label>
+                                            <label class="form-check-label bangla" for="rememberMe">মনে রাখুন</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="forgot-password">
+                                            <a href="#" class="english" id="forgotPasswordLink">Forgot password?</a>
+                                            <a href="#" class="bangla" id="forgotPasswordLink">পাসওয়ার্ড ভুলে গেছেন?</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="loginBtn">
+                                    <span class="loading-spinner" id="loginSpinner"></span>
+                                    <span class="english">Login</span>
+                                    <span class="bangla">লগইন করুন</span>
+                                </button>
+                                <div class="divider">
+                                    <span class="english">Or</span>
+                                    <span class="bangla">অথবা</span>
+                                </div>
+                                <div class="social-login">
+                                    <a href="#" class="social-login-btn facebook" id="facebookLogin">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="social-login-btn google" id="googleLogin">
+                                        <i class="fab fa-google"></i>
+                                    </a>
+                                </div>
+                                <div class="register-link">
+                                    <p class="english">Don't have an account? <a href="#" class="switch-auth" data-tab="register">Register</a></p>
+                                    <p class="bangla">অ্যাকাউন্ট নেই? <a href="#" class="switch-auth" data-tab="register">রেজিস্টার করুন</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="registerFormContainer" style="display: none;" class="slide-in">
+                        <div class="auth-form">
+                            <h3 class="english">Create a New Account</h3>
+                            <h3 class="bangla">নতুন অ্যাকাউন্ট তৈরি করুন</h3>
+                            <form id="registerForm" novalidate>
+                                <div class="form-group">
+                                    <label for="registerName" class="english">Full Name</label>
+                                    <label for="registerName" class="bangla">পূর্ণ নাম</label>
+                                    <input type="text" class="form-control" id="registerName" name="registerName" 
+                                           placeholder="Enter your full name" required>
+                                    <div class="validation-message" id="registerNameMessage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerEmail" class="english">Email</label>
+                                    <label for="registerEmail" class="bangla">ইমেইল</label>
+                                    <input type="email" class="form-control" id="registerEmail" name="registerEmail" 
+                                           placeholder="Enter your email" required>
+                                    <div class="validation-message" id="registerEmailMessage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerMobile" class="english">Mobile Number</label>
+                                    <label for="registerMobile" class="bangla">মোবাইল নম্বর</label>
+                                    <input type="tel" class="form-control" id="registerMobile" name="registerMobile" 
+                                           placeholder="Enter your mobile number" required>
+                                    <div class="validation-message" id="registerMobileMessage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerPassword" class="english">Password</label>
+                                    <label for="registerPassword" class="bangla">পাসওয়ার্ড</label>
+                                    <input type="password" class="form-control" id="registerPassword" name="registerPassword" 
+                                           placeholder="Create a password" required>
+                                    <div class="password-strength" id="passwordStrength" style="display: none;">
+                                        <div class="strength-bar">
+                                            <div class="strength-fill" id="strengthFill"></div>
+                                        </div>
+                                        <div class="strength-text" id="strengthText"></div>
+                                    </div>
+                                    <div class="validation-message" id="registerPasswordMessage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerConfirmPassword" class="english">Confirm Password</label>
+                                    <label for="registerConfirmPassword" class="bangla">পাসওয়ার্ড নিশ্চিত করুন</label>
+                                    <input type="password" class="form-control" id="registerConfirmPassword" name="registerConfirmPassword" 
+                                           placeholder="Confirm your password" required>
+                                    <div class="validation-message" id="registerConfirmPasswordMessage"></div>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                    <label class="form-check-label english" for="agreeTerms">
+                                        I agree to the <a href="#" id="termsLink">Terms & Conditions</a> and <a href="#" id="privacyLink">Privacy Policy</a>
+                                    </label>
+                                    <label class="form-check-label bangla" for="agreeTerms">
+                                        আমি <a href="#" id="termsLinkBn">শর্তাবলী</a> এবং <a href="#" id="privacyLinkBn">গোপনীয়তা নীতি</a> মেনে নিচ্ছি
+                                    </label>
+                                    <div class="validation-message" id="agreeTermsMessage"></div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="registerBtn">
+                                    <span class="loading-spinner" id="registerSpinner"></span>
+                                    <span class="english">Register</span>
+                                    <span class="bangla">রেজিস্টার করুন</span>
+                                </button>
+                                <div class="divider">
+                                    <span class="english">Or</span>
+                                    <span class="bangla">অথবা</span>
+                                </div>
+                                <div class="social-login">
+                                    <a href="#" class="social-login-btn facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="social-login-btn google">
+                                        <i class="fab fa-google"></i>
+                                    </a>
+                                </div>
+                                <div class="register-link">
+                                    <p class="english">Already have an account? <a href="#" class="switch-auth" data-tab="login">Login</a></p>
+                                    <p class="bangla">ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="#" class="switch-auth" data-tab="login">লগইন করুন</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+    <script src="../js/components/notifications.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core Configuration and Utilities -->
+    <script src="../js/utils/config.js"></script>
+    
+    <!-- New Authentication System - Load in correct order -->
+    <script src="../js/auth/auth-config.js"></script>
+    <script src="../js/auth/auth-api.js"></script>
+    <script src="../js/auth/auth-validator.js"></script>
+    <script src="../js/auth/auth-manager.js"></script>
+    <script src="../js/auth/auth-forms.js"></script>
+
+    <!-- Translation System -->
+    <script src="../js/components/translations.js"></script>
+
+    <!-- Main JS -->
+    <script src="../js/main.js"></script>
+    
+    <!-- Enhanced JavaScript -->
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const body = document.body;
+            
+            // Language and Dark Mode Setup
+            const languageSwitcher = document.getElementById('languageSwitcher');
+            const currentLang = languageSwitcher.querySelector('.current-lang');
+            const languageOptions = languageSwitcher.querySelector('.language-options');
+            const languageOption = languageSwitcher.querySelectorAll('.language-option');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+
+            // Language state is handled by translations.js to avoid conflicts
+            // Dark mode state is handled by main.js to avoid conflicts
+
+            // Language switcher dropdown is handled by translations.js to avoid conflicts
+            // Language switching is handled by translations.js to avoid conflicts
+
+            // Function to update input placeholders based on language
+            function updatePlaceholders(lang) {
+                const placeholders = {
+                    'loginEmail': {
+                        'en': 'Enter your email or mobile number',
+                        'bn': 'আপনার ইমেইল বা মোবাইল নম্বর লিখুন'
+                    },
+                    'loginPassword': {
+                        'en': 'Enter your password',
+                        'bn': 'আপনার পাসওয়ার্ড লিখুন'
+                    },
+                    'registerName': {
+                        'en': 'Enter your full name',
+                        'bn': 'আপনার পূর্ণ নাম লিখুন'
+                    },
+                    'registerEmail': {
+                        'en': 'Enter your email',
+                        'bn': 'আপনার ইমেইল লিখুন'
+                    },
+                    'registerMobile': {
+                        'en': 'Enter your mobile number',
+                        'bn': 'আপনার মোবাইল নম্বর লিখুন'
+                    },
+                    'registerPassword': {
+                        'en': 'Create a password',
+                        'bn': 'একটি পাসওয়ার্ড তৈরি করুন'
+                    },
+                    'registerConfirmPassword': {
+                        'en': 'Confirm your password',
+                        'bn': 'আপনার পাসওয়ার্ড নিশ্চিত করুন'
+                    }
+                };
+
+                Object.keys(placeholders).forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field && placeholders[fieldId][lang]) {
+                        field.placeholder = placeholders[fieldId][lang];
+                    }
+                });
+            }
+
+            // Initialize placeholders based on current language
+            const currentLanguage = body.classList.contains('bn') ? 'bn' : 'en';
+            updatePlaceholders(currentLanguage);
+
+            // Dark mode initialization is handled by main.js to avoid conflicts
+
+            // Tab switching
+            const authTabs = document.querySelectorAll('.auth-tab');
+            const loginFormContainer = document.getElementById('loginFormContainer');
+            const registerFormContainer = document.getElementById('registerFormContainer');
+            const switchAuthLinks = document.querySelectorAll('.switch-auth');
+
+            authTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            switchAuthLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tabId = link.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            function switchTab(tabId) {
+                authTabs.forEach(t => t.classList.remove('active'));
+                document.querySelector(`.auth-tab[data-tab="${tabId}"]`).classList.add('active');
+                
+                if (tabId === 'login') {
+                    loginFormContainer.style.display = 'block';
+                    registerFormContainer.style.display = 'none';
+                } else {
+                    loginFormContainer.style.display = 'none';
+                    registerFormContainer.style.display = 'block';
+                }
+            }
+
+            // Handle URL hash for direct form access
+            const hash = window.location.hash;
+            if (hash === '#register') {
+                switchTab('register');
+            }
+
+            // Enhanced forgot password handler with proper validation
+            document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Check if user has entered an email
+                const emailInput = document.getElementById('loginEmail');
+                const email = emailInput ? emailInput.value.trim() : '';
+                
+                const isEnglish = !body.classList.contains('bn');
+                
+                if (email) {
+                    // If email is provided, show more specific message
+                    showNotification(
+                        isEnglish 
+                            ? `Password reset link will be sent to ${email} once this feature is available.` 
+                            : `এই বৈশিষ্ট্যটি উপলব্ধ হলে ${email} এ পাসওয়ার্ড রিসেট লিঙ্ক পাঠানো হবে।`,
+                        'info',
+                        6000
+                    );
+                } else {
+                    // If no email provided, ask user to enter email first
+                    showNotification(
+                        isEnglish 
+                            ? 'Please enter your email address first, then click "Forgot password?" to receive reset instructions.' 
+                            : 'অনুগ্রহ করে প্রথমে আপনার ইমেইল ঠিকানা লিখুন, তারপর "পাসওয়ার্ড ভুলে গেছেন?" ক্লিক করুন রিসেট নির্দেশনা পেতে।',
+                        'warning',
+                        7000
+                    );
+                    
+                    // Focus on email input
+                    if (emailInput) {
+                        emailInput.focus();
+                    }
+                }
+            });
+
+            // Enhanced Terms and Privacy links with user context
+            document.getElementById('termsLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isEnglish = !body.classList.contains('bn');
+                showNotification(
+                    isEnglish 
+                        ? 'Terms & Conditions page is being prepared. You can still register - standard terms apply.' 
+                        : 'শর্তাবলী পৃষ্ঠা প্রস্তুত করা হচ্ছে। আপনি এখনও রেজিস্টার করতে পারেন - মানক শর্তাবলী প্রযোজ্য।',
+                    'info',
+                    5000
+                );
+            });
+
+            document.getElementById('privacyLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isEnglish = !body.classList.contains('bn');
+                showNotification(
+                    isEnglish 
+                        ? 'Privacy Policy page is being prepared. Your data will be protected according to standard privacy practices.' 
+                        : 'গোপনীয়তা নীতি পৃষ্ঠা প্রস্তুত করা হচ্ছে। আপনার ডেটা মানক গোপনীয়তা অনুশীলন অনুযায়ী সুরক্ষিত থাকবে।',
+                    'info',
+                    6000
+                );
+            });
+
+            // Handle Bangla Terms & Privacy links as well
+            document.getElementById('termsLinkBn')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification(
+                    'শর্তাবলী পৃষ্ঠা প্রস্তুত করা হচ্ছে। আপনি এখনও রেজিস্টার করতে পারেন - মানক শর্তাবলী প্রযোজ্য।',
+                    'info',
+                    5000
+                );
+            });
+
+            document.getElementById('privacyLinkBn')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showNotification(
+                    'গোপনীয়তা নীতি পৃষ্ঠা প্রস্তুত করা হচ্ছে। আপনার ডেটা মানক গোপনীয়তা অনুশীলন অনুযায়ী সুরক্ষিত থাকবে।',
+                    'info',
+                    6000
+                );
+            });
+
+            console.log('✅ Auth page initialized');
+        });
+    </script>
+</body>
+</html>

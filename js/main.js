@@ -37,6 +37,16 @@
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
 
+  // Initialize AOS (Animate On Scroll)
+  if (typeof AOS !== 'undefined') {
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-in-out',
+      once: true,
+      mirror: false
+    });
+  }
+
   // Create particles for hero section with enhanced error handling
   const heroParticles = document.getElementById('heroParticles');
   if (heroParticles && typeof heroParticles.appendChild === 'function') {
@@ -169,7 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
-
   // Initialize translation system if available
   if (typeof i18n !== 'undefined') {
     i18n.init();
@@ -178,8 +187,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize dark mode
   initializeDarkMode();
 
-  // Initialize language switcher
-  initializeLanguageSwitcher();
+  // Initialize language switcher (only if translation system is not available)
+  if (typeof i18n === 'undefined') {
+    initializeLanguageSwitcher();
+  }
 
   // Form validation
   initializeFormValidation();
@@ -196,27 +207,76 @@ function initializeDarkMode() {
   const body = document.body;
   const darkModeToggle = document.getElementById('darkModeToggle');
 
-  if (!darkModeToggle) return;
+  console.log('Initializing dark mode...');
+  console.log('Dark mode toggle element:', darkModeToggle);
+
+  if (!darkModeToggle) {
+    console.error('Dark mode toggle not found!');
+    return;
+  }
 
   // Check for saved theme preference
   const savedDarkMode = localStorage.getItem('darkMode');
+  console.log('Saved dark mode preference:', savedDarkMode);
+  
   if (savedDarkMode === 'enabled') {
     body.classList.add('dark-mode');
     darkModeToggle.classList.add('active');
+    console.log('Dark mode enabled from saved preference');
+  } else {
+    console.log('Dark mode disabled - using light mode');
   }
 
   // Toggle dark mode on click
-  darkModeToggle.addEventListener('click', () => {
+  darkModeToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    console.log('Dark mode toggle clicked');
+    
     body.classList.toggle('dark-mode');
     darkModeToggle.classList.toggle('active');
     
+    const isDarkMode = body.classList.contains('dark-mode');
+    console.log('Dark mode is now:', isDarkMode ? 'enabled' : 'disabled');
+    
     // Save preference
-    if (body.classList.contains('dark-mode')) {
+    if (isDarkMode) {
       localStorage.setItem('darkMode', 'enabled');
     } else {
       localStorage.setItem('darkMode', 'disabled');
     }
+    
+    // Force a repaint to ensure logo transitions work
+    body.offsetHeight;
+    
+    // Add a small delay to ensure smooth logo transition
+    setTimeout(() => {
+      // Trigger a repaint for logo elements
+      const logos = document.querySelectorAll('.site-logo img');
+      logos.forEach(logo => {
+        logo.style.transition = 'none';
+        logo.offsetHeight; // Force repaint
+        logo.style.transition = '';
+      });
+    }, 50);
   });
+
+  // Add keyboard support
+  darkModeToggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      darkModeToggle.click();
+    }
+  });
+
+  // Set proper ARIA attributes
+  darkModeToggle.setAttribute('role', 'button');
+  darkModeToggle.setAttribute('tabindex', '0');
+  darkModeToggle.setAttribute('aria-label', 'Toggle dark mode');
+  darkModeToggle.setAttribute('aria-pressed', body.classList.contains('dark-mode').toString());
+
+  console.log('Dark mode initialization complete');
 }
 
 // Language Switcher Functionality
@@ -321,18 +381,10 @@ function initializeFormValidation() {
           valid = false;
           alert(body.classList.contains('bn') ? 'শর্তাবলী মেনে নিতে হবে!' : 'You must agree to the Terms & Conditions!');
         }
-      }
-
-      if (valid) {
-        // Here you would normally send the form data to a server
-        // For demo purposes, we'll just show a success message
-        const isLogin = form.closest('#loginForm');
-        const message = isLogin ? 
-          (body.classList.contains('bn') ? 'সফলভাবে লগইন হয়েছে!' : 'Successfully logged in!') : 
-          (body.classList.contains('bn') ? 'সফলভাবে রেজিস্টার হয়েছে!' : 'Successfully registered!');
-        
-        alert(message);
-        form.reset();
+      }      if (valid) {
+        // Form is valid - actual authentication will be handled by auth system
+        // No fake success messages - let the real auth handle this
+        console.log('Form validation passed, awaiting real authentication...');
       }
     });
   });

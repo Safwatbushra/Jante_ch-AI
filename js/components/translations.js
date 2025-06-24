@@ -181,12 +181,19 @@ class TranslationManager {
         document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
             const key = element.getAttribute('data-i18n-placeholder');
             element.placeholder = this.t(key);
-        });
-
-        // Update aria-labels
+        });        // Update aria-labels
         document.querySelectorAll('[data-i18n-aria]').forEach(element => {
             const key = element.getAttribute('data-i18n-aria');
             element.setAttribute('aria-label', this.t(key));
+        });
+
+        // Handle english/bangla class-based content switching
+        document.querySelectorAll('.english').forEach(element => {
+            element.style.display = this.currentLanguage === 'en' ? '' : 'none';
+        });
+
+        document.querySelectorAll('.bangla').forEach(element => {
+            element.style.display = this.currentLanguage === 'bn' ? '' : 'none';
         });
     }
 

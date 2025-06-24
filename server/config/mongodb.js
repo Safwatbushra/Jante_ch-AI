@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId } from 'mongodb';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -7,8 +7,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables from backend/.env
-dotenv.config({ path: path.join(__dirname, '.env') });
+// Load environment variables from server/.env
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 class MongoDB {
   constructor() {

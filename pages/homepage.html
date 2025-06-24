@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="styles.css" rel="stylesheet">
-    <link href="css/dark-mode.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="../assets/styles/main.css" rel="stylesheet">
 </head>
 <body>
     <!-- Preloader -->
-    <div class="preloader">
+    <div class="preloader" style="display: none;">
         <div class="loader">
             <span class="letter">J</span>
             <span class="letter">a</span>
@@ -35,14 +35,14 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <div class="site-logo">
-                    <img src="p4.png" alt="Site Logo" class="logo-light" />
-                    <img src="dark-01.png" alt="Site Logo" class="logo-dark" />
+                    <img src="../assets/images/p4.png" alt="Jante ChAi Logo" class="logo-image logo-light" />
+                    <img src="../assets/images/dark-01.png" alt="Jante ChAi Logo" class="logo-image logo-dark" />
                 </div>
-                <!--<span class="brand-text"><b>Jante ChAi</b></span>-->
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
-            </button>            <div class="collapse navbar-collapse" id="navbarNav">
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link active" href="#home" data-i18n="nav.home">Home</a>
@@ -87,7 +87,8 @@
     <section id="home" class="hero-section">
         <div class="hero-particles" id="heroParticles"></div>
         <div class="container">
-            <div class="row align-items-center">                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
                     <div class="hero-content">
                         <h1 class="hero-title" data-i18n="hero.title">Jante ChAi</h1>
                         <p class="hero-subtitle" data-i18n="hero.subtitle">Access government services at your fingertips. Get information about National ID, Passport, Birth Certificate, License, and Tax services easily through our platform.</p>
@@ -96,7 +97,8 @@
                             <a href="auth.html" class="btn btn-outline-light btn-lg" data-i18n="hero.btn.account">Create Account</a>
                         </div>
                     </div>
-                </div>                <div class="col-lg-6 d-flex justify-content-center" data-aos="fade-left" data-aos-duration="1000">
+                </div>
+                <div class="col-lg-6 d-flex justify-content-center" data-aos="fade-left" data-aos-duration="1000">
                     <div class="hero-image-container">
                         <div class="service-badge badge-1">
                             <i class="fas fa-id-card"></i>
@@ -111,17 +113,20 @@
                             <span data-i18n="badge.birth">Birth Certificate</span>
                         </div>
                     </div>
-                </div>            </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Features Section -->
     <section id="features" class="features-section">
-        <div class="container">            <div class="section-header text-center" data-aos="fade-up">
+        <div class="container">
+            <div class="section-header text-center" data-aos="fade-up">
                 <h2><span data-i18n="features.title">Why Choose</span> <span class="highlight">Jante ChAi</span>?</h2>
                 <p data-i18n="features.subtitle">Discover our unique features that make us special</p>
             </div>
-            <div class="row">                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-clock"></i>
@@ -264,7 +269,8 @@
                 <h2 class="bangla">কিভাবে <span class="highlight">জানতে চাই</span> কাজ করে?</h2>
                 <p class="english">See the easy process of using our service</p>
                 <p class="bangla">আমাদের সেবা ব্যবহারের সহজ প্রক্রিয়া দেখুন</p>
-            </div>            <div class="row align-items-center">
+            </div>
+            <div class="row align-items-center">
                 <div class="col-lg-8 mx-auto" data-aos="fade-up">
                     <div class="video-container">
                         <iframe 
@@ -331,9 +337,9 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-about">
                         <div class="site-logo">
-                        <img src="p4.png" alt="Site Logo" class="logo-light" />
-                        <img src="dark-01.png" alt="Site Logo" class="logo-dark" />
-                    </div>
+                            <img src="../assets/images/p4.png" alt="Jante ChAi Logo" class="logo-image logo-light" />
+                            <img src="../assets/images/dark-01.png" alt="Jante ChAi Logo" class="logo-image logo-dark" />
+                        </div>
                         <p class="english">Use our platform to easily access government information and services. We'll help you save time and effort.</p>
                         <p class="bangla">সরকারি তথ্য এবং সেবাসমূহ সহজেই পাওয়ার জন্য আমাদের প্ল্যাটফর্ম ব্যবহার করুন। আমরা আপনাকে সময় এবং প্রচেষ্টা বাঁচাতে সাহায্য করব।</p>
                         <div class="social-links">
@@ -417,12 +423,18 @@
     </footer>
 
     <!-- Back to Top Button -->
-    <a href="#" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>    <!-- AOS Animation Library -->
+    <a href="#" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AOS Animation Library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <!-- Translation System -->
-    <script src="js/translations.js"></script>
+    <script src="../js/components/translations.js"></script>
+    
     <!-- Main JavaScript -->
-    <script src="js/main.js"></script>
+    <script src="../js/main.js"></script>
 </body>
 </html>

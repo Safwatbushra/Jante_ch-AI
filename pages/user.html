@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/styles/main.css">
+    <link rel="stylesheet" href="../assets/styles/dashboard.css">
+    <script src="../js/components/notifications.js"></script>
 </head>
 <body class="user-dashboard-body">
     <!-- Dashboard Particles Background -->
@@ -16,11 +18,10 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="homepage.html">
+        <div class="container">            <a class="navbar-brand" href="homepage.html">
                 <div class="site-logo">
-                    <img src="p4.png" alt="Site Logo" class="logo-light" />
-                    <img src="dark-01.png" alt="Site Logo" class="logo-dark" />
+                    <img src="../assets/images/p4.png" alt="Site Logo" class="site-logo-img logo-light" />
+                    <img src="../assets/images/dark-01.png" alt="Site Logo" class="site-logo-img logo-dark" />
                 </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -548,9 +549,14 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      <!-- Translation System -->    <script src="../js/components/translations.js"></script>
     
-    <!-- Translation System -->
-    <script src="js/translations.js"></script>
+    <!-- Authentication and Utility Scripts -->
+    <script src="../js/utils/config.js"></script>
+    <script src="../js/auth/auth-validator.js"></script>
+    <script src="../js/auth/auth-manager.js"></script>
+    <script src="../js/auth/auth-config.js"></script>
+    <script src="../js/auth/auth-forms.js"></script>
     
     <!-- Custom JavaScript -->
     <script>
@@ -897,5 +903,8 @@
             /* PLUS_DROPDOWN_END */
         });
     </script>
+
+    <!-- Dashboard JavaScript -->
+    <script src="../js/dashboard.js"></script>
 </body>
 </html>
