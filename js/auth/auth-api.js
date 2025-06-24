@@ -1,12 +1,21 @@
-// Authentication API Service
-class AuthAPI {
+/**
+ * Authentication API Service
+ * Handles all HTTP requests to the backend authentication endpoints
+ * Manages token storage and user data persistence
+ */
+class AuthenticationAPI {
     constructor() {
-        this.baseURL = AuthConfig.API_BASE_URL;
+        this.baseUrl = AuthConfig.API_BASE_URL;
     }
 
-    // Generic HTTP request method
-    async request(endpoint, options = {}) {
-        const url = `${this.baseURL}${endpoint}`;
+    /**
+     * Generic HTTP request method with error handling
+     * @param {string} endpoint - API endpoint path
+     * @param {Object} options - Request options
+     * @returns {Promise<Object>} API response
+     */
+    async makeRequest(endpoint, options = {}) {
+        const url = `${this.baseUrl}${endpoint}`;
         const config = {
             headers: {
                 'Content-Type': 'application/json',
@@ -15,100 +24,160 @@ class AuthAPI {
             ...options
         };
 
-        // Add auth token if available
-        const token = this.getToken();
-        if (token && !config.headers[AuthConfig.TOKEN_HEADER]) {
-            config.headers[AuthConfig.TOKEN_HEADER] = `${AuthConfig.TOKEN_PREFIX}${token}`;
-        }        try {
+        // Add authentication token if available
+        const authToken = this.getStoredToken();
+        if (authToken && !config.headers[AuthConfig.TOKEN_HEADER]) {
+            config.headers[AuthConfig.TOKEN_HEADER] = `${AuthConfig.TOKEN_PREFIX}${authToken}`;
+        }
+
+        try {
             const response = await fetch(url, config);
             
-            // Check if response is ok
+            // Handle HTTP error responses
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
                 throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
             }
 
-            const data = await response.json();
-            return data;
+            const responseData = await response.json();
+            return responseData;
 
         } catch (error) {
             console.error('API Request failed:', error);
             throw error;
         }
-    }    // Authentication methods
-    async register(userData) {
-        const response = await this.request(AuthConfig.ENDPOINTS.REGISTER, {
+    }
+
+    /**
+     * Register a new user account
+     * @param {Object} userData - User registration data
+     * @returns {Promise<Object>} Registration result
+     */
+    async registerUser(userData) {
+        const response = await this.makeRequest(AuthConfig.ENDPOINTS.REGISTER, {
             method: 'POST',
             body: JSON.stringify(userData)
         });
 
         if (response.success && response.token) {
-            this.setToken(response.token);
-            this.setUserData(response.user);
+            this.storeToken(response.token);
+            this.storeUserData(response.user);
         }
 
         return response;
     }
 
-    async login(email, password, rememberMe = false) {        const response = await this.request(AuthConfig.ENDPOINTS.LOGIN, {
+    /**
+     * Authenticate user login
+     * @param {string} email - User email
+     * @param {string} password - User password
+     * @param {boolean} rememberMe - Whether to remember login
+     * @returns {Promise<Object>} Login result
+     */
+    async authenticateUser(email, password, rememberMe = false) {
+        const response = await this.makeRequest(AuthConfig.ENDPOINTS.LOGIN, {
             method: 'POST',
             body: JSON.stringify({ email, password, rememberMe })
-        });if (response.success && response.token) {
-            this.setToken(response.token, rememberMe);
-            this.setUserData(response.user);
-            this.setRememberMe(rememberMe);
+        });
+
+        if (response.success && response.token) {
+            this.storeToken(response.token, rememberMe);
+            this.storeUserData(response.user);
+            this.setRememberMePreference(rememberMe);
         }
 
         return response;
     }
 
-    async getProfile() {
-        return await this.request(AuthConfig.ENDPOINTS.PROFILE);
+    /**
+     * Get current user profile
+     * @returns {Promise<Object>} User profile data
+     */
+    async getUserProfile() {
+        return await this.makeRequest(AuthConfig.ENDPOINTS.PROFILE);
     }
 
-    async updateProfile(profileData) {
-        return await this.request(AuthConfig.ENDPOINTS.PROFILE, {
+    /**
+     * Update user profile information
+     * @param {Object} profileData - Profile updates
+     * @returns {Promise<Object>} Update result
+     */
+    async updateUserProfile(profileData) {
+        return await this.makeRequest(AuthConfig.ENDPOINTS.PROFILE, {
             method: 'PUT',
             body: JSON.stringify(profileData)
         });
     }
 
-    async changePassword(currentPassword, newPassword) {
-        return await this.request(AuthConfig.ENDPOINTS.CHANGE_PASSWORD, {
+    /**
+     * Change user password
+     * @param {string} currentPassword - Current password
+     * @param {string} newPassword - New password
+     * @returns {Promise<Object>} Password change result
+     */
+    async changeUserPassword(currentPassword, newPassword) {
+        return await this.makeRequest(AuthConfig.ENDPOINTS.CHANGE_PASSWORD, {
             method: 'POST',
             body: JSON.stringify({ currentPassword, newPassword })
         });
     }
 
-    // Token management
-    getToken() {
-        return localStorage.getItem(AuthConfig.STORAGE_KEYS.ACCESS_TOKEN) || 
-               sessionStorage.getItem(AuthConfig.STORAGE_KEYS.ACCESS_TOKEN);
+    // Token management methods
+
+    /**
+     * Get stored authentication token
+     * @returns {string|null} JWT token
+     */
+    getStoredToken() {
+        const localToken = localStorage.getItem(AuthConfig.STORAGE_KEYS.ACCESS_TOKEN);
+        const sessionToken = sessionStorage.getItem(AuthConfig.STORAGE_KEYS.ACCESS_TOKEN);
+        const token = localToken || sessionToken;
+        console.log('[DEBUG] AuthAPI - Retrieved token:', token ? 'Token found' : 'No token', 'Source:', localToken ? 'localStorage' : sessionToken ? 'sessionStorage' : 'none');
+        return token;
     }
 
-    setToken(token, persistent = false) {
+    /**
+     * Store authentication token
+     * @param {string} token - JWT token
+     * @param {boolean} persistent - Whether to store in localStorage
+     */
+    storeToken(token, persistent = false) {
+        console.log('[DEBUG] AuthAPI - Storing token:', token ? 'Token provided' : 'No token', 'Persistent:', persistent);
         if (persistent) {
             localStorage.setItem(AuthConfig.STORAGE_KEYS.ACCESS_TOKEN, token);
         } else {
             sessionStorage.setItem(AuthConfig.STORAGE_KEYS.ACCESS_TOKEN, token);
         }
+        console.log('[DEBUG] AuthAPI - Token stored in:', persistent ? 'localStorage' : 'sessionStorage');
     }
 
-    removeToken() {
+    /**
+     * Remove stored authentication token
+     */
+    removeStoredToken() {
         localStorage.removeItem(AuthConfig.STORAGE_KEYS.ACCESS_TOKEN);
         sessionStorage.removeItem(AuthConfig.STORAGE_KEYS.ACCESS_TOKEN);
     }
 
-    // User data management
-    getUserData() {
-        const data = localStorage.getItem(AuthConfig.STORAGE_KEYS.USER_DATA) || 
-                    sessionStorage.getItem(AuthConfig.STORAGE_KEYS.USER_DATA);
-        return data ? JSON.parse(data) : null;
+    // User data management methods
+
+    /**
+     * Get stored user data
+     * @returns {Object|null} User data object
+     */
+    getStoredUserData() {
+        const dataString = localStorage.getItem(AuthConfig.STORAGE_KEYS.USER_DATA) || 
+                          sessionStorage.getItem(AuthConfig.STORAGE_KEYS.USER_DATA);
+        return dataString ? JSON.parse(dataString) : null;
     }
 
-    setUserData(userData) {
+    /**
+     * Store user data
+     * @param {Object} userData - User data object
+     */
+    storeUserData(userData) {
         const dataString = JSON.stringify(userData);
-        const rememberMe = this.getRememberMe();
+        const rememberMe = this.getRememberMePreference();
         
         if (rememberMe) {
             localStorage.setItem(AuthConfig.STORAGE_KEYS.USER_DATA, dataString);
@@ -117,38 +186,79 @@ class AuthAPI {
         }
     }
 
-    removeUserData() {
+    /**
+     * Remove stored user data
+     */
+    removeStoredUserData() {
         localStorage.removeItem(AuthConfig.STORAGE_KEYS.USER_DATA);
         sessionStorage.removeItem(AuthConfig.STORAGE_KEYS.USER_DATA);
     }
 
-    // Remember me preference
-    getRememberMe() {
+    // Remember me preference methods
+
+    /**
+     * Get remember me preference
+     * @returns {boolean} Remember me setting
+     */
+    getRememberMePreference() {
         return localStorage.getItem(AuthConfig.STORAGE_KEYS.REMEMBER_ME) === 'true';
     }
 
-    setRememberMe(remember) {
+    /**
+     * Set remember me preference
+     * @param {boolean} remember - Remember me setting
+     */
+    setRememberMePreference(remember) {
         localStorage.setItem(AuthConfig.STORAGE_KEYS.REMEMBER_ME, remember.toString());
     }
 
-    // Logout
-    logout() {
-        this.removeToken();
-        this.removeUserData();
-        localStorage.removeItem(AuthConfig.STORAGE_KEYS.REMEMBER_ME);
+    /**
+     * Logout user and clear stored data
+     * @returns {Promise<Object>} Logout result
+     */
+    async logoutUser() {
+        try {
+            // Call server to invalidate session
+            const response = await this.makeRequest(AuthConfig.ENDPOINTS.LOGOUT, {
+                method: 'POST'
+            });
+            
+            // Clear local storage regardless of server response
+            this.removeStoredToken();
+            this.removeStoredUserData();
+            localStorage.removeItem(AuthConfig.STORAGE_KEYS.REMEMBER_ME);
+            
+            return response;
+        } catch (error) {
+            // Even if server call fails, clear local storage
+            this.removeStoredToken();
+            this.removeStoredUserData();
+            localStorage.removeItem(AuthConfig.STORAGE_KEYS.REMEMBER_ME);
+            
+            return {
+                success: true,
+                message: 'Logged out successfully'
+            };
+        }
     }
 
-    // Check if user is authenticated
-    isAuthenticated() {
-        const token = this.getToken();
-        const userData = this.getUserData();
+    /**
+     * Check if user is currently authenticated
+     * @returns {boolean} Authentication status
+     */
+    isUserAuthenticated() {
+        const token = this.getStoredToken();
+        const userData = this.getStoredUserData();
         return !!(token && userData);
     }
 
-    // Test API connection
-    async testConnection() {
+    /**
+     * Test API connection
+     * @returns {Promise<boolean>} Connection status
+     */
+    async testApiConnection() {
         try {
-            const response = await this.request('/test');
+            const response = await this.makeRequest('/test');
             return response.success;
         } catch (error) {
             console.error('API connection test failed:', error);
@@ -157,4 +267,5 @@ class AuthAPI {
     }
 }
 
-window.AuthAPI = AuthAPI;
+// Export for global access
+window.AuthenticationAPI = AuthenticationAPI;

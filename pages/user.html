@@ -13,12 +13,17 @@
     <script src="../js/components/notifications.js"></script>
 </head>
 <body class="user-dashboard-body">
-    <!-- Dashboard Particles Background -->
-    <div class="dashboard-particles" id="dashboardParticles"></div>
-
+    <!-- DEBUG PANEL START -->
+    <div id="debugPanel" style="position:fixed;bottom:0;right:0;z-index:9999;background:rgba(0,0,0,0.8);color:#fff;padding:10px 20px;font-size:14px;border-radius:8px 0 0 0;max-width:400px;display:none;">
+        <div><b>Debug Info</b> <button onclick="document.getElementById('debugPanel').style.display='none'" style="float:right;background:none;border:none;color:#fff;font-size:16px;">&times;</button></div>
+        <div id="debugContent"></div>
+    </div>
+    <button id="showDebugBtn" style="position:fixed;bottom:0;right:0;z-index:9999;background:#008f69;color:#fff;border:none;padding:8px 16px;border-radius:8px 0 0 0;cursor:pointer;">Debug</button>
+    <!-- DEBUG PANEL END -->
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">            <a class="navbar-brand" href="homepage.html">
+        <div class="container">
+            <a class="navbar-brand" href="homepage.html">
                 <div class="site-logo">
                     <img src="../assets/images/p4.png" alt="Site Logo" class="site-logo-img logo-light" />
                     <img src="../assets/images/dark-01.png" alt="Site Logo" class="site-logo-img logo-dark" />
@@ -32,21 +37,6 @@
                     <li class="nav-item">
                         <a class="nav-link english" href="homepage.html">Home</a>
                         <a class="nav-link bangla" href="homepage.html">হোম</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle english" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i> John Doe
-                        </a>
-                        <a class="nav-link dropdown-toggle bangla" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i> জন ডো
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item english" href="#"><i class="fas fa-user me-2"></i> My Profile</a></li>
-                            <li><a class="dropdown-item bangla" href="#"><i class="fas fa-user me-2"></i> আমার প্রোফাইল</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item english" href="homepage.html"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                            <li><a class="dropdown-item bangla" href="homepage.html"><i class="fas fa-sign-out-alt me-2"></i> লগআউট</a></li>
-                        </ul>
                     </li>
                     <li class="nav-item">
                         <div class="language-switcher" id="languageSwitcher">
@@ -89,10 +79,9 @@
                 <div class="user-avatar">
                     <i class="fas fa-user"></i>
                 </div>
-                <h4 class="user-name english">John Doe</h4>
-                <h4 class="user-name bangla">জন ডো</h4>
-                <p class="user-email">john.doe@example.com</p>
-                <div class="user-status english">Verify</div>
+                <h4 class="user-name english">Loading...</h4>
+                <h4 class="user-name bangla">লোড হচ্ছে...</h4>
+                <p class="user-email">loading@example.com</p>
             </div>
             
             <!-- Sidebar Menu -->
@@ -163,17 +152,19 @@
         
         <!-- Main Content -->
         <div class="main-content">
+            <!-- Add particles background to main-content -->
+            <div class="main-particles" id="mainParticles"></div>
             <!-- Chat Assistant Tab (Default Active) -->
             <div class="tab-content active" id="chatTab">
                 <div class="dashboard-header">
                     <h1 class="welcome-message english">Chat Assistant</h1>
                     <h1 class="welcome-message bangla">চ্যাট সহকারী</h1>
-                    <p class="welcome-subtitle english">Ask any questions about government services and get instant answers.</p>
-                    <p class="welcome-subtitle bangla">সরকারি সেবা সম্পর্কে যেকোনো প্রশ্ন করুন এবং তাৎক্ষণিক উত্তর পান।</p>
+                    <p class="welcome-subtitle english" id="welcomeSubtitle">Ask any questions about government services and get instant answers.</p>
+                    <p class="welcome-subtitle bangla" id="welcomeSubtitleBn">সরকারি সেবা সম্পর্কে যেকোনো প্রশ্ন করুন এবং তাৎক্ষণিক উত্তর পান।</p>
                 </div>
                 
                 <!-- Service Categories -->
-                <h2 class="section-title slide-in-left">
+                <h2 class="section-title slide-in-left" id="serviceCategoriesHeader">
                     <i class="fas fa-th-large"></i>
                     <span class="english">Service Categories</span>
                     <span class="bangla">সেবা বিভাগসমূহ</span>
@@ -222,8 +213,11 @@
                 </div>
                 
                 <!-- Chat Interface -->
-                <div class="chat-container slide-in-right">
+                <div class="chat-container slide-in-right" id="chatContainer" style="display: none;">
                     <div class="chat-header">
+                        <button class="chat-back-btn" id="chatBackBtn">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
                         <div class="chat-header-icon">
                             <i class="fas fa-robot"></i>
                         </div>
@@ -264,24 +258,24 @@
                         </div>
                     </div>
                     
+                    <!-- Typing indicator -->
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="message-avatar bot-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                    
                     <!-- Chat input -->
                     <div class="chat-input">
                         <div class="chat-input-container">
                             <button class="chat-voice-btn" id="voiceBtn">
                                 <i class="fas fa-microphone"></i>
                             </button>
-                            <button id="plus-btn" class="plus-button"><i class="fas fa-plus"></i></button>
-                            <div id="plus-menu" class="plus-menu hidden">
-                                <div id="add-photos" class="menu-item">
-                                    <span class="icon">📎</span>
-                                    <span class="text">Add photos and files</span>
-                                </div>
-                                <div id="add-apps" class="menu-item">
-                                    <span class="icon">📂</span>
-                                    <span class="text">Add from apps</span>
-                                    <span class="chevron">›</span>
-                                </div>
-                            </div>
                             <input type="text" class="chat-input-field" id="messageInput" placeholder="Type your question here...">
                             <button class="chat-send-btn" id="sendBtn">
                                 <i class="fas fa-paper-plane"></i>
@@ -294,8 +288,8 @@
             <!-- Dashboard Tab -->
             <div class="tab-content" id="dashboardTab">
                 <div class="dashboard-header">
-                    <h1 class="welcome-message english">Welcome back, John!</h1>
-                    <h1 class="welcome-message bangla">স্বাগতম, জন!</h1>
+                    <h1 class="welcome-message english">Welcome back!</h1>
+                    <h1 class="welcome-message bangla">স্বাগতম!</h1>
                     <p class="welcome-subtitle english">Here's an overview of your government services and applications.</p>
                     <p class="welcome-subtitle bangla">এখানে আপনার সরকারি সেবা এবং আবেদনের একটি সংক্ষিপ্ত বিবরণ রয়েছে।</p>
                 </div>
@@ -468,10 +462,10 @@
                             <i class="fas fa-user"></i>
                         </div>
                         <div>
-                            <h4 class="service-item-title english">John Doe</h4>
-                            <h4 class="service-item-title bangla">জন ডো</h4>
-                            <p class="service-item-description english">john.doe@example.com</p>
-                            <p class="service-item-description bangla">john.doe@example.com</p>
+                            <h4 class="service-item-title english" id="profileName">Loading...</h4>
+                            <h4 class="service-item-title bangla" id="profileNameBn">লোড হচ্ছে...</h4>
+                            <p class="service-item-description english" id="profileEmail">loading@example.com</p>
+                            <p class="service-item-description bangla" id="profileEmailBn">loading@example.com</p>
                         </div>
                     </div>
                     <div class="service-item-actions">
@@ -549,40 +543,72 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-      <!-- Translation System -->    <script src="../js/components/translations.js"></script>
     
-    <!-- Authentication and Utility Scripts -->
+    <!-- Translation System -->
+    <script src="../js/components/translations.js"></script>
+    
+    <!-- Authentication and Utility Scripts - Load in correct order -->
     <script src="../js/utils/config.js"></script>
+    <script src="../js/utils/state-manager.js"></script>
+    <script src="../js/utils/chat-api.js"></script>
+    <script src="../js/auth/auth-config.js"></script>
+    <script src="../js/auth/auth-api.js"></script>
     <script src="../js/auth/auth-validator.js"></script>
     <script src="../js/auth/auth-manager.js"></script>
-    <script src="../js/auth/auth-config.js"></script>
     <script src="../js/auth/auth-forms.js"></script>
     
     <!-- Custom JavaScript -->
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
+            // DEBUGGING: Show debug panel button
+            const debugPanel = document.getElementById('debugPanel');
+            const debugContent = document.getElementById('debugContent');
+            const showDebugBtn = document.getElementById('showDebugBtn');
+            showDebugBtn.onclick = () => {
+                debugPanel.style.display = 'block';
+                updateDebugPanel();
+            };
+            function updateDebugPanel() {
+                let info = [];
+                info.push(`<b>Dark Mode:</b> ${document.body.classList.contains('dark-mode')}`);
+                info.push(`<b>Language:</b> ${document.body.classList.contains('bn') ? 'Bangla' : 'English'}`);
+                info.push(`<b>User Authenticated:</b> ${typeof authManager !== 'undefined' && authManager.isUserAuthenticated ? authManager.isUserAuthenticated() : 'N/A'}`);
+                info.push(`<b>Current User:</b> ${typeof authManager !== 'undefined' && authManager.currentUser ? JSON.stringify(authManager.currentUser) : 'N/A'}`);
+                info.push(`<b>Location:</b> ${window.location.href}`);
+                debugContent.innerHTML = info.join('<br>');
+            }
+            // DEBUGGING: Log key events
+            console.log('[DEBUG] DOMContentLoaded');
             const body = document.body;
             
-            // Create particles for dashboard background
-            const dashboardParticles = document.getElementById('dashboardParticles');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('span');
-                particle.classList.add('particle');
-                
-                const size = Math.random() * 10 + 5;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.left = `${Math.random() * 100}%`;
-                
-                const duration = Math.random() * 20 + 10;
-                const delay = Math.random() * 10;
-                particle.style.animationDuration = `${duration}s`;
-                particle.style.animationDelay = `${delay}s`;
-                
-                dashboardParticles.appendChild(particle);
+            // Wait for authManager to be available
+            let retryCount = 0;
+            const maxRetries = 10;
+            
+            while (typeof authManager === 'undefined' && retryCount < maxRetries) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                retryCount++;
             }
+            
+            if (typeof authManager === 'undefined') {
+                console.error('[DEBUG] authManager not available after retries');
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            // Initialize authentication
+            await authManager.initialize();
+            console.log('[DEBUG] authManager initialized');
+            // Check if user is authenticated
+            if (!authManager.isUserAuthenticated()) {
+                console.log('[DEBUG] User not authenticated, redirecting to auth.html');
+                window.location.href = 'auth.html';
+                return;
+            }
+            console.log('[DEBUG] User authenticated');
+            // Update UI with user information
+            authManager.updateUIForAuthenticatedUser();
+            console.log('[DEBUG] UI updated for authenticated user');
             
             // Language switcher
             const languageSwitcher = document.getElementById('languageSwitcher');
@@ -601,14 +627,13 @@
             
             currentLang.addEventListener('click', () => {
                 languageOptions.classList.toggle('show');
+                console.log('[DEBUG] Language options toggled');
             });
-            
             document.addEventListener('click', (e) => {
                 if (!languageSwitcher.contains(e.target)) {
                     languageOptions.classList.remove('show');
                 }
             });
-            
             languageOption.forEach(option => {
                 option.addEventListener('click', () => {
                     const lang = option.getAttribute('data-lang');
@@ -622,8 +647,26 @@
                     } else {
                         body.classList.remove('bn');
                     }
+                    console.log('[DEBUG] Language switched to', lang);
+                    updateDebugPanel();
                 });
             });
+            
+            // Function to update particles based on theme
+            function updateParticles() {
+                const particles = document.querySelectorAll('.main-particles .particle');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                
+                particles.forEach(particle => {
+                    const opacity = Math.random() * 0.3 + 0.1;
+                    if (isDarkMode) {
+                        // Slightly brighter green for dark mode
+                        particle.style.backgroundColor = `rgba(0, 143, 105, ${opacity + 0.1})`;
+                    } else {
+                        particle.style.backgroundColor = `rgba(0, 143, 105, ${opacity})`;
+                    }
+                });
+            }
             
             // Dark mode toggle
             const darkModeToggle = document.getElementById('darkModeToggle');
@@ -641,6 +684,9 @@
                 } else {
                     localStorage.setItem('darkMode', 'disabled');
                 }
+                console.log('[DEBUG] Dark mode toggled:', body.classList.contains('dark-mode'));
+                updateDebugPanel();
+                updateParticles(); // Update particles when theme changes
             });
             
             // Sidebar menu tabs
@@ -689,21 +735,75 @@
                 });
             }
             
-            // Logout button
+            // Logout functionality
             const logoutBtn = document.getElementById('logoutBtn');
-            logoutBtn.addEventListener('click', () => {
-                if (confirm(body.classList.contains('bn') ? 'আপনি কি লগআউট করতে চান?' : 'Are you sure you want to logout?')) {
-                    localStorage.removeItem('userToken');
-                    window.location.href = 'homepage.html';
+            
+            const handleLogout = async () => {
+                const isEnglish = !body.classList.contains('bn');
+                const confirmMessage = isEnglish ? 'Are you sure you want to logout?' : 'আপনি কি লগআউট করতে চান?';
+                
+                if (confirm(confirmMessage)) {
+                    try {
+                        await authManager.signOut();
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                    }
                 }
-            });
+            };
+            
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleLogout);
+            }
             
             // Chat functionality
             const messageInput = document.getElementById('messageInput');
             const sendBtn = document.getElementById('sendBtn');
             const chatMessages = document.getElementById('chatMessages');
+            const chatContainer = document.querySelector('.chat-container');
             const quickActionBtns = document.querySelectorAll('.quick-action-btn');
-            const serviceCategories = document.querySelectorAll('.service-category');
+            const serviceCategories = document.querySelector('.service-categories');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const voiceBtn = document.getElementById('voiceBtn');
+            const chatBackBtn = document.getElementById('chatBackBtn');
+            
+            // Chat back button functionality
+            if (chatBackBtn) {
+                chatBackBtn.addEventListener('click', () => {
+                    const chatContainer = document.getElementById('chatContainer');
+                    
+                    // Hide the chat container
+                    if (chatContainer) {
+                        chatContainer.style.opacity = '0';
+                        
+                        // After chat fades out, hide it and restore all elements
+                        setTimeout(() => {
+                            chatContainer.style.display = 'none';
+                            
+                            // Small delay before restoring elements for smoother transition
+                            setTimeout(() => {
+                                // Remove fade-up effect from service categories to make them reappear
+                                if (serviceCategories) {
+                                    serviceCategories.classList.remove('fade-up');
+                                }
+                                
+                                // Restore welcome text and service categories header
+                                const dashboardHeader = document.querySelector('.dashboard-header');
+                                const serviceCategoriesHeader = document.getElementById('serviceCategoriesHeader');
+                                
+                                if (dashboardHeader) {
+                                    dashboardHeader.classList.remove('fade-up');
+                                }
+                                if (serviceCategoriesHeader) {
+                                    serviceCategoriesHeader.classList.remove('fade-up');
+                                }
+                                
+                                // Scroll back to service categories
+                                serviceCategories.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }, 100);
+                        }, 300);
+                    }
+                });
+            }
             
             // Chat responses database
             const chatResponses = {
@@ -774,10 +874,31 @@
                     'আমি বুঝতে পারছি আপনি সরকারি সেবা সম্পর্কে জিজ্ঞাসা করছেন। আপনি কোন সেবা নিয়ে সাহায্য চান সে বিষয়ে আরো নির্দিষ্ট হতে পারেন? আপনি জাতীয় পরিচয়পত্র, পাসপোর্ট, জন্ম নিবন্ধন, ড্রাইভিং লাইসেন্স, বা কর সেবা সম্পর্কে জিজ্ঞাসা করতে পারেন।';
             }
             
+            // Function to show typing indicator
+            function showTypingIndicator() {
+                if (typingIndicator) {
+                    typingIndicator.classList.add('show');
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+            
+            // Function to hide typing indicator
+            function hideTypingIndicator() {
+                if (typingIndicator) {
+                    typingIndicator.classList.remove('show');
+                }
+            }
+            
             // Function to send message
-            function sendMessage() {
+            async function sendMessage() {
                 const message = messageInput.value.trim();
                 if (!message) return;
+                
+                console.log('[DEBUG] Starting sendMessage function');
+                console.log('[DEBUG] messageInput element:', messageInput);
+                console.log('[DEBUG] messageInput display style:', messageInput.style.display);
+                console.log('[DEBUG] messageInput visibility:', messageInput.style.visibility);
+                console.log('[DEBUG] messageInput disabled:', messageInput.disabled);
                 
                 addMessage(message, true);
                 messageInput.value = '';
@@ -785,10 +906,44 @@
                 // Hide/remove quick actions after user sends a message
                 hideQuickActions();
                 
-                setTimeout(() => {
-                    const botResponse = getBotResponse(message);
-                    addMessage(botResponse);
-                }, 1000 + Math.random() * 2000);
+                // Show typing indicator
+                showTypingIndicator();
+                
+                try {
+                    // Initialize ChatAPI if not already done
+                    if (!window.chatAPI) {
+                        window.chatAPI = new ChatAPI();
+                    }
+                    
+                    // Send message to server and get AI response
+                    const result = await window.chatAPI.sendMessage(message);
+                    
+                    // Hide typing indicator
+                    hideTypingIndicator();
+                    
+                    // Add AI response to chat
+                    addMessage(result.response);
+                    
+                    console.log('[DEBUG] Chat response received:', result);
+                    console.log('[DEBUG] After response - messageInput element:', messageInput);
+                    console.log('[DEBUG] After response - messageInput display style:', messageInput.style.display);
+                    console.log('[DEBUG] After response - messageInput visibility:', messageInput.style.visibility);
+                    console.log('[DEBUG] After response - messageInput disabled:', messageInput.disabled);
+                    
+                } catch (error) {
+                    console.error('[ERROR] Chat API error:', error);
+                    hideTypingIndicator();
+                    
+                    // Show error message to user
+                    const isEnglish = !body.classList.contains('bn');
+                    const errorMessage = isEnglish ? 
+                        'Sorry, I encountered an error. Please try again.' : 
+                        'দুঃখিত, একটি ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
+                    addMessage(errorMessage);
+                    
+                    console.log('[DEBUG] After error - messageInput element:', messageInput);
+                    console.log('[DEBUG] After error - messageInput display style:', messageInput.style.display);
+                }
             }
             
             // Function to hide/remove quick actions
@@ -813,6 +968,24 @@
                 });
             }
             
+            // Voice button click (placeholder for future voice functionality)
+            if (voiceBtn) {
+                voiceBtn.addEventListener('click', () => {
+                    const isEnglish = !body.classList.contains('bn');
+                    const message = isEnglish ? 
+                        'Voice input feature coming soon!' : 
+                        'ভয়েস ইনপুট বৈশিষ্ট্য শীঘ্রই আসছে!';
+                    addMessage(message, true);
+                    
+                    setTimeout(() => {
+                        const response = isEnglish ? 
+                            'Voice input will be available in the next update. For now, please type your questions.' : 
+                            'ভয়েস ইনপুট পরবর্তী আপডেটে উপলব্ধ হবে। এখন, অনুগ্রহ করে আপনার প্রশ্নগুলি টাইপ করুন।';
+                        addMessage(response);
+                    }, 1000);
+                });
+            }
+            
             // Quick action buttons
             quickActionBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -827,80 +1000,177 @@
             });
             
             // Service category clicks
-            serviceCategories.forEach(category => {
-                category.addEventListener('click', () => {
-                    const service = category.getAttribute('data-service');
-                    const isEnglish = !body.classList.contains('bn');
-                    
-                    let query = '';
-                    switch(service) {
-                        case 'nid':
-                            query = isEnglish ? 'How to apply for National ID card?' : 'জাতীয় পরিচয়পত্রের জন্য কীভাবে আবেদন করব?';
-                            break;
-                        case 'passport':
-                            query = isEnglish ? 'Passport renewal process' : 'পাসপোর্ট নবায়ন প্রক্রিয়া';
-                            break;
-                        case 'birth':
-                            query = isEnglish ? 'Birth certificate correction' : 'জন্ম নিবন্ধন সংশোধন';
-                            break;
-                        case 'driving':
-                            query = isEnglish ? 'How to get driving license?' : 'ড্রাইভিং লাইসেন্স কীভাবে পাবো?';
-                            break;
-                        case 'tax':
-                            query = isEnglish ? 'Tax token information' : 'ট্যাক্স টোকেন তথ্য';
-                            break;
-                    }
-                    
-                    if (messageInput && query) {
-                        messageInput.value = query;
-                        sendMessage();
-                    }
-                });
-            });
-            
-            // Voice button (placeholder functionality)
-            const voiceBtn = document.getElementById('voiceBtn');
-            if (voiceBtn) {
-                voiceBtn.addEventListener('click', () => {
-                    const isEnglish = !body.classList.contains('bn');
-                    alert(isEnglish ? 'Voice input feature coming soon!' : 'ভয়েস ইনপুট ফিচার শীঘ্রই আসছে!');
-                });
-            }
-            
-            // Service action button handlers
-            const serviceActionBtns = document.querySelectorAll('.service-action-btn');
-            serviceActionBtns.forEach(btn => {
+            const serviceCategoryBtns = serviceCategories ? serviceCategories.querySelectorAll('.service-category') : [];
+            console.log('[DEBUG] Found category buttons:', serviceCategoryBtns.length);
+            serviceCategoryBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const isEnglish = !body.classList.contains('bn');
-                    const action = btn.textContent.trim();
+                    console.log('[DEBUG] Category button clicked:', btn);
+                    const serviceType = btn.getAttribute('data-service');
+                    const categoryName = btn.querySelector('.service-category-title').textContent.trim();
                     
-                    if (action.includes('Download') || action.includes('ডাউনলোড')) {
-                        alert(isEnglish ? 'Download started!' : 'ডাউনলোড শুরু হয়েছে!');
-                    } else if (action.includes('View') || action.includes('দেখুন')) {
-                        alert(isEnglish ? 'Opening document viewer...' : 'ডকুমেন্ট ভিউয়ার খোলা হচ্ছে...');
-                    } else if (action.includes('Upload') || action.includes('আপলোড')) {
-                        alert(isEnglish ? 'File upload dialog would open here.' : 'ফাইল আপলোড ডায়ালগ এখানে খুলবে।');
-                    } else {
-                        alert(isEnglish ? `${action} functionality coming soon!` : `${action} ফিচার শীঘ্রই আসছে!`);
+                    // Add fade-up effect to all elements that should disappear
+                    if (serviceCategories) {
+                        serviceCategories.classList.add('fade-up');
                     }
+                    
+                    // Fade out welcome text and service categories header
+                    const dashboardHeader = document.querySelector('.dashboard-header');
+                    const serviceCategoriesHeader = document.getElementById('serviceCategoriesHeader');
+                    
+                    if (dashboardHeader) {
+                        dashboardHeader.classList.add('fade-up');
+                    }
+                    if (serviceCategoriesHeader) {
+                        serviceCategoriesHeader.classList.add('fade-up');
+                    }
+                    
+                    // Show the chat container after categories start fading
+                    const chatContainer = document.getElementById('chatContainer');
+                    if (chatContainer) {
+                        chatContainer.style.display = 'block';
+                        chatContainer.style.opacity = '0';
+                        
+                        // Wait for categories to fade out, then show chat container
+                        setTimeout(() => {
+                            chatContainer.style.opacity = '1';
+                        }, 300);
+                    }
+                    
+                    // Clear previous messages and add a welcome message about the selected service
+                    const chatMessages = document.getElementById('chatMessages');
+                    if (chatMessages) {
+                        chatMessages.innerHTML = '';
+                        
+                        // Add welcome message for the selected service
+                        const isEnglish = !body.classList.contains('bn');
+                        const welcomeMessage = isEnglish ? 
+                            `Hello! I'm your Jante ChAi assistant. I can help you with ${categoryName} services. What would you like to know?` : 
+                            `হ্যালো! আমি আপনার জানতে চাই সহকারী। আমি ${categoryName} সেবা নিয়ে আপনাকে সাহায্য করতে পারি। আপনি কী জানতে চান?`;
+                        
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = 'message bot-message';
+                        const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        
+                        messageDiv.innerHTML = `
+                            <div class="message-avatar bot-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <p class="message-text">${welcomeMessage}</p>
+                                <div class="message-time">${currentTime}</div>
+                            </div>
+                        `;
+                        
+                        chatMessages.appendChild(messageDiv);
+                        
+                        // Add quick actions specific to the selected service
+                        const quickActions = document.createElement('div');
+                        quickActions.className = 'quick-actions';
+                        
+                        let quickActionQueries = [];
+                        switch(serviceType) {
+                            case 'nid':
+                                quickActionQueries = [
+                                    { en: 'How to apply for National ID card?', bn: 'জাতীয় পরিচয়পত্রের জন্য কীভাবে আবেদন করব?' },
+                                    { en: 'Required documents for NID', bn: 'এনআইডির জন্য প্রয়োজনীয় ডকুমেন্ট' },
+                                    { en: 'NID renewal process', bn: 'এনআইডি নবায়ন প্রক্রিয়া' },
+                                    { en: 'Lost NID replacement', bn: 'হারানো এনআইডি প্রতিস্থাপন' }
+                                ];
+                                break;
+                            case 'passport':
+                                quickActionQueries = [
+                                    { en: 'Passport renewal process', bn: 'পাসপোর্ট নবায়ন প্রক্রিয়া' },
+                                    { en: 'New passport application', bn: 'নতুন পাসপোর্ট আবেদন' },
+                                    { en: 'Required documents for passport', bn: 'পাসপোর্টের জন্য প্রয়োজনীয় ডকুমেন্ট' },
+                                    { en: 'Passport fees and timeline', bn: 'পাসপোর্ট ফি এবং সময়সীমা' }
+                                ];
+                                break;
+                            case 'birth':
+                                quickActionQueries = [
+                                    { en: 'Birth certificate registration', bn: 'জন্ম নিবন্ধন নিবন্ধন' },
+                                    { en: 'Birth certificate correction', bn: 'জন্ম নিবন্ধন সংশোধন' },
+                                    { en: 'Duplicate birth certificate', bn: 'ডুপ্লিকেট জন্ম নিবন্ধন' },
+                                    { en: 'Birth certificate verification', bn: 'জন্ম নিবন্ধন যাচাইকরণ' }
+                                ];
+                                break;
+                            case 'driving':
+                                quickActionQueries = [
+                                    { en: 'New driving license application', bn: 'নতুন ড্রাইভিং লাইসেন্স আবেদন' },
+                                    { en: 'License renewal process', bn: 'লাইসেন্স নবায়ন প্রক্রিয়া' },
+                                    { en: 'International driving permit', bn: 'আন্তর্জাতিক ড্রাইভিং অনুমতি' },
+                                    { en: 'Traffic violation check', bn: 'ট্রাফিক লঙ্ঘন চেক' }
+                                ];
+                                break;
+                            case 'tax':
+                                quickActionQueries = [
+                                    { en: 'Tax token information', bn: 'ট্যাক্স টোকেন তথ্য' },
+                                    { en: 'Property tax payment', bn: 'সম্পত্তি কর প্রদান' },
+                                    { en: 'Business tax registration', bn: 'ব্যবসায়িক কর নিবন্ধন' },
+                                    { en: 'Tax certificate download', bn: 'কর সার্টিফিকেট ডাউনলোড' }
+                                ];
+                                break;
+                        }
+                        
+                        quickActionQueries.forEach(query => {
+                            const btn = document.createElement('div');
+                            btn.className = `quick-action-btn ${isEnglish ? 'english' : 'bangla'}`;
+                            btn.setAttribute('data-query', isEnglish ? query.en : query.bn);
+                            btn.textContent = isEnglish ? query.en : query.bn;
+                            quickActions.appendChild(btn);
+                        });
+                        
+                        chatMessages.appendChild(quickActions);
+                        
+                        // Re-attach event listeners to new quick action buttons
+                        const newQuickActionBtns = quickActions.querySelectorAll('.quick-action-btn');
+                        newQuickActionBtns.forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                const query = btn.getAttribute('data-query');
+                                if (messageInput) {
+                                    messageInput.value = query;
+                                    sendMessage();
+                                    // Hide/remove quick actions after quick action is used
+                                    hideQuickActions();
+                                }
+                            });
+                        });
+                    }
+                    
+                    // Scroll to chat container after animation
+                    setTimeout(() => {
+                        chatContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 600);
                 });
             });
             
-            /* PLUS_DROPDOWN_START */
-            // Inserted plus-button and dropdown in chat input wrapper
-            const plusBtn  = document.getElementById('plus-btn');
-            const plusMenu = document.getElementById('plus-menu');
-            plusBtn.addEventListener('click', e => {
-              e.stopPropagation();
-              plusMenu.classList.toggle('hidden');
-            });
-            document.addEventListener('click', () => plusMenu.classList.add('hidden'));
-            document.getElementById('add-photos')
-                    .addEventListener('click', () => {
-                      alert('Photos and files feature coming soon!');
-                      plusMenu.classList.add('hidden');
-                    });
-            /* PLUS_DROPDOWN_END */
+            // Animate particles in #mainParticles
+            const mainParticles = document.getElementById('mainParticles');
+            if (mainParticles) {
+                mainParticles.innerHTML = '';
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('span');
+                    particle.classList.add('particle');
+                    const size = Math.random() * 6 + 2;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.top = `${Math.random() * 100}%`;
+                    particle.style.left = `${Math.random() * 100}%`;
+                    // Use green colors with varying opacity
+                    const opacity = Math.random() * 0.3 + 0.1;
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    if (isDarkMode) {
+                        // Slightly brighter green for dark mode
+                        particle.style.backgroundColor = `rgba(0, 143, 105, ${opacity + 0.1})`;
+                    } else {
+                        particle.style.backgroundColor = `rgba(0, 143, 105, ${opacity})`;
+                    }
+                    const duration = Math.random() * 20 + 10;
+                    const delay = Math.random() * 10;
+                    particle.style.animationDuration = `${duration}s`;
+                    particle.style.animationDelay = `${delay}s`;
+                    mainParticles.appendChild(particle);
+                }
+            }
         });
     </script>
 

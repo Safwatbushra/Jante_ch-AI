@@ -161,7 +161,7 @@ class AuthFormHandler {
         this.setFormLoading(loginBtn, loginSpinner, true);
 
         try {
-            const result = await this.authManager.signIn(email, password, rememberMe);
+            const result = await this.authManager.signInUser(email, password, rememberMe);
 
             if (result.success) {
                 this.showNotification(
@@ -251,7 +251,7 @@ class AuthFormHandler {
         this.setFormLoading(registerBtn, registerSpinner, true);
 
         try {
-            const result = await this.authManager.signUp(email, password, fullName, mobile);
+            const result = await this.authManager.registerUser(email, password, fullName, mobile);
 
             if (result.success) {
                 this.showNotification(

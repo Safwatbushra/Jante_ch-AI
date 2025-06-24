@@ -1,6 +1,7 @@
 // Authentication Configuration
 class AuthConfig {
     static API_BASE_URL = window.location.origin + '/api';
+    
     static ENDPOINTS = {
         REGISTER: '/auth/register',
         LOGIN: '/auth/login',

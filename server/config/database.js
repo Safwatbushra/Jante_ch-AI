@@ -3,7 +3,9 @@ import { mongodb, ObjectId } from './mongodb.js';
 // Chat session functions
 export async function createChatSession(title = 'New Chat', userId) {
   try {
+    console.log('[DEBUG] Creating chat session for user:', userId);
     const db = mongodb.getDb();
+    console.log('[DEBUG] Database connection successful');
     
     const newSession = {
       title,
@@ -13,12 +15,14 @@ export async function createChatSession(title = 'New Chat', userId) {
     };
 
     const result = await db.collection('chat_sessions').insertOne(newSession);
+    console.log('[DEBUG] Chat session created with ID:', result.insertedId);
     
     return { 
       data: result.insertedId, 
       error: null 
     };
   } catch (error) {
+    console.error('[ERROR] Failed to create chat session:', error);
     return { 
       data: null, 
       error: { message: error.message }
@@ -71,6 +75,7 @@ export async function getChatMessages(sessionId) {
 // Message functions
 export async function saveMessage(sessionId, userId, role, content) {
   try {
+    console.log('[DEBUG] Saving message for session:', sessionId, 'role:', role);
     const db = mongodb.getDb();
     
     const newMessage = {
@@ -82,12 +87,14 @@ export async function saveMessage(sessionId, userId, role, content) {
     };
 
     const result = await db.collection('messages').insertOne(newMessage);
+    console.log('[DEBUG] Message saved with ID:', result.insertedId);
     
     return { 
       data: result.insertedId, 
       error: null 
     };
   } catch (error) {
+    console.error('[ERROR] Failed to save message:', error);
     return { 
       data: null, 
       error: { message: error.message }

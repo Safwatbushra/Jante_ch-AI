@@ -3,7 +3,7 @@
 /* Auth Section */
 .auth-section {
     background: linear-gradient(135deg, #f0f8f5 0%, #e0f0eb 100%);
-    padding: 100px 0;
+    padding: 120px 0 50px;
     min-height: 100vh;
     display: flex;
     align-items: center;

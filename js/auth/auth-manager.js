@@ -1,13 +1,21 @@
-// Main Authentication Manager
-class AuthManager {
+/**
+ * Authentication Manager
+ * Main authentication controller that coordinates between UI and API
+ * Integrates with state management for reactive UI updates
+ */
+class AuthenticationManager {
     constructor() {
-        this.api = new AuthAPI();
+        this.api = new AuthenticationAPI();
         this.currentUser = null;
         this.isInitialized = false;
         this.initializationPromise = null;
+        this.sessionCheckInterval = null;
     }
 
-    // Initialize the auth manager
+    /**
+     * Initialize the authentication manager
+     * @returns {Promise<Object|null>} Current user if authenticated
+     */
     async initialize() {
         if (this.isInitialized) {
             return this.currentUser;
@@ -17,36 +25,47 @@ class AuthManager {
             return this.initializationPromise;
         }
 
-        this.initializationPromise = this._performInitialization();
+        this.initializationPromise = this.performInitialization();
         return this.initializationPromise;
     }
 
-    async _performInitialization() {
+    /**
+     * Perform the actual initialization process
+     * @returns {Promise<Object|null>} Current user if authenticated
+     */
+    async performInitialization() {
         try {
-            console.log('Initializing AuthManager...');
-            
             // Test API connection
-            const isConnected = await this.api.testConnection();
+            const isConnected = await this.api.testApiConnection();
             if (!isConnected) {
                 console.warn('⚠️ API connection test failed');
             }
 
             // Check if user is already logged in
-            if (this.api.isAuthenticated()) {
+            if (this.api.isUserAuthenticated()) {
                 try {
-                    const response = await this.api.getProfile();
+                    const response = await this.api.getUserProfile();
                     if (response.success) {
-                        this.currentUser = response.data;
-                        console.log('✅ User session restored:', this.currentUser.email);
+                        this.currentUser = response.user;
+                        this.startSessionMonitoring();
+                        this.updateUIForAuthenticatedUser();
+                        
+                        // Update state manager
+                        if (window.stateManager) {
+                            stateManager.setUser(response.user);
+                        }
                     } else {
                         // Invalid token, clear storage
-                        this.api.logout();
-                        console.log('🔄 Invalid token, cleared storage');
+                        this.api.logoutUser();
+                        this.updateUIForUnauthenticatedUser();
                     }
                 } catch (error) {
                     console.warn('⚠️ Failed to restore session:', error.message);
-                    this.api.logout();
+                    this.api.logoutUser();
+                    this.updateUIForUnauthenticatedUser();
                 }
+            } else {
+                this.updateUIForUnauthenticatedUser();
             }
 
             this.isInitialized = true;
@@ -55,12 +74,133 @@ class AuthManager {
         } catch (error) {
             console.error('❌ AuthManager initialization failed:', error);
             this.isInitialized = true; // Still mark as initialized to prevent retry loops
+            this.updateUIForUnauthenticatedUser();
             return null;
         }
     }
 
-    // Registration
-    async signUp(email, password, fullName, mobile = '') {
+    /**
+     * Start monitoring session validity
+     */
+    startSessionMonitoring() {
+        // Clear any existing interval
+        if (this.sessionCheckInterval) {
+            clearInterval(this.sessionCheckInterval);
+        }
+
+        // Check session every 5 minutes
+        this.sessionCheckInterval = setInterval(async () => {
+            if (this.isUserAuthenticated()) {
+                try {
+                    const response = await this.api.getUserProfile();
+                    if (!response.success) {
+                        console.log('🔄 Session expired, logging out...');
+                        await this.signOut();
+                    }
+                } catch (error) {
+                    console.log('🔄 Session check failed, logging out...');
+                    await this.signOut();
+                }
+            }
+        }, 5 * 60 * 1000); // 5 minutes
+    }
+
+    /**
+     * Update UI for authenticated user
+     */
+    updateUIForAuthenticatedUser() {
+        if (!this.currentUser) return;
+
+        // Update sidebar user info
+        const userNames = document.querySelectorAll('.user-name');
+        userNames.forEach(name => {
+            if (name.textContent.includes('John Doe') || name.textContent.includes('জন ডো') || name.textContent.includes('Loading...') || name.textContent.includes('লোড হচ্ছে...')) {
+                name.textContent = this.currentUser.fullName || this.currentUser.email;
+            }
+        });
+
+        const userEmails = document.querySelectorAll('.user-email');
+        userEmails.forEach(email => {
+            if (email.textContent.includes('john.doe@example.com') || email.textContent.includes('loading@example.com')) {
+                email.textContent = this.currentUser.email;
+            }
+        });
+
+        // Update profile tab elements
+        const profileName = document.getElementById('profileName');
+        const profileNameBn = document.getElementById('profileNameBn');
+        const profileEmail = document.getElementById('profileEmail');
+        const profileEmailBn = document.getElementById('profileEmailBn');
+
+        if (profileName) {
+            profileName.textContent = this.currentUser.fullName || this.currentUser.email;
+        }
+        if (profileNameBn) {
+            profileNameBn.textContent = this.currentUser.fullName || this.currentUser.email;
+        }
+        if (profileEmail) {
+            profileEmail.textContent = this.currentUser.email;
+        }
+        if (profileEmailBn) {
+            profileEmailBn.textContent = this.currentUser.email;
+        }
+
+        // Show authenticated content
+        document.body.classList.add('user-authenticated');
+        this.hideLoginElements();
+        this.showAuthenticatedElements();
+    }
+
+    /**
+     * Update UI for unauthenticated user
+     */
+    updateUIForUnauthenticatedUser() {
+        document.body.classList.remove('user-authenticated');
+        this.showLoginElements();
+        this.hideAuthenticatedElements();
+    }
+
+    /**
+     * Hide login-related elements
+     */
+    hideLoginElements() {
+        const loginElements = document.querySelectorAll('.login-required, .auth-required');
+        loginElements.forEach(el => el.style.display = 'none');
+    }
+
+    /**
+     * Show login-related elements
+     */
+    showLoginElements() {
+        const loginElements = document.querySelectorAll('.login-required, .auth-required');
+        loginElements.forEach(el => el.style.display = 'block');
+    }
+
+    /**
+     * Hide authenticated elements
+     */
+    hideAuthenticatedElements() {
+        const authElements = document.querySelectorAll('.user-dashboard, .authenticated-only');
+        authElements.forEach(el => el.style.display = 'none');
+    }
+
+    /**
+     * Show authenticated elements
+     */
+    showAuthenticatedElements() {
+        const authElements = document.querySelectorAll('.user-dashboard, .authenticated-only');
+        authElements.forEach(el => el.style.display = 'block');
+    }
+
+    /**
+     * Register a new user
+     * @param {string} email - User email
+     * @param {string} password - User password
+     * @param {string} fullName - User full name
+     * @param {string} mobile - User mobile (optional)
+     * @returns {Promise<Object>} Registration result
+     */
+    async registerUser(email, password, fullName, mobile = '') {
         try {
             // Validate input
             const validationData = {
@@ -90,12 +230,19 @@ class AuthManager {
                 mobile: mobile ? AuthValidator.sanitizeInput(mobile) : null
             };
 
-            const response = await this.api.register(sanitizedData);
+            const response = await this.api.registerUser(sanitizedData);
 
             if (response.success) {
                 this.currentUser = response.user;
                 console.log('✅ Registration successful:', this.currentUser.email);
-                this._dispatchAuthEvent('userRegistered', this.currentUser);
+                this.startSessionMonitoring();
+                this.updateUIForAuthenticatedUser();
+                this.dispatchAuthEvent('userRegistered', this.currentUser);
+                
+                // Update state manager
+                if (window.stateManager) {
+                    stateManager.setUser(response.user);
+                }
             }
 
             return response;
@@ -104,16 +251,24 @@ class AuthManager {
             console.error('❌ Registration error:', error);
             return {
                 success: false,
-                error: error.message || 'Registration failed. Please try again.'
+                error: 'Registration failed. Please try again.'
             };
         }
     }
 
-    // Login
-    async signIn(email, password, rememberMe = false) {
+    /**
+     * Sign in user
+     * @param {string} email - User email
+     * @param {string} password - User password
+     * @param {boolean} rememberMe - Whether to remember login
+     * @returns {Promise<Object>} Login result
+     */
+    async signInUser(email, password, rememberMe = false) {
         try {
             // Validate input
-            const validation = AuthValidator.validateLoginForm({ email, password });
+            const validationData = { email, password };
+            const validation = AuthValidator.validateLoginForm(validationData);
+
             if (!validation.isValid) {
                 const firstError = Object.values(validation.errors)[0];
                 return {
@@ -122,13 +277,25 @@ class AuthManager {
                 };
             }
 
-            const sanitizedEmail = AuthValidator.sanitizeInput(email).toLowerCase();
-            const response = await this.api.login(sanitizedEmail, password, rememberMe);
+            // Sanitize inputs
+            const sanitizedData = {
+                email: AuthValidator.sanitizeInput(email).toLowerCase(),
+                password: password
+            };
+
+            const response = await this.api.authenticateUser(sanitizedData.email, sanitizedData.password, rememberMe);
 
             if (response.success) {
                 this.currentUser = response.user;
                 console.log('✅ Login successful:', this.currentUser.email);
-                this._dispatchAuthEvent('userLoggedIn', this.currentUser);
+                this.startSessionMonitoring();
+                this.updateUIForAuthenticatedUser();
+                this.dispatchAuthEvent('userLoggedIn', this.currentUser);
+                
+                // Update state manager
+                if (window.stateManager) {
+                    stateManager.setUser(response.user);
+                }
             }
 
             return response;
@@ -137,56 +304,94 @@ class AuthManager {
             console.error('❌ Login error:', error);
             return {
                 success: false,
-                error: error.message || 'Login failed. Please check your credentials.'
+                error: 'Login failed. Please try again.'
             };
         }
     }
 
-    // Logout
+    /**
+     * Sign out user
+     * @returns {Promise<Object>} Logout result
+     */
     async signOut() {
         try {
-            const user = this.currentUser;
+            const response = await this.api.logoutUser();
+            
             this.currentUser = null;
-            this.api.logout();
+            this.api.logoutUser();
             
-            console.log('✅ User logged out');
-            this._dispatchAuthEvent('userLoggedOut', user);
+            // Clear session monitoring
+            if (this.sessionCheckInterval) {
+                clearInterval(this.sessionCheckInterval);
+                this.sessionCheckInterval = null;
+            }
+
+            this.updateUIForUnauthenticatedUser();
+            this.dispatchAuthEvent('userLoggedOut', null);
             
-            return { success: true };
+            // Update state manager
+            if (window.stateManager) {
+                stateManager.clearUser();
+            }
+
+            // Redirect to homepage after logout
+            setTimeout(() => {
+                window.location.href = 'homepage.html';
+            }, 500);
+
+            return response;
 
         } catch (error) {
             console.error('❌ Logout error:', error);
             return {
                 success: false,
-                error: error.message || 'Logout failed'
+                error: 'Logout failed'
             };
         }
     }
 
-    // Get current user
+    /**
+     * Get current user
+     * @returns {Object|null} Current user object
+     */
     getCurrentUser() {
         return this.currentUser;
     }
 
-    // Check if user is authenticated
-    isAuthenticated() {
-        return !!(this.currentUser && this.api.isAuthenticated());
+    /**
+     * Check if user is authenticated
+     * @returns {boolean} Authentication status
+     */
+    isUserAuthenticated() {
+        return this.api.isUserAuthenticated() && !!this.currentUser;
     }
 
-    // Update profile
-    async updateProfile(profileData) {
+    /**
+     * Require authentication for protected routes
+     * @param {string} redirectUrl - URL to redirect if not authenticated
+     */
+    requireAuthentication(redirectUrl = 'auth.html') {
+        if (!this.isUserAuthenticated()) {
+            this.redirectToLogin(redirectUrl);
+        }
+    }
+
+    /**
+     * Update user profile
+     * @param {Object} profileData - Profile updates
+     * @returns {Promise<Object>} Update result
+     */
+    async updateUserProfile(profileData) {
         try {
-            if (!this.isAuthenticated()) {
-                throw new Error('User not authenticated');
-            }
-
-            const response = await this.api.updateProfile(profileData);
-
+            const response = await this.api.updateUserProfile(profileData);
+            
             if (response.success) {
-                const profileResponse = await this.api.getProfile();
-                if (profileResponse.success) {
-                    this.currentUser = profileResponse.data;
-                    this._dispatchAuthEvent('profileUpdated', this.currentUser);
+                this.currentUser = response.user;
+                this.updateUIForAuthenticatedUser();
+                
+                // Update state manager
+                if (window.stateManager) {
+                    stateManager.setUser(response.user);
                 }
             }
 
@@ -196,30 +401,24 @@ class AuthManager {
             console.error('❌ Profile update error:', error);
             return {
                 success: false,
-                error: error.message || 'Profile update failed'
+                error: 'Profile update failed'
             };
         }
     }
 
-    // Change password
-    async changePassword(currentPassword, newPassword) {
+    /**
+     * Change user password
+     * @param {string} currentPassword - Current password
+     * @param {string} newPassword - New password
+     * @returns {Promise<Object>} Password change result
+     */
+    async changeUserPassword(currentPassword, newPassword) {
         try {
-            if (!this.isAuthenticated()) {
-                throw new Error('User not authenticated');
-            }
-
-            const validation = AuthValidator.validatePassword(newPassword);
-            if (!validation.isValid) {
-                return {
-                    success: false,
-                    error: validation.message
-                };
-            }
-
-            const response = await this.api.changePassword(currentPassword, newPassword);
+            const response = await this.api.changeUserPassword(currentPassword, newPassword);
             
             if (response.success) {
-                this._dispatchAuthEvent('passwordChanged', this.currentUser);
+                // Force re-login after password change
+                await this.signOut();
             }
 
             return response;
@@ -228,80 +427,105 @@ class AuthManager {
             console.error('❌ Password change error:', error);
             return {
                 success: false,
-                error: error.message || 'Password change failed'
+                error: 'Password change failed'
             };
         }
     }
 
-    // Validation methods
+    // Utility methods
+
+    /**
+     * Validate email format
+     * @param {string} email - Email to validate
+     * @returns {boolean} Validation result
+     */
     validateEmail(email) {
         return AuthValidator.validateEmail(email);
     }
 
+    /**
+     * Validate mobile number
+     * @param {string} mobile - Mobile to validate
+     * @returns {boolean} Validation result
+     */
     validateMobile(mobile) {
         return AuthValidator.validateMobile(mobile);
     }
 
+    /**
+     * Validate password strength
+     * @param {string} password - Password to validate
+     * @returns {boolean} Validation result
+     */
     validatePassword(password) {
         return AuthValidator.validatePassword(password);
     }
 
+    /**
+     * Validate name format
+     * @param {string} name - Name to validate
+     * @returns {boolean} Validation result
+     */
     validateName(name) {
         return AuthValidator.validateName(name);
     }
 
-    // Redirect helpers
-    redirectToLogin() {
-        const currentPath = window.location.pathname;
-        if (!currentPath.includes('auth.html')) {
-            window.location.href = 'auth.html';
-        }
+    /**
+     * Redirect to login page
+     * @param {string} redirectUrl - URL to redirect after login
+     */
+    redirectToLogin(redirectUrl = 'auth.html') {
+        const currentUrl = encodeURIComponent(window.location.href);
+        window.location.href = `${redirectUrl}?redirect=${currentUrl}`;
     }
 
+    /**
+     * Redirect to dashboard
+     */
     redirectToDashboard() {
-        const currentPath = window.location.pathname;
-        if (!currentPath.includes('user.html')) {
-            window.location.href = 'user.html';
-        }
+        window.location.href = 'user.html';
     }
 
-    // Protected route helper
-    requireAuth() {
-        if (!this.isAuthenticated()) {
-            this.redirectToLogin();
-            return false;
-        }
-        return true;
-    }
-
-    // Event dispatcher
-    _dispatchAuthEvent(eventName, userData) {
-        const event = new CustomEvent(eventName, {
-            detail: userData
+    /**
+     * Dispatch authentication events
+     * @param {string} eventName - Event name
+     * @param {Object} userData - User data
+     */
+    dispatchAuthEvent(eventName, userData) {
+        const event = new CustomEvent('authStateChanged', {
+            detail: { event: eventName, user: userData }
         });
-        window.dispatchEvent(event);
+        document.dispatchEvent(event);
     }
 
-    // Debug info
+    /**
+     * Get debug information
+     * @returns {Object} Debug info
+     */
     getDebugInfo() {
         return {
             isInitialized: this.isInitialized,
-            isAuthenticated: this.isAuthenticated(),
-            currentUser: this.currentUser,
-            hasToken: !!this.api.getToken(),
-            userData: this.api.getUserData()
+            isAuthenticated: this.isUserAuthenticated(),
+            hasCurrentUser: !!this.currentUser,
+            apiConnected: this.api.isUserAuthenticated(),
+            sessionMonitoring: !!this.sessionCheckInterval
         };
     }
 }
 
-// Initialize global auth manager
-window.authManager = new AuthManager();
+// Create singleton instance
+const authManager = new AuthenticationManager();
 
-// Auto-initialize when DOM is loaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        window.authManager.initialize();
-    });
-} else {
-    window.authManager.initialize();
-}
+// Export for global access
+window.AuthenticationManager = AuthenticationManager;
+window.authManager = authManager;
+
+// Initialize auth manager when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    authManager.initialize();
+});
+
+// Listen for auth state changes
+document.addEventListener('authStateChanged', (event) => {
+    console.log('Auth state changed:', event.detail);
+});

@@ -4,9 +4,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
-import AuthService from './controllers/auth.js';
+import AuthenticationService from './controllers/auth.js';
 import { ChatBot } from './services/chatbot.js';
 import { getUserChatSessions } from './config/database.js';
+import { mongodb } from './config/mongodb.js';
+import { getGroqAccountInfo } from './services/groq.js';
 
 // Load environment variables
 dotenv.config();
@@ -17,10 +19,13 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Initialize Auth Service
-const authService = new AuthService();
+const authService = new AuthenticationService();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : true,
+    credentials: true // Allow credentials for future use
+}));
 app.use(express.json());
 
 // Serve static files from the root project directory (parent of server)
@@ -50,10 +55,15 @@ app.use('/css', express.static(path.join(__dirname, '../css'), {
 async function connectToDatabase() {
     try {
         await authService.initialize();
-        console.log('✅ Connected to MongoDB Atlas');
-        console.log('✅ Auth service initialized');
+        console.log('[INFO] MongoDB Atlas connection established');
+        console.log('[INFO] Authentication service initialized successfully');
+        
+        // Initialize ChatBot MongoDB connection
+        await mongodb.connect();
+        console.log('[INFO] ChatBot MongoDB connection established');
+        
     } catch (error) {
-        console.error('❌ Failed to initialize database/auth:', error.message);
+        console.error('[ERROR] Failed to initialize database/auth:', error.message);
         process.exit(1);
     }
 }
@@ -71,7 +81,7 @@ app.post('/api/auth/register', async (req, res) => {
         const { email, password, fullName, mobile } = req.body;
 
         // Register user using new auth service
-        const result = await authService.register(email, password, fullName, mobile);
+        const result = await authService.registerUser(email, password, fullName, mobile);
         
         if (!result.success) {
             return res.status(400).json({
@@ -80,7 +90,7 @@ app.post('/api/auth/register', async (req, res) => {
             });
         }
 
-        console.log('✅ User registered successfully:', email);
+        console.log('[INFO] User registered successfully:', email);
 
         res.status(201).json({
             success: true,
@@ -90,7 +100,7 @@ app.post('/api/auth/register', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Registration error:', error);
+        console.error('[ERROR] Registration error:', error);
         res.status(500).json({
             success: false,
             error: 'Internal server error during registration'
@@ -103,7 +113,7 @@ app.post('/api/auth/login', async (req, res) => {
         const { email, password, rememberMe } = req.body;
 
         // Sign in user using new auth service
-        const result = await authService.login(email, password, rememberMe);
+        const result = await authService.authenticateUser(email, password, rememberMe);
         
         if (!result.success) {
             return res.status(400).json({
@@ -112,7 +122,7 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        console.log('✅ User logged in successfully:', email);
+        console.log('[INFO] User logged in successfully:', email);
 
         res.json({
             success: true,
@@ -122,7 +132,7 @@ app.post('/api/auth/login', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Login error:', error);
+        console.error('[ERROR] Login error:', error);
         res.status(500).json({
             success: false,
             error: 'Internal server error during login'
@@ -134,7 +144,7 @@ app.post('/api/auth/logout', async (req, res) => {
     try {
         const token = req.headers.authorization;
         
-        const result = await authService.logout(token);
+        const result = await authService.logoutUser(token);
         
         res.json({
             success: result.success,
@@ -142,7 +152,7 @@ app.post('/api/auth/logout', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Logout error:', error);
+        console.error('[ERROR] Logout error:', error);
         res.status(500).json({
             success: false,
             error: 'Internal server error during logout'
@@ -154,7 +164,7 @@ app.get('/api/auth/profile', async (req, res) => {
     try {
         const token = req.headers.authorization;
         
-        const result = await authService.verifyToken(token);
+        const result = await authService.verifyAuthToken(token);
         
         if (!result.success) {
             return res.status(401).json({
@@ -169,7 +179,7 @@ app.get('/api/auth/profile', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Profile fetch error:', error);
+        console.error('[ERROR] Profile fetch error:', error);
         res.status(500).json({
             success: false,
             error: 'Internal server error'
@@ -182,7 +192,7 @@ app.put('/api/auth/profile', async (req, res) => {
         const token = req.headers.authorization;
         
         // Verify token first
-        const authResult = await authService.verifyToken(token);
+        const authResult = await authService.verifyAuthToken(token);
         if (!authResult.success) {
             return res.status(401).json({
                 success: false,
@@ -197,8 +207,8 @@ app.put('/api/auth/profile', async (req, res) => {
         if (mobile !== undefined) updates.mobile = mobile;
         if (preferences !== undefined) updates.preferences = preferences;
 
-        const result = await authService.updateProfile(authResult.user.id, updates);
-
+        const result = await authService.updateUserProfile(authResult.user.id, updates);
+        
         if (!result.success) {
             return res.status(400).json({
                 success: false,
@@ -208,12 +218,11 @@ app.put('/api/auth/profile', async (req, res) => {
 
         res.json({
             success: true,
-            user: result.user,
             message: result.message
         });
 
     } catch (error) {
-        console.error('❌ Profile update error:', error);
+        console.error('[ERROR] Profile update error:', error);
         res.status(500).json({
             success: false,
             error: 'Internal server error'
@@ -226,7 +235,7 @@ app.post('/api/auth/change-password', async (req, res) => {
         const token = req.headers.authorization;
         
         // Verify token first
-        const authResult = await authService.verifyToken(token);
+        const authResult = await authService.verifyAuthToken(token);
         if (!authResult.success) {
             return res.status(401).json({
                 success: false,
@@ -235,7 +244,7 @@ app.post('/api/auth/change-password', async (req, res) => {
         }
 
         const { currentPassword, newPassword } = req.body;
-
+        
         if (!currentPassword || !newPassword) {
             return res.status(400).json({
                 success: false,
@@ -244,7 +253,7 @@ app.post('/api/auth/change-password', async (req, res) => {
         }
 
         const result = await authService.changePassword(authResult.user.id, currentPassword, newPassword);
-
+        
         if (!result.success) {
             return res.status(400).json({
                 success: false,
@@ -258,7 +267,7 @@ app.post('/api/auth/change-password', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Password change error:', error);
+        console.error('[ERROR] Password change error:', error);
         res.status(500).json({
             success: false,
             error: 'Internal server error'
@@ -272,7 +281,7 @@ app.get('/api/chat/sessions', async (req, res) => {
         const token = req.headers.authorization;
         
         // Verify token first
-        const authResult = await authService.verifyToken(token);
+        const authResult = await authService.verifyAuthToken(token);
         if (!authResult.success) {
             return res.status(401).json({
                 success: false,
@@ -295,7 +304,7 @@ app.get('/api/chat/sessions', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Get chat sessions error:', error);
+        console.error('[ERROR] Get chat sessions error:', error);
         res.status(500).json({
             success: false,
             error: 'Internal server error'
@@ -306,9 +315,10 @@ app.get('/api/chat/sessions', async (req, res) => {
 app.post('/api/chat/message', async (req, res) => {
     try {
         const token = req.headers.authorization;
+        console.log('[DEBUG] Chat message - Received token:', token ? 'Token present' : 'No token');
         
         // Verify token first
-        const authResult = await authService.verifyToken(token);
+        const authResult = await authService.verifyAuthToken(token);
         if (!authResult.success) {
             return res.status(401).json({
                 success: false,
@@ -345,7 +355,7 @@ app.post('/api/chat/message', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Chat message error:', error);
+        console.error('[ERROR] Chat message error:', error);
         res.status(500).json({
             success: false,
             error: error.message
@@ -356,9 +366,10 @@ app.post('/api/chat/message', async (req, res) => {
 app.post('/api/chat/new-session', async (req, res) => {
     try {
         const token = req.headers.authorization;
+        console.log('[DEBUG] New chat session - Received token:', token ? 'Token present' : 'No token');
         
         // Verify token first
-        const authResult = await authService.verifyToken(token);
+        const authResult = await authService.verifyAuthToken(token);
         if (!authResult.success) {
             return res.status(401).json({
                 success: false,
@@ -377,10 +388,40 @@ app.post('/api/chat/new-session', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ New chat session error:', error);
+        console.error('[ERROR] New chat session error:', error);
         res.status(500).json({
             success: false,
             error: error.message
+        });
+    }
+});
+
+// Groq account info route
+app.get('/api/groq/account-info', async (req, res) => {
+    try {
+        const token = req.headers.authorization;
+        
+        // Verify token first
+        const authResult = await authService.verifyAuthToken(token);
+        if (!authResult.success) {
+            return res.status(401).json({
+                success: false,
+                error: authResult.error
+            });
+        }
+
+        const accountInfo = await getGroqAccountInfo();
+
+        res.json({
+            success: true,
+            data: accountInfo
+        });
+
+    } catch (error) {
+        console.error('[ERROR] Groq account info error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Internal server error'
         });
     }
 });
@@ -434,27 +475,93 @@ const PORT = process.env.PORT || 3000;
 
 async function startServer() {
     try {
+        console.log('\n[INFO] Starting Jante CH-AI Server...');
+        console.log('[INFO] Initializing services...\n');
+        
         // Initialize Auth Service and MongoDB
         await connectToDatabase();
         
-        // Start Express server
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on http://localhost:${PORT}`);
-            console.log(`📊 MongoDB Atlas connected`);
-            console.log(`🔐 Authentication system ready`);
-            console.log(`🤖 Groq AI chatbot ready`);
-            console.log(`📱 Frontend served from current directory`);
+        // Start Express server with port conflict handling
+        const server = app.listen(PORT, () => {
+            const actualPort = server.address().port;
+            console.log('\n' + '='.repeat(60));
+            console.log('JANTE CH-AI SERVER STARTED SUCCESSFULLY');
+            console.log('='.repeat(60));
+            console.log(`Server URL: http://localhost:${actualPort}`);
+            console.log(`Local Network: http://0.0.0.0:${actualPort}`);
+            console.log(`Database: MongoDB Atlas (Connected)`);
+            console.log(`Authentication: JWT-based system (Ready)`);
+            console.log(`AI Service: Groq API (Ready)`);
+            console.log(`Frontend: Static files served from root`);
+            console.log(`Started at: ${new Date().toLocaleString()}`);
+            console.log('='.repeat(60));
+            console.log(`Quick Links:`);
+            console.log(`  • Homepage: http://localhost:${actualPort}/`);
+            console.log(`  • Authentication: http://localhost:${actualPort}/auth`);
+            console.log(`  • User Dashboard: http://localhost:${actualPort}/user`);
+            console.log(`  • API Test: http://localhost:${actualPort}/api/test`);
+            console.log('='.repeat(60) + '\n');
+        }).on('error', (err) => {
+            if (err.code === 'EADDRINUSE') {
+                console.log(`[WARN] Port ${PORT} is in use, trying alternative ports...`);
+                // Try alternative ports
+                const alternativePorts = [3001, 3002, 3003, 3004, 3005];
+                let portIndex = 0;
+                
+                const tryPort = () => {
+                    if (portIndex >= alternativePorts.length) {
+                        console.error('[ERROR] No available ports found. Please free up a port or specify a different port.');
+                        process.exit(1);
+                    }
+                    
+                    const testPort = alternativePorts[portIndex];
+                    const testServer = app.listen(testPort, () => {
+                        const actualPort = testServer.address().port;
+                        console.log('\n' + '='.repeat(60));
+                        console.log('JANTE CH-AI SERVER STARTED SUCCESSFULLY');
+                        console.log('='.repeat(60));
+                        console.log(`Server URL: http://localhost:${actualPort}`);
+                        console.log(`Local Network: http://0.0.0.0:${actualPort}`);
+                        console.log(`Database: MongoDB Atlas (Connected)`);
+                        console.log(`Authentication: JWT-based system (Ready)`);
+                        console.log(`AI Service: Groq API (Ready)`);
+                        console.log(`Frontend: Static files served from root`);
+                        console.log(`Started at: ${new Date().toLocaleString()}`);
+                        console.log('='.repeat(60));
+                        console.log(`Quick Links:`);
+                        console.log(`  • Homepage: http://localhost:${actualPort}/`);
+                        console.log(`  • Authentication: http://localhost:${actualPort}/auth`);
+                        console.log(`  • User Dashboard: http://localhost:${actualPort}/user`);
+                        console.log(`  • API Test: http://localhost:${actualPort}/api/test`);
+                        console.log('='.repeat(60) + '\n');
+                    }).on('error', (testErr) => {
+                        if (testErr.code === 'EADDRINUSE') {
+                            testServer.close();
+                            portIndex++;
+                            tryPort();
+                        } else {
+                            console.error('[ERROR] Server error:', testErr);
+                            process.exit(1);
+                        }
+                    });
+                };
+                
+                tryPort();
+            } else {
+                console.error('[ERROR] Server error:', err);
+                process.exit(1);
+            }
         });
         
     } catch (error) {
-        console.error('❌ Failed to start server:', error);
+        console.error('[ERROR] Failed to start server:', error);
         process.exit(1);
     }
 }
 
-// Graceful shutdown
+// Shutdown
 process.on('SIGINT', () => {
-    console.log('\n🛑 Server shutting down gracefully...');
+    console.log('\n[INFO] Server shutting down...');
     process.exit(0);
 });
 

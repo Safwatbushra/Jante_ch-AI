@@ -19,19 +19,30 @@ class MongoDB {
 
   async connect() {
     try {
-      this.client = new MongoClient(process.env.MONGODB_URI);
+      if (this.isConnected) {
+        return this.db;
+      }
+
+      const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+      const databaseName = process.env.DB_NAME || 'jante-chai';
+
+      console.log('[INFO] Connecting to MongoDB for ChatBot service...');
+      console.log('[INFO] Using database:', databaseName);
+      
+      this.client = new MongoClient(mongoUri);
       await this.client.connect();
-      this.db = this.client.db('jante-chai');
+      
+      this.db = this.client.db(databaseName);
       this.isConnected = true;
       
-      console.log('✅ Connected to MongoDB Atlas');
+      console.log('✅ ChatBot MongoDB connection established');
       
       // Create indexes for better performance
       await this.createIndexes();
       
       return this.db;
     } catch (error) {
-      console.error('❌ MongoDB connection error:', error);
+      console.error('❌ ChatBot MongoDB connection error:', error);
       throw error;
     }
   }

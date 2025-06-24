@@ -248,9 +248,18 @@
     
     <!-- Enhanced JavaScript -->
     <script>
-
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
             const body = document.body;
+            
+            // Initialize authentication
+            await authManager.initialize();
+            
+            // Check if user is already authenticated
+            if (authManager.isUserAuthenticated()) {
+                // Redirect to dashboard if already logged in
+                window.location.href = 'user.html';
+                return;
+            }
             
             // Language and Dark Mode Setup
             const languageSwitcher = document.getElementById('languageSwitcher');

@@ -324,8 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.authManager.setErrorFeedbackCallback = null; // Remove old callback method
         
         // Override the auth manager methods to use toast notifications
-        const originalSignIn = window.authManager.signIn.bind(window.authManager);
-        window.authManager.signIn = async function(credentials) {
+        const originalSignIn = window.authManager.signInUser.bind(window.authManager);
+        window.authManager.signInUser = async function(credentials) {
             const result = await originalSignIn(credentials);
             if (result.success) {
                 window.toastNotifications.success('Login successful!');
@@ -335,11 +335,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return result;
         };
 
-        const originalSignUp = window.authManager.signUp.bind(window.authManager);
-        window.authManager.signUp = async function(userData) {
+        const originalSignUp = window.authManager.registerUser.bind(window.authManager);
+        window.authManager.registerUser = async function(userData) {
             const result = await originalSignUp(userData);
             if (result.success) {
-                window.toastNotifications.success('Account created successfully!');
+                window.toastNotifications.success('Registration successful!');
             } else {
                 window.toastNotifications.error(result.error);
             }

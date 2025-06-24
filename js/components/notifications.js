@@ -99,19 +99,23 @@ class NotificationManager {
     }
 }
 
-// Create global instance
-const notificationManager = new NotificationManager();
+// Create global instance when DOM is ready
+let notificationManager;
 
-// Make globally available
-window.showNotification = (message, type = 'success', duration = null) => {
-    return notificationManager.show(message, type, duration);
-};
+document.addEventListener('DOMContentLoaded', () => {
+    notificationManager = new NotificationManager();
+    
+    // Make globally available
+    window.showNotification = (message, type = 'success', duration = null) => {
+        return notificationManager.show(message, type, duration);
+    };
 
-// Convenience methods
-window.showSuccess = (message, duration) => notificationManager.success(message, duration);
-window.showError = (message, duration) => notificationManager.error(message, duration);
-window.showWarning = (message, duration) => notificationManager.warning(message, duration);
-window.showInfo = (message, duration) => notificationManager.info(message, duration);
+    // Convenience methods
+    window.showSuccess = (message, duration) => notificationManager.success(message, duration);
+    window.showError = (message, duration) => notificationManager.error(message, duration);
+    window.showWarning = (message, duration) => notificationManager.warning(message, duration);
+    window.showInfo = (message, duration) => notificationManager.info(message, duration);
+});
 
 // Export for module systems
 if (typeof module !== 'undefined' && module.exports) {

@@ -1,69 +1,90 @@
-// Backend Authentication System
+/**
+ * Authentication Controller
+ * Handles user registration, login, logout, and profile management
+ * Uses JWT tokens and bcrypt for secure authentication
+ */
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { MongoClient, ObjectId } from 'mongodb';
 
-class AuthService {
+class AuthenticationService {
     constructor() {
-        this.client = null;
-        this.db = null;
+        // Database connection properties
+        this.mongoClient = null;
+        this.database = null;
         this.usersCollection = null;
         this.sessionsCollection = null;
-        this.JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
-        this.JWT_EXPIRES_IN = '7d';
-        this.SALT_ROUNDS = 12;
-    }    async initialize() {
+        
+        // JWT configuration
+        this.jwtSecret = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
+        this.jwtExpiresIn = '7d';
+        this.bcryptSaltRounds = 12;
+    }
+
+    /**
+     * Initialize database connection and create indexes
+     * @returns {Promise<boolean>} Success status
+     */
+    async initialize() {
         try {
             const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
-            const dbName = process.env.DB_NAME || 'jante-chai'; // Use same database as old system
+            const databaseName = process.env.DB_NAME || 'jante-chai';
 
-            console.log('🔄 Connecting to MongoDB...');
-            console.log('📊 Using database:', dbName);
-            this.client = new MongoClient(mongoUri);
-            await this.client.connect();
+            console.log('[INFO] Connecting to MongoDB...');
+            console.log('[INFO] Using database:', databaseName);
             
-            this.db = this.client.db(dbName);
-            this.usersCollection = this.db.collection('users');
-            this.sessionsCollection = this.db.collection('sessions');
+            this.mongoClient = new MongoClient(mongoUri);
+            await this.mongoClient.connect();
+            
+            this.database = this.mongoClient.db(databaseName);
+            this.usersCollection = this.database.collection('users');
+            this.sessionsCollection = this.database.collection('sessions');
 
-            // Create indexes for better performance
-            await this.createIndexes();
+            // Create database indexes for performance
+            await this.createDatabaseIndexes();
             
-            console.log('✅ Auth service initialized successfully');
+            console.log('[INFO] Authentication service initialized successfully');
             return true;
         } catch (error) {
-            console.error('❌ Failed to initialize auth service:', error);
+            console.error('[ERROR] Failed to initialize auth service:', error);
             throw error;
         }
     }
 
-    async createIndexes() {
+    /**
+     * Create database indexes for better query performance
+     */
+    async createDatabaseIndexes() {
         try {
-            // Create unique index on email
+            // Create unique index on email field
             await this.usersCollection.createIndex({ email: 1 }, { unique: true });
             
-            // Note: Mobile index is created in mongodb.js config file
-            // to avoid conflicts with existing unique index
-            
-            // Create index on sessions for cleanup
+            // Create index on sessions for automatic cleanup
             await this.sessionsCollection.createIndex({ 
                 createdAt: 1 
             }, { 
                 expireAfterSeconds: 604800 // 7 days
             });
             
-            console.log('✅ Database indexes created');
+            console.log('[INFO] Database indexes created successfully');
         } catch (error) {
             if (error.code !== 11000) { // Ignore duplicate index errors
-                console.error('❌ Error creating indexes:', error);
+                console.error('[ERROR] Error creating indexes:', error);
             }
         }
     }
 
-    // User registration
-    async register(email, password, fullName, mobile = null) {
+    /**
+     * Register a new user account
+     * @param {string} email - User's email address
+     * @param {string} password - User's password
+     * @param {string} fullName - User's full name
+     * @param {string} mobile - User's mobile number (optional)
+     * @returns {Promise<Object>} Registration result
+     */
+    async registerUser(email, password, fullName, mobile = null) {
         try {
-            // Validate input
+            // Validate required input fields
             if (!email || !password || !fullName) {
                 return {
                     success: false,
@@ -71,7 +92,7 @@ class AuthService {
                 };
             }
 
-            // Validate email format
+            // Validate email format using regex
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 return {
@@ -89,7 +110,9 @@ class AuthService {
             }
 
             // Check if user already exists
-            const existingUser = await this.usersCollection.findOne({ email: email.toLowerCase() });
+            const existingUser = await this.usersCollection.findOne({ 
+                email: email.toLowerCase() 
+            });
             if (existingUser) {
                 return {
                     success: false,
@@ -97,16 +120,16 @@ class AuthService {
                 };
             }
 
-            // Hash password
-            const hashedPassword = await bcrypt.hash(password, this.SALT_ROUNDS);
+            // Hash password using bcrypt
+            const hashedPassword = await bcrypt.hash(password, this.bcryptSaltRounds);
 
-            // Create user object
+            // Create new user document
             const newUser = {
                 email: email.toLowerCase(),
                 password: hashedPassword,
                 fullName: fullName.trim(),
                 mobile: mobile ? mobile.trim() : null,
-                isEmailVerified: true, // For now, auto-verify
+                isEmailVerified: true, // Auto-verify for demo purposes
                 isActive: true,
                 role: 'user',
                 createdAt: new Date(),
@@ -120,27 +143,27 @@ class AuthService {
                 }
             };
 
-            // Insert user
-            const result = await this.usersCollection.insertOne(newUser);
+            // Insert user into database
+            const insertResult = await this.usersCollection.insertOne(newUser);
             
-            if (!result.insertedId) {
+            if (!insertResult.insertedId) {
                 return {
                     success: false,
                     error: 'Failed to create user account'
                 };
             }
 
-            // Get the created user (without password)
+            // Retrieve created user (excluding password)
             const createdUser = await this.usersCollection.findOne(
-                { _id: result.insertedId },
+                { _id: insertResult.insertedId },
                 { projection: { password: 0 } }
             );
 
             // Generate JWT token
-            const token = this.generateToken(createdUser);
+            const authToken = this.generateJwtToken(createdUser);
 
-            // Create session
-            await this.createSession(createdUser._id, token);
+            // Create user session
+            await this.createUserSession(createdUser._id, authToken);
 
             return {
                 success: true,
@@ -154,7 +177,7 @@ class AuthService {
                     preferences: createdUser.preferences,
                     createdAt: createdUser.createdAt
                 },
-                token: token,
+                token: authToken,
                 message: 'Account created successfully'
             };
 
@@ -167,10 +190,16 @@ class AuthService {
         }
     }
 
-    // User login
-    async login(email, password, rememberMe = false) {
+    /**
+     * Authenticate user login
+     * @param {string} email - User's email address
+     * @param {string} password - User's password
+     * @param {boolean} rememberMe - Whether to extend session duration
+     * @returns {Promise<Object>} Login result
+     */
+    async authenticateUser(email, password, rememberMe = false) {
         try {
-            // Validate input
+            // Validate input fields
             if (!email || !password) {
                 return {
                     success: false,
@@ -178,7 +207,7 @@ class AuthService {
                 };
             }
 
-            // Find user by email
+            // Find user by email address
             const user = await this.usersCollection.findOne({ 
                 email: email.toLowerCase() 
             });
@@ -198,7 +227,7 @@ class AuthService {
                 };
             }
 
-            // Verify password
+            // Verify password using bcrypt
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (!isPasswordValid) {
                 return {
@@ -207,7 +236,7 @@ class AuthService {
                 };
             }
 
-            // Update last login
+            // Update last login timestamp
             await this.usersCollection.updateOne(
                 { _id: user._id },
                 { 
@@ -218,12 +247,12 @@ class AuthService {
                 }
             );
 
-            // Generate JWT token
-            const expiresIn = rememberMe ? '30d' : this.JWT_EXPIRES_IN;
-            const token = this.generateToken(user, expiresIn);
+            // Generate JWT token with appropriate expiration
+            const tokenExpiration = rememberMe ? '30d' : this.jwtExpiresIn;
+            const authToken = this.generateJwtToken(user, tokenExpiration);
 
-            // Create session
-            await this.createSession(user._id, token, rememberMe);
+            // Create user session
+            await this.createUserSession(user._id, authToken, rememberMe);
 
             return {
                 success: true,
@@ -237,7 +266,7 @@ class AuthService {
                     preferences: user.preferences,
                     lastLoginAt: user.lastLoginAt
                 },
-                token: token,
+                token: authToken,
                 message: 'Login successful'
             };
 
@@ -250,8 +279,12 @@ class AuthService {
         }
     }
 
-    // Verify token and get user
-    async verifyToken(token) {
+    /**
+     * Verify JWT token and return user information
+     * @param {string} token - JWT token to verify
+     * @returns {Promise<Object>} Token verification result
+     */
+    async verifyAuthToken(token) {
         try {
             if (!token) {
                 return { success: false, error: 'No token provided' };
@@ -259,13 +292,13 @@ class AuthService {
 
             // Remove 'Bearer ' prefix if present
             const cleanToken = token.replace('Bearer ', '');
-
-            // Verify JWT
-            const decoded = jwt.verify(cleanToken, this.JWT_SECRET);
             
-            // Get user from database
+            // Verify JWT signature and expiration
+            const decodedToken = jwt.verify(cleanToken, this.jwtSecret);
+            
+            // Retrieve user from database
             const user = await this.usersCollection.findOne(
-                { _id: new ObjectId(decoded.userId) },
+                { _id: new ObjectId(decodedToken.userId) },
                 { projection: { password: 0 } }
             );
 
@@ -277,7 +310,7 @@ class AuthService {
                 return { success: false, error: 'Account deactivated' };
             }
 
-            // Check if session exists
+            // Verify session exists in database
             const session = await this.sessionsCollection.findOne({
                 userId: user._id,
                 token: cleanToken
@@ -313,8 +346,12 @@ class AuthService {
         }
     }
 
-    // Logout user
-    async logout(token) {
+    /**
+     * Logout user and invalidate session
+     * @param {string} token - JWT token to invalidate
+     * @returns {Promise<Object>} Logout result
+     */
+    async logoutUser(token) {
         try {
             if (!token) {
                 return { success: false, error: 'No token provided' };
@@ -322,7 +359,7 @@ class AuthService {
 
             const cleanToken = token.replace('Bearer ', '');
 
-            // Remove session
+            // Remove session from database
             await this.sessionsCollection.deleteOne({ token: cleanToken });
 
             return {
@@ -339,8 +376,13 @@ class AuthService {
         }
     }
 
-    // Update user profile
-    async updateProfile(userId, updates) {
+    /**
+     * Update user profile information
+     * @param {string} userId - User's unique identifier
+     * @param {Object} updates - Profile updates to apply
+     * @returns {Promise<Object>} Update result
+     */
+    async updateUserProfile(userId, updates) {
         try {
             const allowedUpdates = ['fullName', 'mobile', 'preferences'];
             const sanitizedUpdates = {};
@@ -361,19 +403,19 @@ class AuthService {
 
             sanitizedUpdates.updatedAt = new Date();
 
-            const result = await this.usersCollection.updateOne(
+            const updateResult = await this.usersCollection.updateOne(
                 { _id: new ObjectId(userId) },
                 { $set: sanitizedUpdates }
             );
 
-            if (result.matchedCount === 0) {
+            if (updateResult.matchedCount === 0) {
                 return {
                     success: false,
                     error: 'User not found'
                 };
             }
 
-            // Get updated user
+            // Retrieve updated user information
             const updatedUser = await this.usersCollection.findOne(
                 { _id: new ObjectId(userId) },
                 { projection: { password: 0 } }
@@ -403,10 +445,16 @@ class AuthService {
         }
     }
 
-    // Change password
-    async changePassword(userId, currentPassword, newPassword) {
+    /**
+     * Change user password
+     * @param {string} userId - User's unique identifier
+     * @param {string} currentPassword - Current password for verification
+     * @param {string} newPassword - New password to set
+     * @returns {Promise<Object>} Password change result
+     */
+    async changeUserPassword(userId, currentPassword, newPassword) {
         try {
-            // Get user with password
+            // Retrieve user with password for verification
             const user = await this.usersCollection.findOne({ 
                 _id: new ObjectId(userId) 
             });
@@ -427,7 +475,7 @@ class AuthService {
                 };
             }
 
-            // Validate new password
+            // Validate new password strength
             if (newPassword.length < 8) {
                 return {
                     success: false,
@@ -436,9 +484,9 @@ class AuthService {
             }
 
             // Hash new password
-            const hashedNewPassword = await bcrypt.hash(newPassword, this.SALT_ROUNDS);
+            const hashedNewPassword = await bcrypt.hash(newPassword, this.bcryptSaltRounds);
 
-            // Update password
+            // Update password in database
             await this.usersCollection.updateOne(
                 { _id: new ObjectId(userId) },
                 { 
@@ -450,7 +498,9 @@ class AuthService {
             );
 
             // Invalidate all existing sessions for this user
-            await this.sessionsCollection.deleteMany({ userId: new ObjectId(userId) });
+            await this.sessionsCollection.deleteMany({ 
+                userId: new ObjectId(userId) 
+            });
 
             return {
                 success: true,
@@ -467,17 +517,30 @@ class AuthService {
     }
 
     // Helper methods
-    generateToken(user, expiresIn = this.JWT_EXPIRES_IN) {
+
+    /**
+     * Generate JWT token for user
+     * @param {Object} user - User object
+     * @param {string} expiresIn - Token expiration time
+     * @returns {string} JWT token
+     */
+    generateJwtToken(user, expiresIn = this.jwtExpiresIn) {
         const payload = {
             userId: user._id,
             email: user.email,
             role: user.role
         };
 
-        return jwt.sign(payload, this.JWT_SECRET, { expiresIn });
+        return jwt.sign(payload, this.jwtSecret, { expiresIn });
     }
 
-    async createSession(userId, token, rememberMe = false) {
+    /**
+     * Create user session in database
+     * @param {ObjectId} userId - User's unique identifier
+     * @param {string} token - JWT token
+     * @param {boolean} rememberMe - Whether to extend session duration
+     */
+    async createUserSession(userId, token, rememberMe = false) {
         const session = {
             userId: new ObjectId(userId),
             token: token,
@@ -489,7 +552,9 @@ class AuthService {
         await this.sessionsCollection.insertOne(session);
     }
 
-    // Cleanup expired sessions
+    /**
+     * Clean up expired sessions from database
+     */
     async cleanupExpiredSessions() {
         try {
             const result = await this.sessionsCollection.deleteMany({
@@ -504,13 +569,15 @@ class AuthService {
         }
     }
 
-    // Close database connection
-    async close() {
-        if (this.client) {
-            await this.client.close();
+    /**
+     * Close database connection
+     */
+    async closeConnection() {
+        if (this.mongoClient) {
+            await this.mongoClient.close();
             console.log('📤 Database connection closed');
         }
     }
 }
 
-export default AuthService;
+export default AuthenticationService;
