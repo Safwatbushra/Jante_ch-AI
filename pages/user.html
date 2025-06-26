@@ -825,23 +825,65 @@
                 }
             };
             
+            // Function to format message text
+            function formatMessageText(message) {
+                const lines = message.split('\n');
+                let html = '';
+                let inList = false;
+                let inSubList = false;
+
+                lines.forEach(line => {
+                    if (/^• /.test(line)) {
+                        if (!inList) {
+                            html += '<ul>';
+                            inList = true;
+                        }
+                        if (inSubList) {
+                            html += '</ul>';
+                            inSubList = false;
+                        }
+                        html += `<li>${line.replace(/^• /, '')}</li>`;
+                    } else if (/^\+ /.test(line)) {
+                        if (!inSubList) {
+                            html += '<ul style="margin-left: 20px;">';
+                            inSubList = true;
+                        }
+                        html += `<li>${line.replace(/^\+ /, '')}</li>`;
+                    } else {
+                        if (inSubList) {
+                            html += '</ul>';
+                            inSubList = false;
+                        }
+                        if (inList) {
+                            html += '</ul>';
+                            inList = false;
+                        }
+                        if (line.trim() !== '') {
+                            html += `<div>${line}</div>`;
+                        }
+                    }
+                });
+
+                if (inSubList) html += '</ul>';
+                if (inList) html += '</ul>';
+
+                return html;
+            }
+
             // Function to add message to chat
             function addMessage(message, isUser = false) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-                
                 const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                
                 messageDiv.innerHTML = `
                     <div class="message-avatar ${isUser ? 'user-avatar-chat' : 'bot-avatar'}">
                         <i class="fas ${isUser ? 'fa-user' : 'fa-robot'}"></i>
                     </div>
                     <div class="message-content">
-                        <p class="message-text">${message}</p>
+                        <div class="message-text">${formatMessageText(message)}</div>
                         <div class="message-time">${currentTime}</div>
                     </div>
                 `;
-                
                 chatMessages.appendChild(messageDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
